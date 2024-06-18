@@ -8,37 +8,49 @@ class Database:
     
     '''
     
+    
     def __init__(self):
-        # 讀取配置的文件
+        self.connection = None
+        self.cursor = None
+
+    def initialize(self):
+        if self.connection is not None and self.cursor is not None:
+            return  # 如果已經初始化過，則不再初始化
+
         config = configparser.ConfigParser()
         config.read('config.ini')
-
         if 'database' not in config:
             raise Exception("配置文件不存在或不完整")
+        for key in ['host', 'user', 'password']:
+            if key not in config['database'] or not config['database'][key]:
+                return Exception("配置文件不存在或不完整")
 
         db_config = {
-                    'host': config.get('database', 'host'),
-                    'user': config.get('database', 'user'),
-                    'password': config.get('database', 'password')
-                    }
+            'host': config.get('database', 'host'),
+            'user': config.get('database', 'user'),
+            'password': config.get('database', 'password')
+        }
 
-        # 連接到資料庫
-        self.connection = mysql.connector.connect(
-                        host=db_config['host'],
-                        user=db_config['user'],
-                        password=db_config['password']
-                        )
-       
-        self.cursor = self.connection.cursor()
-        
-        # 沒有資料庫的話就創建一個
-        self.create_database()
+        try:
+            # 連接到資料庫
+            self.connection = mysql.connector.connect(
+                host=db_config['host'],
+                user=db_config['user'],
+                password=db_config['password']
+            )
+            self.cursor = self.connection.cursor()
 
-        # 使用創建的數據庫連接
-        self.connection.database = 'user_auth'
+            # 沒有資料庫的話就創建一個
+            self.create_database()
 
-        # 执行初始化操作
-        self.initialize_database()
+            # 使用創建的數據庫連接
+            self.connection.database = 'user_auth'
+
+            # 執行初始化操作
+            self.initialize_database()
+
+        except mysql.connector.Error as err:
+            raise Exception(f"連接資料庫失敗: {err}")
 
     # 創建實例時候會先執行這句話，判斷有無這個資料庫，沒有就創建
     def create_database(self):

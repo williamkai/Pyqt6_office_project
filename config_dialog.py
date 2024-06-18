@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
                             QPushButton, 
                             QMessageBox
                             )
+import mysql.connector
 
 class ConfigDialog(QDialog):
 
@@ -63,6 +64,18 @@ class ConfigDialog(QDialog):
         if not host or not user or not password:
             QMessageBox.warning(self, "警告", "所有字段都需要填写")
             return
+        
+        # 嘗試連接資料庫來驗證配置是否正確
+        try:
+            connection = mysql.connector.connect(
+                host=host,
+                user=user,
+                password=password
+            )
+            connection.close()
+        except mysql.connector.Error as err:
+            QMessageBox.warning(self, "錯誤，帳號密碼錯誤or設定錯誤\n", f"無法連接資料庫: {err}")
+            return
 
         config = configparser.ConfigParser()
         config['database'] = {
@@ -70,6 +83,7 @@ class ConfigDialog(QDialog):
             'user': user,
             'password': password,
         }
+
         with open('config.ini', 'w') as configfile:
             config.write(configfile)
 
