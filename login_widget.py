@@ -103,13 +103,20 @@ class LoginWidget(QWidget):
     def check_username(self):
         username = self.email_input.text()
         if username:
-            query = "SELECT name FROM users WHERE username = %s"
-            self.database.cursor.execute(query, (username,))
-            result = self.database.cursor.fetchone()
-            if result:
-                self.user_label.setText(f"{result[0]}")
+            if not self.is_config_valid():
+                print("就是甚麼都不用做")
+                return
             else:
-                self.user_label.setText("")
+                 # 只有在連接和游標為 None 時才初始化
+                if self.database.connection is None or self.database.cursor is None:
+                    self.database.initialize()
+                query = "SELECT name FROM users WHERE username = %s"
+                self.database.cursor.execute(query, (username,))
+                result = self.database.cursor.fetchone()
+                if result:
+                    self.user_label.setText(f"{result[0]}")
+                else:
+                    self.user_label.setText("")
         else:
             self.user_label.setText("")
 
@@ -119,6 +126,10 @@ class LoginWidget(QWidget):
             return
         email = self.email_input.text()
         password = self.password_input.text()
+
+         # 只有在連接和游標為 None 時才初始化
+        if self.database.connection is None or self.database.cursor is None:
+            self.database.initialize()
 
         # 从数据库验证用户凭据
         result = self.database.validate_user(email, password)
