@@ -34,13 +34,20 @@ class MainApplication(QMainWindow):
         # 連接登入成功的畫面
         self.login_widget.login_success.connect(self.show_main_window)
 
-    def show_main_window(self):
+        # 初始化資料庫
+        self.database = None
+        self.current_user = None
+
+    def show_main_window(self, user_email):
         # 移除登入畫面物件
+        self.database=self.login_widget.database
+        self.current_user = user_email
+
         self.layout.removeWidget(self.login_widget)
         self.login_widget.deleteLater()
 
         # 創建登入成功的Class跟轉換畫面
-        self.main_window = MainWindow(self)
+        self.main_window = MainWindow(self, self.database, self.current_user)
         self.layout.addWidget(self.main_window)
          # 连接主窗口的登出信号到处理槽
         # self.main_window.logout_signal.connect(self.show_login_widget)

@@ -117,29 +117,41 @@ class Database:
             print("Error:", err)
             return False
         
-    # 創建每個帳號的資料庫
-    def create_user_data_database(self, username):
+    def create_user_specific_database(self, username):
+        # 創建與用戶相關的資料庫
+        print("建立個別帳號資料庫~~~")
+        db_name = f"user_{username}"
+        create_db_query = f"CREATE DATABASE IF NOT EXISTS {db_name}"
+        self.cursor.execute(create_db_query)
+        self.connection.commit()
+
+         # 切換到新創建的用戶資料庫
+        self.connection.database = db_name
+
+        # 創建 user_account_data 表格
+        self.create_user_account_table()
+
+    def create_user_account_table(self):
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS user_account_data (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )
+        """
+        self.cursor.execute(create_table_query)
+        self.connection.commit()
+
+    def insert_user_account(self, username, password):
         try:
-            # 连接到主数据库
-            self.connection.database = 'william_users'
-            
-            # 检查用户数据数据库是否已经存在
-            self.cursor.execute(f"SHOW DATABASES LIKE 'william_users_{username}_data'")
-            db_exists = self.cursor.fetchone()
-            
-            if not db_exists:
-                # 创建用户数据数据库
-                create_database_query = f"CREATE DATABASE william_users_{username}_data"
-                self.cursor.execute(create_database_query)
-                return True
-            else:
-                print("用户数据数据库已经存在")
-                return False
+            self.cursor.execute("INSERT INTO user_account_data (email, password) VALUES (%s, %s)", (username, password))
+            self.connection.commit()
+            return True
         except mysql.connector.Error as err:
             print("Error:", err)
             return False
 
-
+    
 
     def close(self):
         self.cursor.close()
