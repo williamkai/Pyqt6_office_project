@@ -2,8 +2,8 @@ import sys
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QStackedWidget
 
-from login_widget import LoginWidget 
-from main_window import MainWindow
+from login.login_widget import LoginWidget 
+from success_login.main_window import MainWindow
 
 
 '''
