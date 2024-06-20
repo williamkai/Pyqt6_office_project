@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QTextEdit
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,QLineEdit
 
 class DatabaseWidget(QWidget):
 
@@ -45,7 +45,10 @@ class DatabaseWidget(QWidget):
         line_edit = QLineEdit()
         self.display_layout.addWidget(line_edit)
         
+
+        
         submit_button = QPushButton("提交")
+        submit_button.setFixedSize(200, 40)
         submit_button.clicked.connect(lambda: self.submit_product(line_edit.text()))
         self.display_layout.addWidget(submit_button)
 
