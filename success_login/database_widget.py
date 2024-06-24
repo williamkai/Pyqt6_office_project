@@ -1,5 +1,12 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,QLineEdit
+from PyQt6.QtWidgets import (QWidget, 
+                             QVBoxLayout, 
+                             QHBoxLayout, 
+                             QPushButton, 
+                             QLabel,
+                             QLineEdit,
+                             QGridLayout
+                             )
 
 class DatabaseWidget(QWidget):
 
@@ -34,23 +41,73 @@ class DatabaseWidget(QWidget):
         self.display_area = QWidget()
         self.display_layout = QVBoxLayout(self.display_area)
         self.main_layout.addWidget(self.display_area)
+        # 初始化GridLayout对象
+        self.grid_layout = None
 
     def create_product(self):
         self.clear_display_area()
-        
-        # 在顯示區域內加入標籤、輸入框、提交按鈕等
-        label = QLabel("商品名稱:")
-        self.display_layout.addWidget(label)
-        
-        line_edit = QLineEdit()
-        self.display_layout.addWidget(line_edit)
-        
+        self.database.create_product_list_table()
 
-        
+        # 使用QGridLayout进行布局
+        grid_layout = QGridLayout()
+
+        label_product_name = QLabel("商品名稱:")
+        grid_layout.addWidget(label_product_name, 0, 0, 1, 1)
+
+        line_edit_product_name = QLineEdit()
+        line_edit_product_name.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_product_name, 0, 1, 1, 4)
+
+        label_product_code = QLabel("商品代號:")
+        grid_layout.addWidget(label_product_code, 1, 0, 1, 1)
+
+        line_edit_product_code = QLineEdit()
+        line_edit_product_code.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_product_code, 1, 1, 1, 4)
+
+        label_package_count = QLabel("包數:")
+        grid_layout.addWidget(label_package_count, 2, 0, 1, 1)
+
+        line_edit_package_count = QLineEdit()
+        line_edit_package_count.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_package_count, 2, 1, 1, 4)
+
+        label_draw_count = QLabel("抽數:")
+        grid_layout.addWidget(label_draw_count, 3, 0, 1, 1)
+
+        line_edit_draw_count = QLineEdit()
+        line_edit_draw_count.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_draw_count, 3, 1, 1, 4)
+
+        label_manufacturer = QLabel("廠商名稱:")
+        grid_layout.addWidget(label_manufacturer, 4, 0, 1, 1)
+
+        line_edit_manufacturer = QLineEdit()
+        line_edit_manufacturer.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_manufacturer, 4, 1, 1, 4)
+
+        label_price = QLabel("售價:")
+        grid_layout.addWidget(label_price, 5, 0, 1, 1)
+
+        line_edit_price = QLineEdit()
+        line_edit_price.setFixedWidth(200)
+        grid_layout.addWidget(line_edit_price, 5, 1, 1, 4)
+
         submit_button = QPushButton("提交")
         submit_button.setFixedSize(200, 40)
-        submit_button.clicked.connect(lambda: self.submit_product(line_edit.text()))
-        self.display_layout.addWidget(submit_button)
+        submit_button.clicked.connect(lambda: self.submit_product(line_edit_product_code.text(),
+                                                                  line_edit_product_name.text(),
+                                                                  int(line_edit_package_count.text()),
+                                                                  int(line_edit_draw_count.text()),
+                                                                  line_edit_manufacturer.text(),
+                                                                  float(line_edit_price.text()) if line_edit_price.text() else None))
+        grid_layout.addWidget(submit_button, 6, 2, 1, 1)  # 将提交按钮放在第7行第3列，占据1行1列
+
+        # 设置列的伸展因子，让中间的列（第2列）伸展以填充空白空间，从而将提交按钮置中
+        grid_layout.setColumnStretch(1, 1)
+
+        self.display_layout.addLayout(grid_layout)
+
 
     def inventory_function(self):
         self.clear_display_area()
@@ -72,6 +129,17 @@ class DatabaseWidget(QWidget):
             widget = self.display_layout.itemAt(i).widget()
             if widget:
                 widget.deleteLater()
+
+        # 清空GridLayout对象及其中的部件
+        if self.grid_layout:
+            while self.grid_layout.count():
+                item = self.grid_layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+
+            # 將布局管理器置空，以便重新使用
+            self.grid_layout = None
 
     def submit_product(self, product_name):
         # 提交商品名稱等資料的處理

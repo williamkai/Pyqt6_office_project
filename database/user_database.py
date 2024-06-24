@@ -11,6 +11,7 @@ class UserDatabase:
         self.connection = None
         self.cursor = None
         self.username=user_email
+        self.initialize()
 
     def initialize(self):
         if self.connection is not None and self.cursor is not None:
@@ -41,7 +42,7 @@ class UserDatabase:
 
             # 沒有資料庫的話就創建一個
             db_name = f"user_{self.username}"
-            self.create_database(self,db_name)
+            self.create_database(db_name)
 
             # 使用創建的數據庫連接
             self.connection.database = f'{db_name}'
@@ -79,9 +80,7 @@ class UserDatabase:
             self.connection.commit()
         except mysql.connector.Error as err:
             print(f"Error creating table: {err}")
-     
-
-              
+               
     def insert_user_account(self, username, password):
         try:
             self.cursor.execute("INSERT INTO User_basic_information (email, password) VALUES (%s, %s)", (username, password))
@@ -90,8 +89,24 @@ class UserDatabase:
         except mysql.connector.Error as err:
             print("Error:", err)
             return False
-
-    
+        
+    def create_product_list_table(self):
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS ProductList (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                product_code VARCHAR(255) NOT NULL,
+                product_name VARCHAR(255) NOT NULL,
+                package_count INT NOT NULL,
+                draw_count INT NOT NULL,
+                manufacturer VARCHAR(255),
+                price DECIMAL(10, 2)
+            )
+        """
+        try:
+            self.cursor.execute(create_table_query)
+            self.connection.commit()
+        except mysql.connector.Error as err:
+            print(f"Error creating ProductList table: {err}")
 
     def close(self):
         self.cursor.close()
