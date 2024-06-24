@@ -52,11 +52,6 @@ class UserInformationWidget(QDialog):
             QMessageBox.warning(self, "錯誤", "請輸入基本資料！")
             return
         
-        # # 檢查用户名是否已存在
-        # if self.database.check_username_exists(username):
-        #     QMessageBox.warning(self, "錯誤", "唷齁齁不需要確認")
-        #     return
-
         # 檢查密碼是否匹配
         if password != confirm_password:
             QMessageBox.warning(self, "錯誤", "兩次輸入的密碼不一致！")

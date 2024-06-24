@@ -11,14 +11,15 @@ from PyQt6.QtWidgets import (
          
 from success_login.user_information_widget import UserInformationWidget
 from success_login.database_widget import DatabaseWidget
+from database.user_database import UserDatabase  # 引入用戶專屬的資料庫類
 
 class MainWindow(QWidget):
     
-    logout_signal = pyqtSignal(str)
+    logout_signal = pyqtSignal()
     
-    def __init__(self, parent=None, database=None, user_email=None):
-        super().__init__(parent)   
-        self.database = database
+    def __init__(self, parent=None, user_email=None):
+        super(MainWindow, self).__init__(parent) 
+        self.database =  UserDatabase(user_email)
 
         self.user_email = user_email
         self.database_window=None

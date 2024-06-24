@@ -26,7 +26,7 @@ from login.config_dialog import ConfigDialog
 class LoginWidget(QWidget):
     login_success = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
         self.database=Database()
         self.layout = QVBoxLayout(self)
@@ -136,9 +136,8 @@ class LoginWidget(QWidget):
         if isinstance(result, bool):
             if result:
                 print("登入成功")
-                self.database.create_user_specific_database(email) 
-                # 會創建個別帳戶 資料庫且會轉換資料庫，在創建這個使用者資料庫的帳戶資料表
-                
+                # 登录成功后关闭数据库连接
+                self.database.close()
                 QMessageBox.warning(self, "肥肥力量", "登入成功")
                 self.login_success.emit(email)  # 發送登入成功的訊號
             else:

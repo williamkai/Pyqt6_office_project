@@ -47,7 +47,7 @@ class ConfigDialog(QDialog):
 
     def load_config(self):
         config = configparser.ConfigParser()
-        config.read('login\config.ini')
+        config.read(r'login\config.ini')
 
         if 'database' in config:
             self.host_input.setText(config.get('database', 'host', fallback='localhost'))
@@ -84,7 +84,7 @@ class ConfigDialog(QDialog):
             'password': password,
         }
 
-        with open('login\config.ini', 'w') as configfile:
+        with open(r'login\config.ini', 'w') as configfile:
             config.write(configfile)
 
         QMessageBox.information(self, "成功", "配置已保存")
