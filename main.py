@@ -40,26 +40,29 @@ class MainApplication(QMainWindow):
 
     def show_main_window(self, user_email):
         # 移除登入畫面物件
-        self.database=self.login_widget.database
         self.current_user = user_email
 
         self.layout.removeWidget(self.login_widget)
         self.login_widget.deleteLater()
 
-        # 創建登入成功的Class跟轉換畫面
-        self.main_window = MainWindow(self, self.database, self.current_user)
+        # 創建主視窗並添加到佈局
+        self.main_window = MainWindow(self, self.current_user)
         self.layout.addWidget(self.main_window)
-         # 连接主窗口的登出信号到处理槽
-        # self.main_window.logout_signal.connect(self.show_login_widget)
+        # 連接主視窗的登出信號到處理槽
+        self.main_window.logout_signal.connect(self.show_login_widget)
+
 
     def show_login_widget(self):
-        # 移除主窗口对象
+        # 移除主視窗物件
         self.layout.removeWidget(self.main_window)
         self.main_window.deleteLater()
 
-        # 重新添加登录界面对象
-        self.login_widget = LoginWidget()
+        # 創建登入畫面並添加到佈局
+        self.login_widget = LoginWidget(self)
         self.layout.addWidget(self.login_widget)
+        # 連接登入畫面的登入信號到處理槽
+        self.login_widget.login_success.connect(self.show_main_window)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
