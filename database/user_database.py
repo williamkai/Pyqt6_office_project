@@ -112,12 +112,12 @@ class UserDatabase:
         self.cursor.execute(query)
         return self.cursor.fetchall()
     
-    def delete_product(self, product_id):
+    def delete_product(self, product_code):
         delete_query = """
-            DELETE FROM ProductList WHERE id = %s
+            DELETE FROM ProductList WHERE product_code = %s
         """
         try:
-            self.cursor.execute(delete_query, (product_id,))
+            self.cursor.execute(delete_query, (product_code,))
             self.connection.commit()
         except mysql.connector.Error as err:
             print(f"Error deleting from ProductList table: {err}")
@@ -150,8 +150,9 @@ class UserDatabase:
     def create_inventory_table(self):
         create_table_query = """
             CREATE TABLE IF NOT EXISTS Inventory (
-                product_code VARCHAR(255) PRIMARY KEY,
-                date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                inventory_id INT AUTO_INCREMENT PRIMARY KEY,
+                product_code VARCHAR(255) NOT NULL,
+                date DATETIME NOT NULL,
                 status ENUM('製造', '銷貨', '退貨', '瑕疵品') NOT NULL,
                 quantity INT NOT NULL,
                 FOREIGN KEY (product_code) REFERENCES ProductList(product_code)
@@ -164,8 +165,29 @@ class UserDatabase:
         except mysql.connector.Error as err:
             print(f"Error creating Inventory table: {err}")
 
+
+    def search_inventory(self, product_code):
+        search_query = """
+            SELECT inventory_id, product_code, date, status, quantity
+            FROM Inventory
+            WHERE product_code = %s
+        """
+        try:
+            self.cursor.execute(search_query, (product_code,))
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            print(f"Error searching inventory: {err}")
+            return []
         
+    def get_all_product_codes(self):
+        query = "SELECT product_code FROM ProductList"
+        self.cursor.execute(query)
+        return [item[0] for item in self.cursor.fetchall()]
 
     def close(self):
-        self.cursor.close()
-        self.connection.close()
+        try:
+            self.cursor.close()
+            self.connection.close()
+            print("Database connection closed.")
+        except mysql.connector.Error as err:
+            print(f"Error closing the database connection: {err}")
