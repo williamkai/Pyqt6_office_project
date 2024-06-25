@@ -163,8 +163,8 @@ class DatabaseWidget(QWidget):
         reply = QMessageBox.question(self, '刪除商品', '確定要刪除此商品嗎？',
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
-            product_id = int(self.table_widget.item(row, 0).text())
-            self.database.delete_product(product_id)
+            product_code =  self.table_widget.item(row, 0).text() 
+            self.database.delete_product(product_code)
             QMessageBox.information(self, "信息", "商品已刪除")
             self.product_table()
 
@@ -184,20 +184,78 @@ class DatabaseWidget(QWidget):
         self.clear_display_area()
         self.database.create_inventory_table()
         
-        # 在顯示區域內加入庫存功能相關的小部件
-        label = QLabel("庫存功能正在開發中...")
-        self.display_layout.addWidget(label)
+        # 创建搜索框和按钮
+        search_layout = QHBoxLayout()
+        self.search_box = QLineEdit()
+        self.search_box.setPlaceholderText("請輸入商品代號")
+        self.search_box.textChanged.connect(self.dynamic_search)  # 监听文本变化事件
+        search_button = QPushButton("搜索")
+        search_button.clicked.connect(self.search_inventory)
+
+        search_layout.addWidget(self.search_box)
+        search_layout.addWidget(search_button)
+
+        self.display_layout.addLayout(search_layout)
+
+        # 创建表格用于显示搜索结果
+        self.table_widget = QTableWidget()
+        self.table_widget.setColumnCount(5)
+        self.table_widget.setHorizontalHeaderLabels(["庫存ID", "商品代號", "日期", "狀態", "數量"])
+        self.display_layout.addWidget(self.table_widget)
+
+        # 初始化商品代号列表
+        self.all_product_codes = []
+        self.all_product_codes = self.database.get_all_product_codes()
+        print(f"{self.all_product_codes}")
+
+    def dynamic_search(self):
+        text = self.search_box.text().strip()
+        if not text:
+            return
+        
+        matches = []
+        for code in self.all_product_codes:
+            if text.upper() in code.upper():  # 不区分大小写进行匹配
+                matches.append(code)
+
+        if len(matches) == 1:
+            self.search_box.setText(matches[0])  # 自动补全搜索框内容
+            self.search_inventory()
+
+    def search_inventory(self):
+        product_code = self.search_box.text()
+        if not product_code:
+            QMessageBox.warning(self, "输入错误", "請輸入商品代號進行搜索")
+            return
+
+        # 从数据库中获取库存数据
+        inventory_data = self.database.search_inventory(product_code)
+
+        if not inventory_data:
+            QMessageBox.information(self, "無結果", "沒有找到該商品的庫存紀錄")
+            return
+
+        # 更新表格内容
+        self.table_widget.setRowCount(len(inventory_data))
+        for row_idx, row_data in enumerate(inventory_data):
+            for col_idx, col_data in enumerate(row_data):
+                self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
+
+        # 调整列宽
+        self.table_widget.resizeColumnsToContents()
+
 
     def clear_display_area(self):
         # 清空顯示區域
-        for i in reversed(range(self.display_layout.count())):
-            widget = self.display_layout.itemAt(i).widget()
+        while self.display_layout.count() > 0:
+            item = self.display_layout.takeAt(0)
+            widget = item.widget()
             if widget:
                 widget.deleteLater()
 
         # 清空GridLayout对象及其中的部件
         if self.grid_layout:
-            while self.grid_layout.count():
+            while self.grid_layout.count() > 0:
                 item = self.grid_layout.takeAt(0)
                 widget = item.widget()
                 if widget:
