@@ -1,4 +1,4 @@
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal,QDate
 from PyQt6.QtWidgets import (QWidget, 
                              QVBoxLayout, 
                              QHBoxLayout, 
@@ -11,7 +11,10 @@ from PyQt6.QtWidgets import (QWidget,
                              QApplication,
                              QMessageBox,
                              QDialog,
-                             QFormLayout
+                             QFormLayout,
+                             QComboBox,
+                             QDateEdit,
+                             QCompleter,
                              )
 
 class DatabaseWidget(QWidget):
@@ -183,7 +186,7 @@ class DatabaseWidget(QWidget):
     def inventory_function(self):
         self.clear_display_area()
         self.database.create_inventory_table()
-        
+
         # 创建搜索框和按钮
         search_layout = QHBoxLayout()
         self.search_box = QLineEdit()
@@ -199,14 +202,121 @@ class DatabaseWidget(QWidget):
 
         # 创建表格用于显示搜索结果
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(5)
-        self.table_widget.setHorizontalHeaderLabels(["庫存ID", "商品代號", "日期", "狀態", "數量"])
+        self.table_widget.setColumnCount(8)  # 新增“更改”和“删除”按钮
+        self.table_widget.setHorizontalHeaderLabels(["庫存序列號", "商品代號", "日期", "狀態", "數量","當前庫存量", "更改", "刪除"])
         self.display_layout.addWidget(self.table_widget)
 
         # 初始化商品代号列表
-        self.all_product_codes = []
         self.all_product_codes = self.database.get_all_product_codes()
         print(f"{self.all_product_codes}")
+
+        # 添加新增庫存變動的按鈕
+        add_inventory_button = QPushButton("新增庫存變動")
+        add_inventory_button.clicked.connect(self.add_inventory)
+        self.display_layout.addWidget(add_inventory_button)
+    
+    def add_inventory(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("新增庫存變動")
+        layout = QFormLayout(dialog)
+
+        # 商品代號輸入框，帶有自動補全功能
+        product_code_edit = QComboBox()
+        product_code_edit.setEditable(True)
+        product_code_edit.addItems(self.all_product_codes)
+        product_code_edit.setCompleter(QCompleter(self.all_product_codes))
+
+        # 日期輸入框，默認為當前日期
+        date_edit = QDateEdit(calendarPopup=True)
+        date_edit.setDate(QDate.currentDate())
+        
+        # 狀態選擇框
+        status_edit = QComboBox()
+        status_edit.addItems(["製造", "銷貨", "退貨", "瑕疵品"])
+
+        quantity_edit = QLineEdit()
+
+        layout.addRow("商品代號", product_code_edit)
+        layout.addRow("日期 (YYYY-MM-DD)", date_edit)
+        layout.addRow("狀態", status_edit)
+        layout.addRow("數量", quantity_edit)
+
+        buttons = QHBoxLayout()
+        add_button = QPushButton("新增")
+        add_button.clicked.connect(lambda: self.save_inventory(
+            dialog,
+            None,
+            product_code_edit.currentText(),  # 使用 currentText() 而不是 text()
+            date_edit.date().toString('yyyy-MM-dd'),
+            status_edit.currentText(),  # 使用 currentText() 而不是 text()
+            int(quantity_edit.text())
+        ))
+        buttons.addWidget(add_button)
+        cancel_button = QPushButton("取消")
+        cancel_button.clicked.connect(dialog.reject)
+        buttons.addWidget(cancel_button)
+        layout.addRow(buttons)
+
+        dialog.setLayout(layout)
+        dialog.exec()
+
+    def modify_inventory(self, row):
+        inventory_id = self.table_widget.item(row, 0).text()
+        product_code = self.table_widget.item(row, 1).text()
+        date = self.table_widget.item(row, 2).text()
+        status = self.table_widget.item(row, 3).text()
+        quantity = int(self.table_widget.item(row, 4).text())
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("修改庫存")
+        layout = QFormLayout(dialog)
+
+        date_edit = QDateEdit(calendarPopup=True)
+        date_edit.setDate(QDate.fromString(date, 'yyyy-MM-dd'))
+        status_edit = QComboBox()
+        status_edit.addItems(["製造", "銷貨", "退貨", "瑕疵品"])
+        status_edit.setCurrentText(status)
+        quantity_edit = QLineEdit(str(quantity))
+
+        layout.addRow("日期 (YYYY-MM-DD)", date_edit)
+        layout.addRow("狀態", status_edit)
+        layout.addRow("數量", quantity_edit)
+
+        buttons = QHBoxLayout()
+        save_button = QPushButton("保存")
+        save_button.clicked.connect(lambda: self.save_inventory(dialog, inventory_id, product_code, date_edit.date().toString('yyyy-MM-dd'), status_edit.currentText(), int(quantity_edit.text())))
+        buttons.addWidget(save_button)
+        cancel_button = QPushButton("取消")
+        cancel_button.clicked.connect(dialog.reject)
+        buttons.addWidget(cancel_button)
+        layout.addRow(buttons)
+
+        dialog.setLayout(layout)
+        dialog.exec()
+
+    def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity):
+        if inventory_id is None:
+            # 如果 inventory_id 为 None，则执行新增操作
+            print("走這邊嗎????? 這便是新增商品庫存")
+            self.database.insert_inventory(product_code, date, status, quantity)
+            QMessageBox.information(self, "資訊", "庫存變動已新增")
+        else:
+            # 否则执行更新操作
+            print("還是這邊??? 這邊是更新原有資料")
+            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity)
+            QMessageBox.information(self, "資訊", "庫存變動已更新")
+
+        dialog.accept()
+        self.search_inventory()
+
+    def delete_inventory_confirmation(self, row):
+        reply = QMessageBox.question(self, '刪除庫存', '確定要刪除此庫存嗎？',
+                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
+            inventory_id = self.table_widget.item(row, 0).text()
+            self.database.delete_inventory(inventory_id)
+            QMessageBox.information(self, "信息", "庫存已刪除")
+            self.search_inventory()
 
     def dynamic_search(self):
         text = self.search_box.text().strip()
@@ -240,6 +350,17 @@ class DatabaseWidget(QWidget):
         for row_idx, row_data in enumerate(inventory_data):
             for col_idx, col_data in enumerate(row_data):
                 self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
+
+            current_stock_item = QTableWidgetItem(str(row_data[-1]))  # 获取最后一个元素作为当前库存量
+            self.table_widget.setItem(row_idx, 5, current_stock_item)
+
+            modify_button = QPushButton("更改")
+            modify_button.clicked.connect(lambda _, r=row_idx: self.modify_inventory(r))
+            self.table_widget.setCellWidget(row_idx, 6, modify_button)
+
+            delete_button = QPushButton("刪除")
+            delete_button.clicked.connect(lambda _, r=row_idx: self.delete_inventory_confirmation(r))
+            self.table_widget.setCellWidget(row_idx, 7, delete_button)
 
         # 调整列宽
         self.table_widget.resizeColumnsToContents()

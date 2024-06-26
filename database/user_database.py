@@ -155,6 +155,7 @@ class UserDatabase:
                 date DATETIME NOT NULL,
                 status ENUM('製造', '銷貨', '退貨', '瑕疵品') NOT NULL,
                 quantity INT NOT NULL,
+                current_stock INT,
                 FOREIGN KEY (product_code) REFERENCES ProductList(product_code)
             )
         """
@@ -164,6 +165,18 @@ class UserDatabase:
             print("Inventory table created successfully.")
         except mysql.connector.Error as err:
             print(f"Error creating Inventory table: {err}")
+        
+        # 如果表已经存在，添加 current_stock 列
+        try:
+            self.cursor.execute("ALTER TABLE Inventory ADD COLUMN current_stock INT")
+            self.connection.commit()
+            print("Added current_stock column to Inventory table.")
+        except mysql.connector.Error as err:
+            if "Duplicate column name 'current_stock'" in str(err):
+                print("current_stock column already exists.")
+            else:
+                print(f"Error adding current_stock column to Inventory table: {err}")
+
 
 
     def search_inventory(self, product_code):
@@ -179,10 +192,121 @@ class UserDatabase:
             print(f"Error searching inventory: {err}")
             return []
         
+    def update_inventory(self, inventory_id, product_code, date, status, quantity):
+        try:
+            # 获取当前库存量
+            get_current_stock_query = """
+                SELECT current_stock FROM Inventory
+                WHERE inventory_id = %s
+            """
+            self.cursor.execute(get_current_stock_query, (inventory_id,))
+            result = self.cursor.fetchone()
+            current_stock = result[0] if result else 0
+
+            # 根据操作状态更新库存量
+            if status == '製造':
+                current_stock += quantity
+            elif status in ['銷貨', '瑕疵品']:
+                current_stock -= quantity
+            elif status == '退貨':
+                current_stock += quantity
+
+            # 更新库存记录
+            update_query = """
+                UPDATE Inventory
+                SET product_code = %s, date = %s, status = %s, quantity = %s, current_stock = %s
+                WHERE inventory_id = %s
+            """
+            self.cursor.execute(update_query, (product_code, date, status, quantity, current_stock, inventory_id))
+            self.connection.commit()
+        except mysql.connector.Error as err:
+            print(f"Error updating Inventory table: {err}")
+
+    def delete_inventory(self, inventory_id):
+        delete_query = """
+            DELETE FROM Inventory WHERE inventory_id = %s
+        """
+        try:
+            self.cursor.execute(delete_query, (inventory_id,))
+            self.connection.commit()
+        except mysql.connector.Error as err:
+            print(f"Error deleting from Inventory table: {err}")
+
+        
     def get_all_product_codes(self):
         query = "SELECT product_code FROM ProductList"
         self.cursor.execute(query)
         return [item[0] for item in self.cursor.fetchall()]
+    
+
+    def insert_inventory(self, product_code, date, status, quantity):
+        try:
+            # 獲取最近一次庫存記錄的 current_stock
+            get_current_stock_query = """
+                SELECT current_stock FROM Inventory
+                WHERE product_code = %s
+                ORDER BY date DESC
+                LIMIT 1
+            """
+            self.cursor.execute(get_current_stock_query, (product_code,))
+            result = self.cursor.fetchone()
+            current_stock = result[0] if result and result[0] is not None else 0
+
+            # 根據操作類型更新 current_stock
+            if status == '製造':
+                current_stock += quantity
+            elif status in ['銷售', '瑕疵品']:
+                current_stock -= quantity
+            elif status == '退貨':
+                current_stock += quantity
+
+            # 插入新的庫存記錄
+            insert_query = """
+                INSERT INTO Inventory (product_code, date, status, quantity, current_stock)
+                VALUES (%s, %s, %s, %s, %s)
+            """
+            self.cursor.execute(insert_query, (product_code, date, status, quantity, current_stock))
+            self.connection.commit()
+        except mysql.connector.Error as err:
+            print(f"插入庫存記錄時出錯: {err}")
+
+
+        # 在你的資料庫類別中新增這個方法
+    def adjust_inventory_after_date(self, inventory_id, product_code, date, status, quantity):
+        try:
+            # 獲取要更新的庫存記錄的 current_stock
+            get_current_stock_query = """
+                SELECT current_stock FROM Inventory
+                WHERE inventory_id = %s
+            """
+            self.cursor.execute(get_current_stock_query, (inventory_id,))
+            result = self.cursor.fetchone()
+            current_stock = result[0] if result and result[0] is not None else 0
+
+            # 計算數量的差異
+            update_quantity = quantity - current_stock
+
+            # 更新當前庫存記錄
+            update_query = """
+                UPDATE Inventory
+                SET product_code = %s, date = %s, status = %s, quantity = %s, current_stock = %s
+                WHERE inventory_id = %s
+            """
+            self.cursor.execute(update_query, (product_code, date, status, quantity, current_stock, inventory_id))
+            self.connection.commit()
+
+            # 調整從變動日期後的所有庫存記錄的 current_stock
+            adjust_query = """
+                UPDATE Inventory
+                SET current_stock = current_stock + %s
+                WHERE product_code = %s AND date > %s
+            """
+            self.cursor.execute(adjust_query, (update_quantity, product_code, date))
+            self.connection.commit()
+
+        except mysql.connector.Error as err:
+            print(f"Error adjusting inventory after date: {err}")
+
 
     def close(self):
         try:
