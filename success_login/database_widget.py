@@ -1,4 +1,4 @@
-from PyQt6.QtCore import pyqtSignal,QDate
+from PyQt6.QtCore import pyqtSignal,QDate,QDateTime
 from PyQt6.QtWidgets import (QWidget, 
                              QVBoxLayout, 
                              QHBoxLayout, 
@@ -15,6 +15,7 @@ from PyQt6.QtWidgets import (QWidget,
                              QComboBox,
                              QDateEdit,
                              QCompleter,
+                             QDateTimeEdit,
                              )
 
 class DatabaseWidget(QWidget):
@@ -226,9 +227,10 @@ class DatabaseWidget(QWidget):
         product_code_edit.addItems(self.all_product_codes)
         product_code_edit.setCompleter(QCompleter(self.all_product_codes))
 
-        # 日期輸入框，默認為當前日期
-        date_edit = QDateEdit(calendarPopup=True)
-        date_edit.setDate(QDate.currentDate())
+        # 日期時間輸入框，默認為當前日期和時間
+        datetime_edit = QDateTimeEdit(calendarPopup=True)
+        datetime_edit.setDateTime(QDateTime.currentDateTime())
+        datetime_edit.setDisplayFormat('yyyy-MM-dd HH:mm')
         
         # 狀態選擇框
         status_edit = QComboBox()
@@ -237,7 +239,7 @@ class DatabaseWidget(QWidget):
         quantity_edit = QLineEdit()
 
         layout.addRow("商品代號", product_code_edit)
-        layout.addRow("日期 (YYYY-MM-DD)", date_edit)
+        layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", datetime_edit)
         layout.addRow("狀態", status_edit)
         layout.addRow("數量", quantity_edit)
 
@@ -247,9 +249,10 @@ class DatabaseWidget(QWidget):
             dialog,
             None,
             product_code_edit.currentText(),  # 使用 currentText() 而不是 text()
-            date_edit.date().toString('yyyy-MM-dd'),
+            datetime_edit.dateTime().toString('yyyy-MM-dd HH:mm:ss'),
             status_edit.currentText(),  # 使用 currentText() 而不是 text()
-            int(quantity_edit.text())
+            int(quantity_edit.text()),
+            None
         ))
         buttons.addWidget(add_button)
         cancel_button = QPushButton("取消")
@@ -258,6 +261,10 @@ class DatabaseWidget(QWidget):
         layout.addRow(buttons)
 
         dialog.setLayout(layout)
+
+        # 設置對話框大小
+        dialog.resize(400, 150)  # 設置合適的寬度和高度
+
         dialog.exec()
 
     def modify_inventory(self, row):
@@ -266,25 +273,39 @@ class DatabaseWidget(QWidget):
         date = self.table_widget.item(row, 2).text()
         status = self.table_widget.item(row, 3).text()
         quantity = int(self.table_widget.item(row, 4).text())
+        current_stock = int(self.table_widget.item(row, 5).text())  # 获取当前库存量
 
         dialog = QDialog(self)
         dialog.setWindowTitle("修改庫存")
         layout = QFormLayout(dialog)
 
-        date_edit = QDateEdit(calendarPopup=True)
-        date_edit.setDate(QDate.fromString(date, 'yyyy-MM-dd'))
+        date_edit = QDateTimeEdit()
+        date_edit.setDateTime(QDateTime.fromString(date, 'yyyy-MM-dd HH:mm:ss'))
+        date_edit.setDisplayFormat('yyyy-MM-dd HH:mm')
+
         status_edit = QComboBox()
         status_edit.addItems(["製造", "銷貨", "退貨", "瑕疵品"])
         status_edit.setCurrentText(status)
-        quantity_edit = QLineEdit(str(quantity))
 
-        layout.addRow("日期 (YYYY-MM-DD)", date_edit)
+        quantity_edit = QLineEdit(str(quantity))
+        current_stock_label = QLabel(str(current_stock))  # 使用 QLabel 顯示當前庫存量，不可編輯
+
+        layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", date_edit)
         layout.addRow("狀態", status_edit)
         layout.addRow("數量", quantity_edit)
+        layout.addRow("當前庫存量", current_stock_label)  # 使用 QLabel 顯示當前庫存量
 
         buttons = QHBoxLayout()
         save_button = QPushButton("保存")
-        save_button.clicked.connect(lambda: self.save_inventory(dialog, inventory_id, product_code, date_edit.date().toString('yyyy-MM-dd'), status_edit.currentText(), int(quantity_edit.text())))
+        save_button.clicked.connect(lambda: self.save_inventory(
+            dialog,
+            inventory_id,
+            product_code,
+            date_edit.dateTime().toString('yyyy-MM-dd HH:mm:ss'),
+            status_edit.currentText(),
+            int(quantity_edit.text()),
+            current_stock  
+        ))
         buttons.addWidget(save_button)
         cancel_button = QPushButton("取消")
         cancel_button.clicked.connect(dialog.reject)
@@ -292,9 +313,14 @@ class DatabaseWidget(QWidget):
         layout.addRow(buttons)
 
         dialog.setLayout(layout)
+
+        # 設置對話框大小
+        dialog.resize(400, 150)  # 設置合適的寬度和高度
+
         dialog.exec()
 
-    def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity):
+
+    def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity,current_stock  ):
         if inventory_id is None:
             # 如果 inventory_id 为 None，则执行新增操作
             print("走這邊嗎????? 這便是新增商品庫存")
@@ -303,7 +329,7 @@ class DatabaseWidget(QWidget):
         else:
             # 否则执行更新操作
             print("還是這邊??? 這邊是更新原有資料")
-            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity)
+            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity,current_stock)
             QMessageBox.information(self, "資訊", "庫存變動已更新")
 
         dialog.accept()
@@ -323,6 +349,9 @@ class DatabaseWidget(QWidget):
         if not text:
             return
         
+        # 断开信号连接，避免多次调用
+        self.search_box.textChanged.disconnect(self.dynamic_search)
+
         matches = []
         for code in self.all_product_codes:
             if text.upper() in code.upper():  # 不区分大小写进行匹配
@@ -331,6 +360,11 @@ class DatabaseWidget(QWidget):
         if len(matches) == 1:
             self.search_box.setText(matches[0])  # 自动补全搜索框内容
             self.search_inventory()
+        elif len(matches) == 0:
+            QMessageBox.warning(self, "输入错误", "請輸入商品代號進行搜索")
+
+        # 重新连接信号
+        self.search_box.textChanged.connect(self.dynamic_search)
 
     def search_inventory(self):
         product_code = self.search_box.text()

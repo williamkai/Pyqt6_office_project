@@ -181,7 +181,7 @@ class UserDatabase:
 
     def search_inventory(self, product_code):
         search_query = """
-            SELECT inventory_id, product_code, date, status, quantity
+            SELECT inventory_id, product_code, date, status, quantity,current_stock
             FROM Inventory
             WHERE product_code = %s
         """
@@ -241,7 +241,7 @@ class UserDatabase:
 
     def insert_inventory(self, product_code, date, status, quantity):
         try:
-            # 獲取最近一次庫存記錄的 current_stock
+            # 查询最近一次庫存記錄的 current_stock
             get_current_stock_query = """
                 SELECT current_stock FROM Inventory
                 WHERE product_code = %s
@@ -250,12 +250,16 @@ class UserDatabase:
             """
             self.cursor.execute(get_current_stock_query, (product_code,))
             result = self.cursor.fetchone()
-            current_stock = result[0] if result and result[0] is not None else 0
-
-            # 根據操作類型更新 current_stock
+            
+            if result:
+                current_stock = result[0]
+            else:
+                current_stock = 0
+            
+            # 根据操作类型更新 current_stock
             if status == '製造':
                 current_stock += quantity
-            elif status in ['銷售', '瑕疵品']:
+            elif status in ['銷貨', '瑕疵品']:
                 current_stock -= quantity
             elif status == '退貨':
                 current_stock += quantity
@@ -267,24 +271,42 @@ class UserDatabase:
             """
             self.cursor.execute(insert_query, (product_code, date, status, quantity, current_stock))
             self.connection.commit()
+            print("庫存記錄插入成功")
+            
         except mysql.connector.Error as err:
             print(f"插入庫存記錄時出錯: {err}")
 
 
         # 在你的資料庫類別中新增這個方法
-    def adjust_inventory_after_date(self, inventory_id, product_code, date, status, quantity):
+    def adjust_inventory_after_date(self, inventory_id, product_code, date, status, quantity,current_stock):
         try:
-            # 獲取要更新的庫存記錄的 current_stock
-            get_current_stock_query = """
-                SELECT current_stock FROM Inventory
-                WHERE inventory_id = %s
+            # 獲取前一筆庫存記錄的 current_stock
+            get_previous_inventory_query = """
+                SELECT inventory_id, current_stock, quantity
+                FROM Inventory
+                WHERE product_code = %s AND date < %s
+                ORDER BY date DESC
+                LIMIT 1
             """
-            self.cursor.execute(get_current_stock_query, (inventory_id,))
-            result = self.cursor.fetchone()
-            current_stock = result[0] if result and result[0] is not None else 0
+            self.cursor.execute(get_previous_inventory_query, (product_code, date))
+            previous_result = self.cursor.fetchone()
 
-            # 計算數量的差異
-            update_quantity = quantity - current_stock
+            if previous_result:
+                previous_inventory_id = previous_result[0]
+                previous_current_stock = previous_result[1]
+                previous_quantity = previous_result[2]
+            else:
+                previous_inventory_id = None
+                previous_current_stock = 0
+                previous_quantity = 0
+
+            # 計算庫存變動量
+            if status == '製造':
+                update_current_stock = previous_current_stock +quantity
+            elif status == '銷貨' or status == '瑕疵品':
+                update_current_stock = previous_current_stock-quantity  # 銷貨和瑕疵品是減少庫存
+            elif status == '退貨':
+                update_current_stock = previous_current_stock+quantity  # 退貨是增加庫存
 
             # 更新當前庫存記錄
             update_query = """
@@ -292,20 +314,36 @@ class UserDatabase:
                 SET product_code = %s, date = %s, status = %s, quantity = %s, current_stock = %s
                 WHERE inventory_id = %s
             """
-            self.cursor.execute(update_query, (product_code, date, status, quantity, current_stock, inventory_id))
+            self.cursor.execute(update_query, (product_code, date, status, quantity, update_current_stock, inventory_id))
             self.connection.commit()
 
             # 調整從變動日期後的所有庫存記錄的 current_stock
-            adjust_query = """
-                UPDATE Inventory
-                SET current_stock = current_stock + %s
-                WHERE product_code = %s AND date > %s
-            """
-            self.cursor.execute(adjust_query, (update_quantity, product_code, date))
+            update_quantity=update_current_stock-current_stock
+            print(f"{update_quantity}")
+            print(f"{update_current_stock}")
+            print(f"{current_stock}")
+            if update_quantity > 0:
+                print("到底是不是執行這邊? 這邊明明是+，我明明是負數為啥執行這邊")
+                adjust_query = """
+                    UPDATE Inventory
+                    SET current_stock = current_stock + %s
+                    WHERE product_code = %s AND date > %s
+                """
+            else:
+                print("應該是要執行這邊才對啊")
+                adjust_query = """
+                    UPDATE Inventory
+                    SET current_stock = current_stock + %s
+                    WHERE product_code = %s AND date > %s
+                """
+
+            self.cursor.execute(adjust_query, ( update_quantity, product_code, date))
             self.connection.commit()
 
         except mysql.connector.Error as err:
             print(f"Error adjusting inventory after date: {err}")
+
+
 
 
     def close(self):
