@@ -23,6 +23,7 @@ class RegisterWidgetWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.database = parent.database
+        self.database.initialize()  # 初始化數據庫連接
         self.setWindowTitle("註冊帳戶")
         self.setFixedSize(400, 300)  # 設定固定大小            
         self.init_ui()  # 使用絕對佈局

@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (QWidget,
                              QDateEdit,
                              QCompleter,
                              QDateTimeEdit,
+                             QHeaderView,
                              )
 
 class DatabaseWidget(QWidget):
@@ -26,7 +27,7 @@ class DatabaseWidget(QWidget):
         super().__init__(parent)
         self.database = database
         self.setWindowTitle("庫存資料庫功能")
-        self.setMinimumSize(700, 600)
+        self.setMinimumSize(900, 600)
         
         self.main_layout = QVBoxLayout(self)
         
@@ -203,8 +204,10 @@ class DatabaseWidget(QWidget):
 
         # 创建表格用于显示搜索结果
         self.table_widget = QTableWidget()
-        self.table_widget.setColumnCount(8)  # 新增“更改”和“删除”按钮
-        self.table_widget.setHorizontalHeaderLabels(["庫存序列號", "商品代號", "日期", "狀態", "數量","當前庫存量", "更改", "刪除"])
+        self.table_widget.setColumnCount(9)  # 包括“更改”和“删除”按钮
+        self.table_widget.setHorizontalHeaderLabels(["", "商品代號", "日期", "狀態", "數量", "當前庫存量", "備註", "更改", "刪除"])
+        # 將第一列的寬度設置為零，隱藏該列
+        self.table_widget.setColumnWidth(0, 0)
         self.display_layout.addWidget(self.table_widget)
 
         # 初始化商品代号列表
@@ -215,6 +218,7 @@ class DatabaseWidget(QWidget):
         add_inventory_button = QPushButton("新增庫存變動")
         add_inventory_button.clicked.connect(self.add_inventory)
         self.display_layout.addWidget(add_inventory_button)
+
     
     def add_inventory(self):
         dialog = QDialog(self)
@@ -238,10 +242,14 @@ class DatabaseWidget(QWidget):
 
         quantity_edit = QLineEdit()
 
+        # 備註輸入框
+        notes_edit = QLineEdit()
+
         layout.addRow("商品代號", product_code_edit)
         layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", datetime_edit)
         layout.addRow("狀態", status_edit)
         layout.addRow("數量", quantity_edit)
+        layout.addRow("備註", notes_edit)  # 添加備註輸入框
 
         buttons = QHBoxLayout()
         add_button = QPushButton("新增")
@@ -252,7 +260,8 @@ class DatabaseWidget(QWidget):
             datetime_edit.dateTime().toString('yyyy-MM-dd HH:mm:ss'),
             status_edit.currentText(),  # 使用 currentText() 而不是 text()
             int(quantity_edit.text()),
-            None
+            None,
+            notes_edit.text()  # 傳遞備註的值,
         ))
         buttons.addWidget(add_button)
         cancel_button = QPushButton("取消")
@@ -274,6 +283,7 @@ class DatabaseWidget(QWidget):
         status = self.table_widget.item(row, 3).text()
         quantity = int(self.table_widget.item(row, 4).text())
         current_stock = int(self.table_widget.item(row, 5).text())  # 获取当前库存量
+        notes = self.table_widget.item(row, 6).text() if self.table_widget.item(row, 6) is not None else ''  # 获取备注信息
 
         dialog = QDialog(self)
         dialog.setWindowTitle("修改庫存")
@@ -290,10 +300,13 @@ class DatabaseWidget(QWidget):
         quantity_edit = QLineEdit(str(quantity))
         current_stock_label = QLabel(str(current_stock))  # 使用 QLabel 顯示當前庫存量，不可編輯
 
+        notes_edit = QLineEdit(notes)  # 新增備註輸入框
+
         layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", date_edit)
         layout.addRow("狀態", status_edit)
         layout.addRow("數量", quantity_edit)
         layout.addRow("當前庫存量", current_stock_label)  # 使用 QLabel 顯示當前庫存量
+        layout.addRow("備註", notes_edit)  # 新增備註輸入框
 
         buttons = QHBoxLayout()
         save_button = QPushButton("保存")
@@ -304,7 +317,8 @@ class DatabaseWidget(QWidget):
             date_edit.dateTime().toString('yyyy-MM-dd HH:mm:ss'),
             status_edit.currentText(),
             int(quantity_edit.text()),
-            current_stock  
+            current_stock,
+            notes_edit.text()  # 傳遞備註的值
         ))
         buttons.addWidget(save_button)
         cancel_button = QPushButton("取消")
@@ -315,21 +329,21 @@ class DatabaseWidget(QWidget):
         dialog.setLayout(layout)
 
         # 設置對話框大小
-        dialog.resize(400, 150)  # 設置合適的寬度和高度
+        dialog.resize(400, 200)  # 設置合適的寬度和高度
 
         dialog.exec()
 
 
-    def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity,current_stock  ):
+    def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity, current_stock, notes):
         if inventory_id is None:
             # 如果 inventory_id 为 None，则执行新增操作
             print("走這邊嗎????? 這便是新增商品庫存")
-            self.database.insert_inventory(product_code, date, status, quantity)
+            self.database.insert_inventory(product_code, date, status, quantity, notes)
             QMessageBox.information(self, "資訊", "庫存變動已新增")
         else:
             # 否则执行更新操作
             print("還是這邊??? 這邊是更新原有資料")
-            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity,current_stock)
+            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity, current_stock, notes)
             QMessageBox.information(self, "資訊", "庫存變動已更新")
 
         dialog.accept()
@@ -385,19 +399,26 @@ class DatabaseWidget(QWidget):
             for col_idx, col_data in enumerate(row_data):
                 self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
 
-            current_stock_item = QTableWidgetItem(str(row_data[-1]))  # 获取最后一个元素作为当前库存量
+            current_stock_item = QTableWidgetItem(str(row_data[-2]))  # 获取倒数第二个元素作为当前库存量
             self.table_widget.setItem(row_idx, 5, current_stock_item)
+
+            notes_item = QTableWidgetItem(row_data[-1])  # 获取最后一个元素作为备注
+            self.table_widget.setItem(row_idx, 6, notes_item)
 
             modify_button = QPushButton("更改")
             modify_button.clicked.connect(lambda _, r=row_idx: self.modify_inventory(r))
-            self.table_widget.setCellWidget(row_idx, 6, modify_button)
+            self.table_widget.setCellWidget(row_idx, 7, modify_button)
 
             delete_button = QPushButton("刪除")
             delete_button.clicked.connect(lambda _, r=row_idx: self.delete_inventory_confirmation(r))
-            self.table_widget.setCellWidget(row_idx, 7, delete_button)
+            self.table_widget.setCellWidget(row_idx, 8, delete_button)
 
         # 调整列宽
         self.table_widget.resizeColumnsToContents()
+        self.table_widget.setColumnWidth(0, 0)  # 將第一列（庫存序列號列）的寬度設置為零，隱藏該列
+        self.table_widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+
+
 
 
     def clear_display_area(self):
