@@ -1,4 +1,6 @@
-import configparser
+import sys
+import os
+import pickle
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
                             QWidget, 
@@ -91,23 +93,34 @@ class LoginWidget(QWidget):
         self.layout.addWidget(self.config_button)
 
     def is_config_valid(self):
-        config = configparser.ConfigParser()
-        config.read('login/config.ini')
-        if 'database' not in config:
+        exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+        config_path = os.path.join(exe_dir, 'config.pickle')
+
+        if not os.path.exists(config_path):
             return False
-        for key in ['host', 'user', 'password']:
-            if key not in config['database'] or not config['database'][key]:
-                return False
+
+        try:
+            with open(config_path, 'rb') as f:
+                config = pickle.load(f)
+                if 'host' not in config or not config['host']:
+                    return False
+                if 'user' not in config or not config['user']:
+                    return False
+                if 'password' not in config or not config['password']:
+                    return False
+        except (pickle.UnpicklingError, FileNotFoundError, EOFError, KeyError):
+            return False
+
         return True
 
     def check_username(self):
         username = self.email_input.text()
         if username:
             if not self.is_config_valid():
-                print("就是甚麼都不用做")
+                print("配置文件不存在或不完整")
                 return
             else:
-                 # 只有在連接和游標為 None 時才初始化
+                # 檢查 Database 物件的 connection 和 cursor
                 if self.database.connection is None or self.database.cursor is None:
                     self.database.initialize()
                 query = "SELECT name FROM users WHERE username = %s"

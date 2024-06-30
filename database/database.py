@@ -1,5 +1,8 @@
+import os
+import sys
 import mysql.connector
 import configparser
+import pickle
 
 class Database:
     '''
@@ -15,24 +18,37 @@ class Database:
 
     def initialize(self):
         if self.connection is not None and self.cursor is not None:
-            return  # 如果已經初始化過，則不再初始化
+            return
+        
+        # 判断是否为冻结状态，决定如何获取 config.pickle 的路径
+        if getattr(sys, 'frozen', False):
+            # 如果是冻结状态（打包成 exe），则使用 sys.executable 的目录
+            exe_dir = os.path.dirname(sys.executable)
+            config_path = os.path.join(exe_dir, 'config.pickle')
+        else:
+            # 如果不是冻结状态，使用当前文件所在目录的上一层目录下的 login 文件夹中的 config.pickle
+            config_path = os.path.join(os.path.dirname(__file__), '..', 'login', 'config.pickle')
 
-        config = configparser.ConfigParser()
-        config.read('login\config.ini')
-        if 'database' not in config:
-            raise Exception("配置文件不存在或不完整")
-        for key in ['host', 'user', 'password']:
-            if key not in config['database'] or not config['database'][key]:
-                return Exception("配置文件不存在或不完整")
-
-        db_config = {
-            'host': config.get('database', 'host'),
-            'user': config.get('database', 'user'),
-            'password': config.get('database', 'password')
-        }
+        # 确认配置文件路径是否存在
+        if not os.path.exists(config_path):
+            raise Exception(f"配置文件不存在或不完整: {config_path}")
 
         try:
-            # 連接到資料庫
+            # 读取配置文件
+            with open(config_path, 'rb') as f:
+                config = pickle.load(f)
+
+            # 確認配置的完整性
+            db_config = {
+                'host': config.get('host', 'localhost'),
+                'user': config.get('user', ''),
+                'password': config.get('password', '')
+            }
+
+            if not all(db_config.values()):
+                raise Exception("配置文件中缺少 'host', 'user' 或 'password'")
+
+            # 连接到数据库
             self.connection = mysql.connector.connect(
                 host=db_config['host'],
                 user=db_config['user'],
@@ -40,17 +56,17 @@ class Database:
             )
             self.cursor = self.connection.cursor()
 
-            # 沒有資料庫的話就創建一個
+            # 如果数据库不存在则创建
             self.create_database()
 
-            # 使用創建的數據庫連接
+            # 使用已创建的数据库连接
             self.connection.database = 'user_auth'
 
-            # 執行初始化操作
+            # 执行其他初始化操作
             self.initialize_database()
 
-        except mysql.connector.Error as err:
-            raise Exception(f"連接資料庫失敗: {err}")
+        except (pickle.UnpicklingError, FileNotFoundError, EOFError, mysql.connector.Error, KeyError) as e:
+            raise Exception(f"初始化数据库时发生错误: {e}")
 
     # 創建實例時候會先執行這句話，判斷有無這個資料庫，沒有就創建
     def create_database(self):
