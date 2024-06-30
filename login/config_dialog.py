@@ -1,12 +1,9 @@
-import configparser
+import os
+import sys
+import pickle
 from PyQt6.QtWidgets import (
-                            QDialog,
-                            QVBoxLayout, 
-                            QLabel, 
-                            QLineEdit, 
-                            QPushButton, 
-                            QMessageBox
-                            )
+    QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+)
 import mysql.connector
 
 class ConfigDialog(QDialog):
@@ -25,6 +22,7 @@ class ConfigDialog(QDialog):
         self.layout.addWidget(host_label)
 
         self.host_input = QLineEdit(self)
+        self.host_input.setText("localhost")  # 設置預設文字為 localhost
         self.layout.addWidget(self.host_input)
 
         user_label = QLabel("User:", self)
@@ -46,17 +44,19 @@ class ConfigDialog(QDialog):
         self.layout.addWidget(self.save_button)
 
     def load_config(self):
-        config = configparser.ConfigParser()
-        config.read(r'login\config.ini')
-
-        if 'database' in config:
-            self.host_input.setText(config.get('database', 'host', fallback='localhost'))
-            self.user_input.setText(config.get('database', 'user', fallback=''))
-            self.password_input.setText(config.get('database', 'password', fallback=''))
-        else:
-            self.host_input.setText('localhost')
+        exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+        config_path = os.path.join(exe_dir, 'config.pickle')
+        if os.path.exists(config_path):
+            with open(config_path, 'rb') as f:
+                config = pickle.load(f)
+                self.host_input.setText(config.get('host', 'localhost'))
+                self.user_input.setText(config.get('user', ''))
+                self.password_input.setText(config.get('password', ''))
 
     def save_config(self):
+        exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+        config_path = os.path.join(exe_dir, 'config.pickle')
+
         host = self.host_input.text()
         user = self.user_input.text()
         password = self.password_input.text()
@@ -65,7 +65,6 @@ class ConfigDialog(QDialog):
             QMessageBox.warning(self, "警告", "所有字段都需要填写")
             return
         
-        # 嘗試連接資料庫來驗證配置是否正確
         try:
             connection = mysql.connector.connect(
                 host=host,
@@ -77,16 +76,18 @@ class ConfigDialog(QDialog):
             QMessageBox.warning(self, "錯誤，帳號密碼錯誤or設定錯誤\n", f"無法連接資料庫: {err}")
             return
 
-        config = configparser.ConfigParser()
-        config['database'] = {
+        config = {
             'host': host,
             'user': user,
             'password': password,
         }
 
-        with open(r'login\config.ini', 'w') as configfile:
-            config.write(configfile)
+        with open(config_path, 'wb') as f:
+            pickle.dump(config, f)
 
-        QMessageBox.information(self, "成功", "配置已保存")
+        if os.path.exists(config_path):
+            QMessageBox.information(self, "成功", "配置已保存")
+        else:
+            QMessageBox.warning(self, "错误", "配置保存失败")
+
         self.accept()
-
