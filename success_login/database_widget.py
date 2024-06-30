@@ -354,7 +354,8 @@ class DatabaseWidget(QWidget):
                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
             inventory_id = self.table_widget.item(row, 0).text()
-            self.database.delete_inventory(inventory_id)
+            inventory_code=self.table_widget.item(row, 1).text()
+            self.database.delete_inventory(inventory_id,inventory_code)
             QMessageBox.information(self, "信息", "庫存已刪除")
             self.search_inventory()
 

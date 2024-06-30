@@ -200,6 +200,7 @@ class UserDatabase:
             SELECT inventory_id, product_code, date, status, quantity, current_stock, notes
             FROM Inventory
             WHERE product_code = %s
+            ORDER BY date DESC
         """
         try:
             self.cursor.execute(search_query, (product_code,))
@@ -238,15 +239,51 @@ class UserDatabase:
         except mysql.connector.Error as err:
             print(f"Error updating Inventory table: {err}")
 
-    def delete_inventory(self, inventory_id):
-        delete_query = """
-            DELETE FROM Inventory WHERE inventory_id = %s
+    def delete_inventory(self, inventory_id, product_code):
+     # 查找要刪除的庫存記錄
+        get_inventory_query = """
+            SELECT date, status, quantity, current_stock
+            FROM Inventory
+            WHERE inventory_id = %s
         """
-        try:
-            self.cursor.execute(delete_query, (inventory_id,))
-            self.connection.commit()
-        except mysql.connector.Error as err:
-            print(f"Error deleting from Inventory table: {err}")
+        self.cursor.execute(get_inventory_query, (inventory_id,))
+        inventory_record = self.cursor.fetchone()
+
+        if inventory_record:
+            date = inventory_record[0]
+            status = inventory_record[1]
+            quantity = inventory_record[2]
+            current_stock = inventory_record[3]
+
+            # 計算庫存變動量
+            if status == '製造':
+                update_quantity = -quantity
+            elif status == '銷貨' or status == '瑕疵品':
+                update_quantity = quantity  # 銷貨和瑕疵品是減少庫存，所以刪除時應該增加庫存
+            elif status == '退貨':
+                update_quantity = -quantity  # 退貨是增加庫存，所以刪除時應該減少庫存
+
+            # 刪除庫存記錄
+            delete_query = """
+                DELETE FROM Inventory WHERE inventory_id = %s
+            """
+            try:
+                self.cursor.execute(delete_query, (inventory_id,))
+                self.connection.commit()
+
+                # 調整從刪除日期後的所有庫存記錄的 current_stock
+                adjust_query = """
+                    UPDATE Inventory
+                    SET current_stock = current_stock + %s
+                    WHERE product_code = %s AND date > %s
+                """
+                self.cursor.execute(adjust_query, (update_quantity, product_code, date))
+                self.connection.commit()
+
+            except mysql.connector.Error as err:
+                print(f"Error deleting from Inventory table: {err}")
+        else:
+            print(f"No inventory record found with inventory_id: {inventory_id}")
 
         
     def get_all_product_codes(self):
