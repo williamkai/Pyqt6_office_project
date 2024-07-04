@@ -31,6 +31,9 @@ class DatabaseWidget(QWidget):
         
         self.main_layout = QVBoxLayout(self)
         
+        self.initialize_ui()
+        
+    def initialize_ui(self):
         # 上排的水平排列按鈕
         self.button_layout = QHBoxLayout()
         
@@ -48,9 +51,11 @@ class DatabaseWidget(QWidget):
         self.display_area = QWidget()
         self.display_layout = QVBoxLayout(self.display_area)
         self.main_layout.addWidget(self.display_area)
+        
         # 初始化GridLayout对象
         self.grid_layout = None
         self.table_widget = None
+        self.last_search_text = ""
 
     def product_table(self):
         self.clear_display_area()
@@ -367,16 +372,21 @@ class DatabaseWidget(QWidget):
         # 断开信号连接，避免多次调用
         self.search_box.textChanged.disconnect(self.dynamic_search)
 
-        matches = []
-        for code in self.all_product_codes:
-            if text.upper() in code.upper():  # 不区分大小写进行匹配
-                matches.append(code)
+        # 判断是输入文字还是删除文字
+        if len(text) > len(self.last_search_text):
+            matches = []
+            for code in self.all_product_codes:
+                if text.upper() in code.upper():  # 不区分大小写进行匹配
+                    matches.append(code)
 
-        if len(matches) == 1:
-            self.search_box.setText(matches[0])  # 自动补全搜索框内容
-            self.search_inventory()
-        elif len(matches) == 0:
-            QMessageBox.warning(self, "输入错误", "請輸入商品代號進行搜索")
+            if len(matches) == 1:
+                self.search_box.setText(matches[0])  # 自动补全搜索框内容
+                self.last_search_text = matches[0] 
+                self.search_inventory()
+        else:
+            # 如果是删除文字，什么都不做
+            self.last_search_text = text
+            pass
 
         # 重新连接信号
         self.search_box.textChanged.connect(self.dynamic_search)
