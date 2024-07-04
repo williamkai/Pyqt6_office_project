@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
                             QMessageBox
                             )
 
-from database.database import Database
+from data_access_object.database import Database
 from login.register_widget import RegisterWidgetWindow
 from login.config_dialog import ConfigDialog
 

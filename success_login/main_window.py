@@ -10,8 +10,8 @@ from PyQt6.QtWidgets import (
                             )          
          
 from success_login.user_information_widget import UserInformationWidget
-from success_login.database_widget import DatabaseWidget
-from database.user_database import UserDatabase  # 引入用戶專屬的資料庫類
+from success_login.database_widget.database_widget import DatabaseWidget
+from data_access_object.user_database import UserDatabase  # 引入用戶專屬的資料庫類
 
 class MainWindow(QWidget):
     
