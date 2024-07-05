@@ -67,6 +67,7 @@ class MainWindow(QWidget):
             self.database_window.closed.connect(self.on_database_window_closed)  # 连接窗口关闭信号
             self.database_window.show()
         else:
+            QMessageBox.information(self, "阿肥之力", "資料庫功能已經開啟了喔！")
             print("資料庫功能視窗已經開啟")
 
     def on_database_window_closed(self):
