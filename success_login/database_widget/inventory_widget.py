@@ -31,7 +31,7 @@ class InventoryWidget(QWidget):
 
     def inventory_function(self):
         self.clear_layout()
-        self.database.create_inventory_table()
+        self.database.inventory_dao.create_inventory_table()
 
         search_layout = QHBoxLayout()
         self.search_box = QLineEdit()
@@ -50,7 +50,7 @@ class InventoryWidget(QWidget):
         self.table_widget.setColumnWidth(0, 0)
         self.layout.addWidget(self.table_widget)
 
-        self.all_product_codes = self.database.get_all_product_codes()
+        self.all_product_codes = self.database.inventory_dao.get_all_product_codes()
 
         add_inventory_button = QPushButton("新增庫存變動")
         add_inventory_button.clicked.connect(self.add_inventory)
@@ -173,12 +173,12 @@ class InventoryWidget(QWidget):
         if inventory_id is None:
             # 如果 inventory_id 为 None，则执行新增操作
             print("走這邊嗎????? 這便是新增商品庫存")
-            self.database.insert_inventory(product_code, date, status, quantity, notes)
+            self.database.inventory_dao.insert_inventory(product_code, date, status, quantity, notes)
             QMessageBox.information(self, "資訊", "庫存變動已新增")
         else:
             # 否则执行更新操作
             print("還是這邊??? 這邊是更新原有資料")
-            self.database.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity, current_stock, notes)
+            self.database.inventory_dao.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity, current_stock, notes)
             QMessageBox.information(self, "資訊", "庫存變動已更新")
 
         dialog.accept()
@@ -190,7 +190,7 @@ class InventoryWidget(QWidget):
         if reply == QMessageBox.StandardButton.Yes:
             inventory_id = self.table_widget.item(row, 0).text()
             inventory_code=self.table_widget.item(row, 1).text()
-            self.database.delete_inventory(inventory_id,inventory_code)
+            self.database.inventory_dao.delete_inventory(inventory_id,inventory_code)
             QMessageBox.information(self, "信息", "庫存已刪除")
             self.search_inventory()
 
@@ -228,7 +228,8 @@ class InventoryWidget(QWidget):
             return
 
         # 从数据库中获取库存数据
-        inventory_data = self.database.search_inventory(product_code)
+        inventory_data = self.database.inventory_dao.search_inventory(product_code)
+        print(inventory_data)
 
         if not inventory_data:
             QMessageBox.information(self, "無結果", "沒有找到該商品的庫存紀錄")
@@ -237,6 +238,7 @@ class InventoryWidget(QWidget):
         # 更新表格内容
         self.table_widget.setRowCount(len(inventory_data))
         for row_idx, row_data in enumerate(inventory_data):
+            print(f"Row {row_idx}: {row_data}")  # 列印每行數據，確認順序
             for col_idx, col_data in enumerate(row_data):
                 self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
 

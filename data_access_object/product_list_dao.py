@@ -1,14 +1,10 @@
-import os
-import sys
+# product_list_dao.py
 import mysql.connector
-import pickle
-import configparser
-
 
 class ProductListDao:
 
-    def __init__(self,connectio=None,cursor=None):
-        self.connectio=connectio
+    def __init__(self,connection=None,cursor=None):
+        self.connection=connection
         self.cursor=cursor
 
     def create_product_list_table(self):
