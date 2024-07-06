@@ -36,7 +36,7 @@ class LoginWidget(QWidget):
         self.register_window = None  # 追蹤註冊帳戶窗口
         self.create_login_form()
         self.create_register_button()
-        self.create_config_button()  # 创建配置按钮
+        self.create_config_button()  # 創建配置按钮
 
     def create_login_form(self):
         self.user_label = QLabel("", self)
