@@ -1,5 +1,14 @@
 # product_list_widget.py
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QDialog, QFormLayout, QComboBox)
+from PyQt6.QtWidgets import (QWidget, 
+                             QVBoxLayout, 
+                             QHBoxLayout, 
+                             QPushButton, 
+                             QLineEdit, 
+                             QTableWidget, 
+                             QTableWidgetItem, 
+                             QMessageBox, QDialog, 
+                             QFormLayout, 
+                             QComboBox)
 
 class ProductListWidget(QWidget):
 

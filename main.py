@@ -31,7 +31,7 @@ class MainApplication(QMainWindow):
         self.login_widget = LoginWidget()
         self.layout.addWidget(self.login_widget)
 
-        # 連接登入成功的畫面
+        # 連接登入成功畫面
         self.login_widget.login_success.connect(self.show_main_window)
 
         # 初始化資料庫

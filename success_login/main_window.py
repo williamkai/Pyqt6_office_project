@@ -19,7 +19,7 @@ class MainWindow(QWidget):
     
     def __init__(self, parent=None, user_email=None):
         super(MainWindow, self).__init__(parent) 
-        self.database =  UserDatabase(user_email)
+        self.database =  UserDatabase(user_email)#這邊或創建登入成功使用者的資料庫、跟第一層的帳戶資料
 
         self.user_email = user_email
         self.database_window=None
@@ -64,7 +64,7 @@ class MainWindow(QWidget):
     def open_database_window(self):
         if self.database_window is None:
             self.database_window = DatabaseWidget(None, database=self.database)
-            self.database_window.closed.connect(self.on_database_window_closed)  # 连接窗口关闭信号
+            self.database_window.closed.connect(self.on_database_window_closed)  # 連接窗口關閉訊號
             self.database_window.show()
         else:
             QMessageBox.information(self, "阿肥之力", "資料庫功能已經開啟了喔！")
@@ -87,4 +87,4 @@ class MainWindow(QWidget):
 
     def logout(self):
         QMessageBox.information(self, "登出", "已登出")
-        self.logout_signal.emit()  # 发射登出信号
+        self.logout_signal.emit()  # 發射登出信号
