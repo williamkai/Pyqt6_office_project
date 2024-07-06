@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (QWidget,
                              QFormLayout, 
                              QComboBox)
 
+# from data_access_object.product_list_dao import ProductListDao
 class ProductListWidget(QWidget):
 
     def __init__(self, parent=None, database=None):
@@ -23,9 +24,9 @@ class ProductListWidget(QWidget):
         
     def product_table(self):
         self.clear_layout()
-        self.database.create_product_list_table()
+        self.database.product_list_dao.create_product_list_table()
         
-        products = self.database.get_product_list()
+        products = self.database.product_list_dao.get_product_list()
 
         self.table_widget = QTableWidget()
         self.table_widget.setRowCount(len(products))
@@ -133,13 +134,13 @@ class ProductListWidget(QWidget):
             self.product_table()
 
     def save_new_product(self, dialog, product_code, product_name, package_count, draw_count, manufacturer, price):
-        self.database.insert_product(product_code, product_name, package_count, draw_count, manufacturer, price)
+        self.database.product_list_dao.insert_product(product_code, product_name, package_count, draw_count, manufacturer, price)
         QMessageBox.information(self, "信息", "商品已新增")
         dialog.accept()
         self.product_table()
 
     def save_product(self, dialog, product_code, product_name, package_count, draw_count, manufacturer, price):
-        self.database.update_product(product_code, product_name, package_count, draw_count, manufacturer, price)
+        self.database.product_list_dao.update_product(product_code, product_name, package_count, draw_count, manufacturer, price)
         QMessageBox.information(self, "信息", "商品已更新")
         dialog.accept()
         self.product_table()
