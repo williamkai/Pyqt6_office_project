@@ -81,25 +81,24 @@ class CustomerInformation(QWidget):
             dialog.setWindowTitle("修改客戶")
             layout = QFormLayout(dialog)
 
-            short_name_edit = QLineEdit(customer_data['short_name'])
-            company_name_edit = QLineEdit(customer_data['company_name'])
-            # vat_number_edit = QLineEdit(customer_data['vat_number'])
-            manager_edit = QLineEdit(customer_data['manager'])
-            contact_person_edit = QLineEdit(customer_data['contact_person'])
-            phone_edit = QLineEdit(customer_data['phone'])
-            mobile_edit = QLineEdit(customer_data['mobile'])
-            company_address_edit = QLineEdit(customer_data['company_address'])
-            email_edit = QLineEdit(customer_data['email'])
-            vat_number_edit = QLineEdit(customer_data['vat_number'])
-            phone2_edit = QLineEdit(customer_data['phone2'])
-            fax_edit = QLineEdit(customer_data['fax'])
-            factory_address_edit = QLineEdit(customer_data['factory_address'])
-            website_edit = QLineEdit(customer_data['website'])
-            line_id_edit = QLineEdit(customer_data['line_id'])
-            notes_edit = QLineEdit(customer_data['notes'])
+            short_name_edit = QLineEdit(customer_data[1])
+            company_name_edit = QLineEdit(customer_data[2])
+            manager_edit = QLineEdit(customer_data[3])
+            contact_person_edit = QLineEdit(customer_data[4])
+            vat_number_edit = QLineEdit(customer_data[5])
+            phone_edit = QLineEdit(customer_data[6])
+            phone2_edit = QLineEdit(customer_data[7])
+            fax_edit = QLineEdit(customer_data[8])
+            mobile_edit = QLineEdit(customer_data[9])
+            email_edit = QLineEdit(customer_data[10])
+            company_address_edit = QLineEdit(customer_data[11])
+            factory_address_edit = QLineEdit(customer_data[12])
+            website_edit = QLineEdit(customer_data[13])
+            line_id_edit = QLineEdit(customer_data[14])
+            notes_edit = QLineEdit(customer_data[15])
 
             # 客戶ID設為不可編輯
-            customer_id_label = QLabel(customer_data['id'])
+            customer_id_label = QLabel(str(customer_data[0])) 
 
             layout.addRow("客戶ID", customer_id_label)
             layout.addRow("客戶簡稱", short_name_edit)
@@ -118,12 +117,11 @@ class CustomerInformation(QWidget):
             layout.addRow("LINE ID", line_id_edit)
             layout.addRow("備註", notes_edit)
 
-            button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-            layout.addWidget(button_box)
-
+            button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+            
             def on_accept():
                 update_success = self.database.customer_dao.update_customer(
-                    customer_data['id'], short_name_edit.text(), company_name_edit.text(),
+                    customer_data[0], short_name_edit.text(), company_name_edit.text(),
                     vat_number_edit.text(), manager_edit.text(), contact_person_edit.text(),
                     phone_edit.text(), phone2_edit.text(), fax_edit.text(), mobile_edit.text(),
                     email_edit.text(), company_address_edit.text(), factory_address_edit.text(),
@@ -138,7 +136,9 @@ class CustomerInformation(QWidget):
 
             button_box.accepted.connect(on_accept)
             button_box.rejected.connect(dialog.reject)
-            
+
+            layout.addWidget(button_box)
+
             dialog.setLayout(layout)
             dialog.exec()
         else:
@@ -212,8 +212,8 @@ class CustomerInformation(QWidget):
         reply = QMessageBox.question(self, '刪除客戶', '確定要刪除此客戶嗎？',
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
-            customer_short_name = self.table_widget.item(row, 0).text()
-            self.database.customer_dao.delete_customer(customer_short_name)
+            CompanyName = self.table_widget.item(row, 1).text()
+            self.database.customer_dao.delete_customer(CompanyName)
             QMessageBox.information(self, "信息", "客戶已刪除")
             self.customer_table()
 

@@ -44,26 +44,26 @@ class CustomerInformationDao:
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
-    def get_customer_by_company_name(self, company_name):
+    def get_customer_company_name(self, company_name):
         query = """
-            SELECT CustomerID AS id, Abbreviation AS short_name, CompanyName AS company_name,
-                PersonInCharge AS manager, ContactPerson AS contact_person, VATNumber AS vat_number,
-                Phone1 AS phone, Phone2 AS phone2, Fax AS fax, MobilePhone AS mobile,
-                Email AS email, CompanyAddress AS company_address, FactoryAddress AS factory_address,
-                Website AS website, LINEID AS line_id, Notes AS notes
+            SELECT CustomerID, Abbreviation, CompanyName,
+                PersonInCharge, ContactPerson, VATNumber,
+                Phone1, Phone2, Fax, MobilePhone,
+                Email, CompanyAddress, FactoryAddress,
+                Website, LINEID, Notes
             FROM Customers
             WHERE CompanyName = %s
         """
         self.cursor.execute(query, (company_name,))
         return self.cursor.fetchone()
 
-    def delete_customer(self, customer_short_name):
-        delete_query = "DELETE FROM CustomerInformation WHERE customer_short_name = %s"
+    def delete_customer(self, CompanyName):
+        delete_query = "DELETE FROM Customers WHERE CompanyName = %s"
         try:
-            self.cursor.execute(delete_query, (customer_short_name,))
+            self.cursor.execute(delete_query, (CompanyName,))
             self.connection.commit()
         except mysql.connector.Error as err:
-            print(f"Error deleting from CustomerInformation table: {err}")
+            print(f"Error deleting from Customers table: {err}")
 
     def check_company_name_exist(self, company_name):
         query = "SELECT COUNT(*) FROM Customers WHERE CompanyName = %s"
