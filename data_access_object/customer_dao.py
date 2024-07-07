@@ -75,19 +75,19 @@ class CustomerInformationDao:
             return False
 
     def insert_customer(
-                self,short_name,company_name,invoice_title,manager,contact_person, 
+                self,short_name,company_name,VATNumber,manager,contact_person, 
                 phone1, phone2,fax,mobile,email,company_address,factory_address,website, 
                 line_id,notes
                         ):
         insert_query = """
-        INSERT INTO Customers (Abbreviation, CompanyName, Invoice_Title, Manager,
+        INSERT INTO Customers (Abbreviation, CompanyName, VATNumber, PersonInCharge,
                                ContactPerson, Phone1, Phone2, Fax, MobilePhone, 
                                Email, CompanyAddress, FactoryAddress, 
                                Website, LINEID, Notes)
             VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         try:
-            self.cursor.execute(insert_query, (short_name,  company_name, invoice_title, manager,
+            self.cursor.execute(insert_query, (short_name,  company_name, VATNumber, manager,
                                             contact_person, phone1, phone2, fax, mobile, 
                                             email, company_address, factory_address, 
                                             website, line_id, notes))
@@ -95,7 +95,7 @@ class CustomerInformationDao:
         except mysql.connector.Error as err:
             print(f"Error inserting into Customers table: {err}")
 
-    def update_customer(self, customer_id, short_name,company_name, invoice_title, manager,
+    def update_customer(self, customer_id, short_name,company_name, VATNumber, manager,
                     contact_person, phone, phone2, fax, mobile, email, company_address, factory_address,
                     website, line_id, notes):
         # Check if the new company_name conflicts with existing records (excluding current customer_id)
@@ -110,13 +110,13 @@ class CustomerInformationDao:
         # Update the customer record
         update_query = """
             UPDATE Customers
-            SET Abbreviation = %s, CompanyName = %s, CompanyFullName = %s, InvoiceTitle = %s, PersonInCharge = %s,
-                ContactPerson = %s, Phone1 = %s, Phone2 = %s, Fax = %s, MobilePhone = %s,
+            SET Abbreviation = %s, CompanyName = %s, VATNumber = %s, PersonInCharge = %s, ContactPerson = %s,
+                Phone1 = %s, Phone2 = %s, Fax = %s, MobilePhone = %s,
                 Email = %s, CompanyAddress = %s, FactoryAddress = %s, Website = %s, LINEID = %s, Notes = %s
             WHERE CustomerID = %s
         """
         values = (
-            short_name, company_name, invoice_title, manager, contact_person,
+            short_name, company_name, VATNumber, manager, contact_person,
             phone, phone2, fax, mobile, email, company_address, factory_address,
             website, line_id, notes, customer_id
         )

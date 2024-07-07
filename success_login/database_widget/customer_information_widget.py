@@ -83,7 +83,7 @@ class CustomerInformation(QWidget):
 
             short_name_edit = QLineEdit(customer_data['short_name'])
             company_name_edit = QLineEdit(customer_data['company_name'])
-            invoice_title_edit = QLineEdit(customer_data['invoice_title'])
+            # vat_number_edit = QLineEdit(customer_data['vat_number'])
             manager_edit = QLineEdit(customer_data['manager'])
             contact_person_edit = QLineEdit(customer_data['contact_person'])
             phone_edit = QLineEdit(customer_data['phone'])
@@ -104,7 +104,7 @@ class CustomerInformation(QWidget):
             layout.addRow("客戶ID", customer_id_label)
             layout.addRow("客戶簡稱", short_name_edit)
             layout.addRow("公司名稱", company_name_edit)
-            layout.addRow("發票台頭", invoice_title_edit)
+            layout.addRow("統一編號", vat_number_edit)
             layout.addRow("負責人", manager_edit)
             layout.addRow("聯絡人", contact_person_edit)
             layout.addRow("電話1", phone_edit)
@@ -124,7 +124,7 @@ class CustomerInformation(QWidget):
             def on_accept():
                 update_success = self.database.customer_dao.update_customer(
                     customer_data['id'], short_name_edit.text(), company_name_edit.text(),
-                    invoice_title_edit.text(), manager_edit.text(), contact_person_edit.text(),
+                    vat_number_edit.text(), manager_edit.text(), contact_person_edit.text(),
                     phone_edit.text(), phone2_edit.text(), fax_edit.text(), mobile_edit.text(),
                     email_edit.text(), company_address_edit.text(), factory_address_edit.text(),
                     website_edit.text(), line_id_edit.text(), notes_edit.text()
@@ -151,7 +151,7 @@ class CustomerInformation(QWidget):
 
         short_name_edit = QLineEdit()
         company_name_edit = QLineEdit()
-        invoice_title_edit = QLineEdit()
+        vat_number_edit = QLineEdit()
         manager_edit = QLineEdit()
         contact_person_edit = QLineEdit()
         phone_edit = QLineEdit()
@@ -167,7 +167,7 @@ class CustomerInformation(QWidget):
 
         layout.addRow("客戶簡稱", short_name_edit)
         layout.addRow("公司名稱", company_name_edit)
-        layout.addRow("發票台頭", invoice_title_edit)
+        layout.addRow("統一發票", vat_number_edit)
         layout.addRow("負責人", manager_edit)
         layout.addRow("聯絡人", contact_person_edit)
         layout.addRow("電話1", phone_edit)
@@ -186,7 +186,7 @@ class CustomerInformation(QWidget):
         add_button.clicked.connect(lambda: self.save_new_customer(dialog,
                                                                 short_name_edit.text(),
                                                                 company_name_edit.text(),
-                                                                invoice_title_edit.text(),
+                                                                vat_number_edit.text(),
                                                                 manager_edit.text(),
                                                                 contact_person_edit.text(),
                                                                 phone_edit.text(),
@@ -218,7 +218,7 @@ class CustomerInformation(QWidget):
             self.customer_table()
 
     def save_new_customer(
-            self, dialog,short_name,company_name,invoice_title, 
+            self, dialog,short_name,company_name,vat_number, 
             manager,contact_person,phone1,phone2,fax,mobile,email,company_address, 
             factory_address,website, line_id,notes):
         # Perform validation or any necessary checks here before inserting
@@ -230,7 +230,7 @@ class CustomerInformation(QWidget):
 
         # Insert customer data into the database
         self.database.customer_dao.insert_customer(
-                short_name,company_name,invoice_title,manager, 
+                short_name,company_name,vat_number,manager, 
                 contact_person, phone1, phone2,fax,mobile,email,company_address, 
                 factory_address,website,line_id,notes)
         
