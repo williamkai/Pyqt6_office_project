@@ -60,7 +60,7 @@ class UserDatabase:
                 user=db_config['user'],
                 password=db_config['password']
             )
-            self.cursor = self.connection.cursor()
+            self.cursor = self.connection.cursor()#dictionary=True
 
             # 創建用戶特定的資料庫
             db_name = f"user_{self.username}"
