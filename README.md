@@ -58,4 +58,23 @@
   
 [MySQL](https://www.mysql.com/) 官方網站。
 
+## 步驟說明
+
+1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟：
+   
+   ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
+   
+   點選下載按鈕，選擇適合你的Windows版本的安裝檔。
+
+2. 下載完成後，執行安裝檔，並按照以下步驟進行安裝：
+   
+   ![步驟2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_2.jpg)
+   
+   按照安裝向導的指示進行操作，選擇安裝路徑和配置選項。
+
+3. 安裝完成後，啟動MySQL服務並設置你的MySQL帳戶：
+   
+   ![步驟3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_3.jpg)
+   
+   確保你記下設置的密碼，以便將來使用。
 
