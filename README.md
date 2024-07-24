@@ -63,47 +63,43 @@
 1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟，點DOWNLOADS：
    ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
    
-3. 點MySQL Community (GPL) Downloads »：
+2. 點MySQL Community (GPL) Downloads »：
    
    ![步驟2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_2.jpg)
    
 
-4. 點MySQL Installer for Windows：
+3. 點MySQL Installer for Windows：
    
    ![步驟3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_3.jpg)
    
 
-5. 我是選版本比較新的，然後點下面檔案比較大的那個: ![步驟4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_4.jpg)
+4. 我是選版本比較新的，然後點下面檔案比較大的那個: ![步驟4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_4.jpg)
    
    
 
-6. 他會問要不要登入或註冊，如果沒需求就點下面直接下載: ![步驟5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_5.jpg)
+5. 他會問要不要登入或註冊，如果沒需求就點下面直接下載: ![步驟5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_5.jpg)
    
 
-7. 下載好後，就開始安裝吧: ![步驟6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_6.jpg)
+6. 下載好後，就開始安裝吧: ![步驟6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_6.jpg)
    
 
-8. 雖然我不是所有功能都使用，但就點全部安裝吧: ![步驟7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_7.jpg)
+7. 雖然我不是所有功能都使用，但就點全部下載吧: ![步驟7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_7.jpg)
    
 
-9. 這些是安裝的功能，沒問題就點安裝吧!: ![步驟8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_8.jpg)
+8. 這些是各種的功能，沒問題就點吧!: ![步驟8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_8.jpg)
    
 
-10. 第九步驟: ![步驟9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_9.jpg)
+9. 這邊會是先下載這些功能: ![步驟9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_9.jpg)
    
-   第九步驟文字
 
-11. 第十步驟: ![步驟10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_10.jpg)
+10. 下載後就是安裝: ![步驟10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_10.jpg)
     
-    第十步驟文字
 
-12. 第十一步驟: ![步驟11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_11.jpg)
+11. 安裝後繼續下一步: ![步驟11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_11.jpg)
     
-    第十一步驟文字
 
-13. 第十二步驟: ![步驟12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_12.jpg)
+12. 這邊要來安裝Server跟Router: ![步驟12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_12.jpg)
     
-    第十二步驟文字
 
 14. 第十三步驟: ![步驟13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_13.jpg)
     
