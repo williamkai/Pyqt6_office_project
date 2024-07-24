@@ -369,7 +369,8 @@ imported by:
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#login.login_widget">login.login_widget</a>
  &#8226;   <a href="#login.register_widget">login.register_widget</a>
- &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
  &#8226;   <a href="#success_login.main_window">success_login.main_window</a>
  &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
 
@@ -408,7 +409,10 @@ imported by:
  &#8226;   <a href="#login.login_widget">login.login_widget</a>
  &#8226;   <a href="#login.register_widget">login.register_widget</a>
  &#8226;   <a href="#main.py">main.py</a>
- &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.customer_information_widget">success_login.database_widget.customer_information_widget</a>
+ &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
+ &#8226;   <a href="#success_login.database_widget.product_list_widget">success_login.database_widget.product_list_widget</a>
  &#8226;   <a href="#success_login.main_window">success_login.main_window</a>
  &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
 
@@ -2008,8 +2012,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+    <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#mysql.connector.optionfiles">mysql.connector.optionfiles</a>
 
@@ -2171,24 +2175,44 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="database"></a>
-  <a target="code" href="-" type="text/plain"><tt>database</tt></a>
+  <a name="data_access_object"></a>
+  <a target="code" href="-" type="text/plain"><tt>data_access_object</tt></a>
 <span class="moduletype">NamespacePackage</span>  <div class="import">
 imported by:
-    <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+    <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
+ &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
+ &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="database.database"></a>
-  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/database/database.py" type="text/plain"><tt>database.database</tt></a>
+  <a name="data_access_object.customer_dao"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/customer_dao.py" type="text/plain"><tt>data_access_object.customer_dao</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#mysql.connector">mysql.connector</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#data_access_object.user_database">data_access_object.user_database</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="data_access_object.database"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/database.py" type="text/plain"><tt>data_access_object.database</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#configparser">configparser</a>
- &#8226;   <a href="#database">database</a>
+ &#8226;   <a href="#data_access_object">data_access_object</a>
  &#8226;   <a href="#mysql.connector">mysql.connector</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pickle">pickle</a>
@@ -2204,12 +2228,49 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="database.user_database"></a>
-  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/database/user_database.py" type="text/plain"><tt>database.user_database</tt></a>
+  <a name="data_access_object.inventory_dao"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/inventory_dao.py" type="text/plain"><tt>data_access_object.inventory_dao</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#mysql.connector">mysql.connector</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#data_access_object.user_database">data_access_object.user_database</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="data_access_object.product_list_dao"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/product_list_dao.py" type="text/plain"><tt>data_access_object.product_list_dao</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#mysql.connector">mysql.connector</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#data_access_object.user_database">data_access_object.user_database</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="data_access_object.user_database"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/user_database.py" type="text/plain"><tt>data_access_object.user_database</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#configparser">configparser</a>
- &#8226;   <a href="#database">database</a>
+ &#8226;   <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
+ &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
+ &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
  &#8226;   <a href="#mysql.connector">mysql.connector</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pickle">pickle</a>
@@ -6388,7 +6449,7 @@ imported by:
 imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
- &#8226;   <a href="#database.database">database.database</a>
+ &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
  &#8226;   <a href="#login">login</a>
  &#8226;   <a href="#login.config_dialog">login.config_dialog</a>
  &#8226;   <a href="#login.register_widget">login.register_widget</a>
@@ -7355,8 +7416,11 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+    <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
+ &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
+ &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#login.config_dialog">login.config_dialog</a>
  &#8226;   <a href="#mysql">mysql</a>
  &#8226;   <a href="#mysql.connector">mysql.connector</a>
@@ -9322,8 +9386,8 @@ imported by:
  &#8226;   <a href="#concurrent.futures.thread">concurrent.futures.thread</a>
  &#8226;   <a href="#configparser">configparser</a>
  &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+ &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#genericpath">genericpath</a>
@@ -9478,8 +9542,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+    <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#login.config_dialog">login.config_dialog</a>
  &#8226;   <a href="#login.login_widget">login.login_widget</a>
@@ -10338,17 +10402,91 @@ imported by:
 
 <div class="node">
   <a name="success_login.database_widget"></a>
-  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/database_widget.py" type="text/plain"><tt>success_login.database_widget</tt></a>
+  <a target="code" href="-" type="text/plain"><tt>success_login.database_widget</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#success_login">success_login</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.database_widget.customer_information_widget">success_login.database_widget.customer_information_widget</a>
+ &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
+ &#8226;   <a href="#success_login.database_widget.product_list_widget">success_login.database_widget.product_list_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.database_widget.customer_information_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/database_widget/customer_information_widget.py" type="text/plain"><tt>success_login.database_widget.customer_information_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.database_widget.database_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/database_widget/database_widget.py" type="text/plain"><tt>success_login.database_widget.database_widget</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
- &#8226;   <a href="#success_login">success_login</a>
+ &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.customer_information_widget">success_login.database_widget.customer_information_widget</a>
+ &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
+ &#8226;   <a href="#success_login.database_widget.product_list_widget">success_login.database_widget.product_list_widget</a>
 
   </div>
   <div class="import">
 imported by:
     <a href="#success_login.main_window">success_login.main_window</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.database_widget.inventory_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/database_widget/inventory_widget.py" type="text/plain"><tt>success_login.database_widget.inventory_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.database_widget.product_list_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/database_widget/product_list_widget.py" type="text/plain"><tt>success_login.database_widget.product_list_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
 
   </div>
 
@@ -10361,9 +10499,9 @@ imported by:
 imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#success_login">success_login</a>
- &#8226;   <a href="#success_login.database_widget">success_login.database_widget</a>
+ &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
  &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
 
   </div>
@@ -10413,8 +10551,8 @@ imported by:
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#ctypes._endian">ctypes._endian</a>
- &#8226;   <a href="#database.database">database.database</a>
- &#8226;   <a href="#database.user_database">database.user_database</a>
+ &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
+ &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#dis">dis</a>
