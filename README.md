@@ -64,39 +64,32 @@
    
    ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
    
-   點選下載按鈕，選擇適合你的Windows版本的安裝檔。
-
-2. 下載完成後，執行安裝檔，並按照以下步驟進行安裝：
+   點下載
+2. 點MySQL Community (GPL) Downloads »：
    
    ![步驟2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_2.jpg)
    
-   按照安裝向導的指示進行操作，選擇安裝路徑和配置選項。
 
-3. 安裝完成後，啟動MySQL服務並設置你的MySQL帳戶：
+3. 點MySQL Installer for Windows：
    
    ![步驟3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_3.jpg)
    
-   確保你記下設置的密碼，以便將來使用。
 
-4. 第四步驟: ![步驟4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_4.jpg)
+4. 我是選版本比較新的，然後點下面檔案比較大的那個: ![步驟4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_4.jpg)
    
-   第四步驟文字
+   
 
-5. 第五步驟: ![步驟5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_5.jpg)
+5. 他會問要不要登入或註冊，如果沒需求就點下面直接下載: ![步驟5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_5.jpg)
    
-   第五步驟文字
 
-6. 第六步驟: ![步驟6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_6.jpg)
+6. 下載好後，就開始安裝吧: ![步驟6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_6.jpg)
    
-   第六步驟文字
 
-7. 第七步驟: ![步驟7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_7.jpg)
+7. 雖然我不是所有功能都使用，但就點全部安裝吧: ![步驟7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_7.jpg)
    
-   第七步驟文字
 
-8. 第八步驟: ![步驟8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_8.jpg)
+8. 這些是安裝的功能，沒問題就點安裝吧!: ![步驟8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_8.jpg)
    
-   第八步驟文字
 
 9. 第九步驟: ![步驟9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_9.jpg)
    
