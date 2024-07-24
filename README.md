@@ -42,7 +42,7 @@
 
 ### 使用方式:
 <p>1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫Mysql，所以在使用前請先安裝好Mysql<br><br>
-這邊是 <a href="https://www.mysql.com/"target="_blank">MySQL</a> 官方，沒有下載的話請點選連結，照著下面步驟下載並安裝。
+這邊是<a href="https://www.mysql.com/" target="_blank">MySQL</a>官方，沒有下載的話請點選連結，照著下面步驟下載並安裝。
 
 </p>
 <p></p>
