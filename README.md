@@ -101,91 +101,90 @@
 12. 這邊要來安裝Server跟Router: ![步驟12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_12.jpg)
     
 
-14. 第十三步驟: ![步驟13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_13.jpg)
+13. 沒意外就照上面的繼續執行下一步驟: ![步驟13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_13.jpg)
     
-    第十三步驟文字
 
-15. 第十四步驟: ![步驟14](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_14.jpg)
+14. 第十四步驟: ![步驟14](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_14.jpg)
     
     第十四步驟文字
 
-16. 第十五步驟: ![步驟15](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_15.jpg)
+15. 第十五步驟: ![步驟15](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_15.jpg)
     
     第十五步驟文字
 
-17. 第十六步驟: ![步驟16](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_16.jpg)
+16. 第十六步驟: ![步驟16](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_16.jpg)
     
     第十六步驟文字
 
-18. 第十七步驟: ![步驟17](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_17.jpg)
+17. 第十七步驟: ![步驟17](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_17.jpg)
     
     第十七步驟文字
 
-19. 第十八步驟: ![步驟18](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_18.jpg)
+18. 第十八步驟: ![步驟18](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_18.jpg)
     
     第十八步驟文字
 
-20. 第十九步驟: ![步驟19](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_19.jpg)
+19. 第十九步驟: ![步驟19](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_19.jpg)
     
     第十九步驟文字
 
-21. 第二十步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
+20. 第二十步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
     
     第二十步驟文字
 
-22. 第二十一步驟: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
+21. 第二十一步驟: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
     
     第二十一步驟文字
 
-23. 第二十二步驟: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
+22. 第二十二步驟: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
     
     第二十二步驟文字
 
-24. 第二十三步驟: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
+23. 第二十三步驟: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
     
     第二十三步驟文字
 
-25. 第二十四步驟: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
+24. 第二十四步驟: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
     
     第二十四步驟文字
 
-26. 第二十五步驟: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
+25. 第二十五步驟: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
     
     第二十五步驟文字
 
-27. 第二十六步驟: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
+26. 第二十六步驟: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
     
     第二十六步驟文字
 
-28. 第二十七步驟: ![步驟27](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_27.jpg)
+27. 第二十七步驟: ![步驟27](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_27.jpg)
     
     第二十七步驟文字
 
-29. 第二十八步驟: ![步驟28](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_28.jpg)
+28. 第二十八步驟: ![步驟28](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_28.jpg)
     
     第二十八步驟文字
 
-30. 第二十九步驟: ![步驟29](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_29.jpg)
+29. 第二十九步驟: ![步驟29](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_29.jpg)
     
     第二十九步驟文字
 
-31. 第三十步驟: ![步驟30](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_30.jpg)
+30. 第三十步驟: ![步驟30](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_30.jpg)
     
     第三十步驟文字
 
-32. 第三十一步驟: ![步驟31](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_31.jpg)
+31. 第三十一步驟: ![步驟31](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_31.jpg)
     
     第三十一步驟文字
 
-33. 第三十二步驟: ![步驟32](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_32.jpg)
+32. 第三十二步驟: ![步驟32](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_32.jpg)
     
     第三十二步驟文字
 
-34. 第三十三步驟: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
+33. 第三十三步驟: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
     
     第三十三步驟文字
 
-35. 第三十四步驟: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
+34. 第三十四步驟: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
     
     第三十四步驟文字
 
