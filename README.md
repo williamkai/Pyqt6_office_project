@@ -36,7 +36,6 @@
 
 # 稍微介紹跟使用方式教學
 ### 目前有的功能:
-[MySQL](https://www.mysql.com/){:target="_blank"}
 <p>1. 庫存功能:我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。</p>
 <p>2. 商品資料庫功能:建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
 </p>
@@ -46,6 +45,18 @@
 這邊是<a href="https://www.mysql.com/" target="_blank">MySQL</a>官方，沒有下載的話請點選連結，照著下面步驟下載並安裝。
 
 </p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MySQL 安裝教學</title>
+</head>
+<body>
+    <p>
+    1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫 MySQL，所以在使用前請先安裝好 MySQL。<br><br>
+    這邊是 <a href="https://www.mysql.com/" target="_blank">MySQL</a> 官方，沒有下載的話請點選連結，照著下面步驟下載並安裝。
+    </p>
+</body>
+</html>
 <p></p>
 <p></p>
 <p></p>
