@@ -60,8 +60,7 @@
 
 ## 步驟說明
 
-1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟：
-   點下載
+1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟，點DOWNLOADS：
    ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
    
 3. 點MySQL Community (GPL) Downloads »：
