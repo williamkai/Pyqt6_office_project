@@ -104,89 +104,75 @@
 13. 沒意外就照上面的繼續執行下一步驟: ![步驟13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_13.jpg)
     
 
-14. 第十四步驟: ![步驟14](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_14.jpg)
+14. 這個選項其實是可以選服務器: ![步驟14](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_14.jpg)
     
-    第十四步驟文字
+    主要是我是在開發程序所以選上面的開發者選項，但開發完成後，應該是要用第二個，他在處理資料庫會比較快，但我其實沒用過Sever的選項，所以就先選開發者選項吧~~
 
-15. 第十五步驟: ![步驟15](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_15.jpg)
+15. 依然是照著圖片下一步驟: ![步驟15](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_15.jpg)
     
-    第十五步驟文字
+    如果對內容有信去就自己去估狗翻譯一下吧
 
-16. 第十六步驟: ![步驟16](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_16.jpg)
+16. 這邊要設定跟密碼跟創建使用者帳號跟密碼: ![步驟16](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_16.jpg)
     
-    第十六步驟文字
+    這邊算是滿重要的，因為我寫的程序在第一次使用會要求輸入資料庫的帳號跟密碼，就是這邊這個，當然會操作的人也可以後面在自己去創建。
 
-17. 第十七步驟: ![步驟17](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_17.jpg)
+17. 輸入帳號跟密碼: ![步驟17](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_17.jpg)
     
-    第十七步驟文字
 
-18. 第十八步驟: ![步驟18](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_18.jpg)
+18. 帳號跟密碼設定好後再下面會顯示出來，沒問題就下一步驟: ![步驟18](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_18.jpg)
     
-    第十八步驟文字
 
-19. 第十九步驟: ![步驟19](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_19.jpg)
+19. 這邊我是都預設直接下一步驟: ![步驟19](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_19.jpg)
     
-    第十九步驟文字
+    如果要調整就自己設定囉
 
-20. 第二十步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
+20. 沒問題就繼續下一步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
     
-    第二十步驟文字
 
-21. 第二十一步驟: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
+21. 沒問題就行讓他跑: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
     
-    第二十一步驟文字
 
-22. 第二十二步驟: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
+22. 完成第一階段拉繼續囉: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
     
-    第二十二步驟文字
 
-23. 第二十三步驟: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
+23. Sever處理好了繼續下一個: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
     
-    第二十三步驟文字
 
-24. 第二十四步驟: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
+24. 我是直接預設，他這邊應該是設定一些窗口連接我是都預設就是3306: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
     
-    第二十四步驟文字
 
-25. 第二十五步驟: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
+25. 好的路由窗口耶設定好了繼續下一個: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
     
-    第二十五步驟文字
 
-26. 第二十六步驟: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
+26. 這邊是要下載範本到資料庫: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
     
-    第二十六步驟文字
+    輸入剛剛設定的根密碼
 
-27. 第二十七步驟: ![步驟27](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_27.jpg)
+27. 可以點選確認看密碼打的對不對，沒問題就下一步: ![步驟27](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_27.jpg)
     
-    第二十七步驟文字
 
-28. 第二十八步驟: ![步驟28](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_28.jpg)
+28. 一樣執行: ![步驟28](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_28.jpg)
     
-    第二十八步驟文字
 
-29. 第二十九步驟: ![步驟29](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_29.jpg)
+29. 跑完沒問題就點完成囉: ![步驟29](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_29.jpg)
     
-    第二十九步驟文字
 
-30. 第三十步驟: ![步驟30](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_30.jpg)
+30. 這三個都處理好了，就繼續下一步驟: ![步驟30](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_30.jpg)
     
-    第三十步驟文字
 
-31. 第三十一步驟: ![步驟31](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_31.jpg)
+31. 恭喜啦完成，這邊看要不要打開shell或是workbench，可以開來玩看看: ![步驟31](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_31.jpg)
     
-    第三十一步驟文字
+    但是指令的shell，要自己學一下怎麼使用，當然另一個也要，但相對簡單一點畢竟是GUI
 
-32. 第三十二步驟: ![步驟32](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_32.jpg)
+32. 這是給大家看看指令的跟圖形化的操作版面長甚麼樣子: ![步驟32](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_32.jpg)
     
-    第三十二步驟文字
 
-33. 第三十三步驟: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
+33. shell就不教學了，可以看一下資料庫長相: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
     
-    第三十三步驟文字
+    可以進去看看，看是要用root帳戶登入還是要剛剛自己創建得帳號登入
 
-34. 第三十四步驟: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
+34. 左邊是資料庫，每個帳戶登入近來的資料庫應該都相同，畢竟是連到同一個sever: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
     
-    第三十四步驟文字
 
 ## 注意事項
 
