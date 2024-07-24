@@ -129,10 +129,10 @@
 20. 沒問題就繼續下一步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
     
 
-21. 沒問題就行讓他跑: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
+21. 沒問題就執行讓他跑: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
     
 
-22. 完成第一階段拉繼續囉: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
+22. 完成第一階段拉~~，繼續囉~: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
     
 
 23. Sever處理好了繼續下一個: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
@@ -141,7 +141,7 @@
 24. 我是直接預設，他這邊應該是設定一些窗口連接我是都預設就是3306: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
     
 
-25. 好的路由窗口耶設定好了繼續下一個: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
+25. 好的路由窗口也設定好了繼續下一個: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
     
 
 26. 這邊是要下載範本到資料庫: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
@@ -169,11 +169,11 @@
 
 33. shell就不教學了，可以看一下資料庫長相: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
     
-    可以進去看看，看是要用root帳戶登入還是要剛剛自己創建得帳號登入
+    可以進去看看，看是要用root帳戶登入還是要剛剛自己創建的帳號登入
 
 34. 左邊是資料庫，每個帳戶登入近來的資料庫應該都相同，畢竟是連到同一個sever: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
     
-
+   然後剛剛下載麼範本就是左邊那些
 ## 注意事項
 
 - 確保你的系統符合MySQL的安裝要求。
