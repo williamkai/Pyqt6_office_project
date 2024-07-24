@@ -54,6 +54,7 @@
 <p></p>
 
 # MySQL下載跟安裝教學
-到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有windows系統，其他的可能要自己研究囉，[MySQL](https://www.mysql.com/) 官方網站。
+到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有windows系統，其他的可能要自己研究囉。  
+[MySQL](https://www.mysql.com/) 官方網站。
 
 
