@@ -69,58 +69,60 @@
    - 執行時可以建立捷徑到桌面，方便執行。
    - 第一次使用時，如果是放在C槽或其他需要系統管理員權限資料夾中，請使用系統管理員權限打開程式。
    - 建議是放在自己一個資料夾在使用捷徑打開，因為第一次使用時會設定資料庫，會將資料庫資訊保存起來
-   - 會在main.exe所在位子寫入一個檔案config.pickle，用來保存資料庫資料。
+   - 會在main.exe所在位子寫入一個檔案config.pickle，用來保存資料庫資料，所以放在桌面的話，怕會多一個資料導致畫面雜。
 
-2. **登錄界面**:
-   - 首次使用時，您需要先登錄。輸入您的用戶名和密碼，然後點擊登錄按鈕。
+2. **程式畫面**:
+   - 執行程式後會有兩個框框，依格式文字框，一個是主程式的畫面，之後會把圖片上main移除，現在留著是為了除bug用的。
+   - 第一次使用時，需要先設定資料庫如下圖。
    - ![Step 1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_1.jpg)
 
-3. **主界面功能**:
-   - 登錄成功後，您將看到主界面。這裡包括庫存管理和商品資料庫等功能。
+3. **資料庫設定**:
+   - 這邊就要輸入我的資料庫的帳號跟密碼了，如果不知道是啥，請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
    - ![Step 2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_2.jpg)
 
-4. **庫存管理**:
-   - 點擊庫存管理進入庫存管理界面。在這裡，您可以查看和管理庫存。
+4. **資料庫保存時會寫入檔案**:
+   - 這邊可能會出問題，檔案如果放在C槽或其他寫入受限的地方，因為會產生config.pickle，且沒有權限寫入檔案，就會出錯
+   - 如果遇到上面說的這個問題，解決方式就是，案右鍵以系統管理員身分執行(如下圖)，就可以囉。
+   - 保存成功如下圖
    - ![Step 3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_3.jpg)
-
-5. **商品資料庫**:
-   - 點擊商品資料庫進入商品資料庫界面。在這裡，您可以新增、修改或刪除商品信息。
-   - ![Step 4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_4.jpg)
-
-6. **進貨管理**:
-   - 點擊進貨管理進入進貨管理界面。在這裡，您可以新增進貨記錄。
-   - ![Step 5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_5.jpg)
-
-7. **出貨管理**:
-   - 點擊出貨管理進入出貨管理界面。在這裡，您可以新增出貨記錄。
    - ![Step 6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_6.jpg)
 
-8. **報表功能**:
-   - 點擊報表功能進入報表界面。在這裡，您可以生成各類報表。
+5. **成功設定資料庫後，就需要創建這個程式的帳戶跟密碼**:
+   - 就是設定帳戶跟密碼，還有使用者名稱
+   - ![Step 4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_4.jpg)
+
+6. **可以登入囉**:
+   - 沒啥特別的，就是登入。
+   - ![Step 5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_5.jpg)
+
+7. **成功登入~**:
+   - 主要是左邊那個畫面，然後目前功能只有庫存資料庫功能，剩下功能都還在慢慢生產中。
+   - 點開後會產生新視窗，就是我們的庫存資料庫功能拉~
+   - 我是把它寫成開啟新視窗，因為功能更多時候，有時候可以開很多個功能在互相使用，感覺這比較方便。
    - ![Step 7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_7.jpg)
 
-9. **功能9**:
-   - 描述功能9的用途和操作步驟。
+8. **庫存資料庫的功能**:
+   - 目前只有三個功能:D，商品清單、庫存、客戶資料。
+   - 我沒有其他的公司可以參考，所以就是用自己公司的需求設計的。
+   - 未來可能會改成符合所有產業的方式，但現在我得先寫一個自己公司用的，提升自己工作的效率，所以就先這樣設計了
+   - 公司是工廠製造業，所以會製造很多不同的商品(衛生紙)，都會有不同代號跟名稱，所以我的商品清單就是這樣設計的
+   - 我的商品代號是唯一(是PK_KEY)，用來關聯。
    - ![Step 8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_8.jpg)
 
-10. **功能10**:
-    - 描述功能10的用途和操作步驟。
-    - ![Step 9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_9.jpg)
+9. **庫存功能**:
+   - 我的公司是傳產，說實話，點貨、算庫存...等等都是寫在本子上，我真的無法接受那個效率。
+   - 假設今天製造A商品，那要在庫存上寫入，那問題來了，有五十個商品，可能有十個本子，光是找這個商品在哪一個本子還要用手寫製造N個然後再加總現在庫存多少...等等，我真的覺得超浪費時間，我甚至想要連動製造機台，直接把製造的資料直接寫進資料庫，連人工開程序寫商品進來都不用。
+   - 但目前沒那麼厲害，這邊就是取代那個可悲的紙本庫存本，製造、銷貨、退貨、瑕疵品，都可以在這邊寫入。
+   - ![Step 9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_9.jpg)
 
-11. **功能11**:
-    - 描述功能11的用途和操作步驟。
+10. **庫存功能使用介紹圖**:
+    - 大致上就會是呈現這樣，最上面就是最新的資料，也就是當前庫存量，如果做更改或刪除都可以。
     - ![Step 10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_10.jpg)
 
-12. **功能12**:
-    - 描述功能12的用途和操作步驟。
     - ![Step 11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_11.jpg)
 
-13. **功能13**:
-    - 描述功能13的用途和操作步驟。
     - ![Step 12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_12.jpg)
 
-14. **功能14**:
-    - 描述功能14的用途和操作步驟。
     - ![Step 13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_13.jpg)
 
 
