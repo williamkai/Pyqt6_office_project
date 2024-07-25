@@ -52,7 +52,7 @@
    - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
    - 下載後，將 `main.exe` 放置在您想要運行應用程式的目錄中。
 
-## 開源代碼
+### 開源代碼
 
 如果您有興趣查看或修改源代碼，可以從以下連結獲取：[GitHub Repository](https://github.com/williamkai/Pyqt6_office_project)。
 
@@ -60,12 +60,16 @@
 
 **注意**: 如果您不了解如何查看或修改代碼，請耐心等待我們的更新。
 
-## 使用方式
+### 使用方式
 
 下面是如何使用本應用程式的詳細說明和步驟：
 
 1. **打開應用程式**:
-   - 下載並安裝主程式後，雙擊 `main.exe` 打開應用程式。
+   - 下載主程式後，可以把main.exe，放到C:\Program Files\pyQT\main.exe，或者是看自己要放在哪邊都行。
+   - 執行時可以建立捷徑到桌面，方便執行。
+   - 第一次使用時，如果是放在C槽或其他需要系統管理員權限資料夾中，請使用系統管理員權限打開程式。
+   - 建議是放在自己一個資料夾在使用捷徑打開，因為第一次使用時會設定資料庫，會將資料庫資訊保存起來
+   - 會在main.exe所在位子寫入一個檔案config.pickle，用來保存資料庫資料。
 
 2. **登錄界面**:
    - 首次使用時，您需要先登錄。輸入您的用戶名和密碼，然後點擊登錄按鈕。
@@ -94,6 +98,30 @@
 8. **報表功能**:
    - 點擊報表功能進入報表界面。在這裡，您可以生成各類報表。
    - ![Step 7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_7.jpg)
+
+9. **功能9**:
+   - 描述功能9的用途和操作步驟。
+   - ![Step 8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_8.jpg)
+
+10. **功能10**:
+    - 描述功能10的用途和操作步驟。
+    - ![Step 9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_9.jpg)
+
+11. **功能11**:
+    - 描述功能11的用途和操作步驟。
+    - ![Step 10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_10.jpg)
+
+12. **功能12**:
+    - 描述功能12的用途和操作步驟。
+    - ![Step 11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_11.jpg)
+
+13. **功能13**:
+    - 描述功能13的用途和操作步驟。
+    - ![Step 12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_12.jpg)
+
+14. **功能14**:
+    - 描述功能14的用途和操作步驟。
+    - ![Step 13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_13.jpg)
 
 
 ## MySQL下載跟安裝教學
