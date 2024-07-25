@@ -47,9 +47,8 @@
 1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫MySQL，所以在使用前請先安裝好MySQL。
    - 這邊是 [MySQL 官方網站](https://www.mysql.com/)，如果沒有下載過，請點選連結並照著下面步驟下載並安裝。
    - 詳細安裝步驟請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
-   - 主程式下載[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
 
-2.主程式下載  
+2. **主程式下載**:  
    - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
    - 下載後，將 `main.exe` 放置在您想要運行應用程式的目錄中。
 
@@ -67,7 +66,6 @@
 
 [MySQL 官方網站](https://www.mysql.com/)
 
-### 步驟說明
 
 ### 步驟說明
 
