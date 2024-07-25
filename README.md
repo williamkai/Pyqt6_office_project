@@ -44,9 +44,31 @@
    <br>這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>，官方沒有下載的話請點選連結並照著下面步驟下載並安裝
    <br><a href="#mysql下載跟安裝教學">MySQL下載跟安裝教學</a>。
 
-2. 下載主程式，上面是開源的code，如果看得懂的，可以自己載回去改，不然就是等我慢慢更新程式了
-   <br>主程式在上面的[dist/main.exe]([https://www.mysql.com/](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist))，以後有更新暫時都是去載這個main.exe，然後覆蓋本來的
-3.  
+## 下載和安裝
+
+1. **下載主程式**:
+    - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)
+
+2. **安裝主程式**:
+    - 下載後，將`main.exe`放置在您想要運行應用程式的目錄中。
+
+## 更新
+
+每當有新版本的主程式發布時，您可以按照以下步驟進行更新：
+
+1. **下載更新的主程式**:
+    - 前往以下連結下載最新版本的`main.exe`：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)
+
+2. **覆蓋舊版本**:
+    - 將下載的`main.exe`覆蓋原來目錄中的舊版本`main.exe`。
+
+## 開源代碼
+
+如果您有興趣查看或修改源代碼，可以從以下連結獲取：[GitHub Repository](https://github.com/williamkai/Pyqt6_office_project)
+
+---
+
+**注意**: 如果您不了解如何查看或修改代碼，請耐心等待我們的更新。
 
 # MySQL下載跟安裝教學
 到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有windows系統，其他的可能要自己研究囉。
