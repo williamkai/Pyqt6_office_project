@@ -41,10 +41,10 @@
 
 ### 使用方式:  
 1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫Mysql，所以在使用前請先安裝好Mysql。
-   <br>這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>官方
-   <br>沒有下載的話請點選連結並照著下面步驟下載並安裝<a href="#mysql下載跟安裝教學">MySQL下載跟安裝教學</a>。
+   <br>這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>，官方沒有下載的話請點選連結並照著下面步驟下載並安裝
+   <br><a href="#mysql下載跟安裝教學">MySQL下載跟安裝教學</a>。
 
-2. 下載主程式，上面是開源的code，如果看得懂的，可以自己載回去改，不然就是等我慢慢更新程式了
+3. 下載主程式，上面是開源的code，如果看得懂的，可以自己載回去改，不然就是等我慢慢更新程式了
    主程式在上面的dist/main.exe
 
 # MySQL下載跟安裝教學
