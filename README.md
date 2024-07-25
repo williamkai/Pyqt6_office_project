@@ -35,11 +35,11 @@
 以上都是碎碎念廢話，懶得刪除了(以後有緣再來處理)
 
 # 稍微介紹跟使用方式教學
-## 目前有的功能:  
+### 目前有的功能:  
 1. 庫存功能:我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。
 2. 商品資料庫功能:建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
 
-## 使用方式:  
+### 使用方式:  
 1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫Mysql，所以在使用前請先安裝好Mysql。
    <br>這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>，官方沒有下載的話請點選連結並照著下面步驟下載並安裝
    <br><a href="#mysql下載跟安裝教學">MySQL下載跟安裝教學</a>。
@@ -53,7 +53,7 @@
   
 [MySQL](https://www.mysql.com/) 官方網站。
 
-## 步驟說明
+### 步驟說明
 
 1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟，點DOWNLOADS：
    ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
@@ -169,7 +169,7 @@
 34. 左邊是資料庫，每個帳戶登入近來的資料庫應該都相同，畢竟是連到同一個sever: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
     
    然後剛剛下載麼範本就是左邊那些
-## 注意事項
+### 注意事項
 
 - 確保你的系統符合MySQL的安裝要求。
 - 如果遇到任何問題，可以參考[官方文檔](https://dev.mysql.com/doc/)或在論壇上尋求幫助。
