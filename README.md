@@ -43,28 +43,14 @@
 2. **商品資料庫功能**: 
    建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
 
-### 使用方式
+### 使用前準備
 1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫MySQL，所以在使用前請先安裝好MySQL。
    - 這邊是 [MySQL 官方網站](https://www.mysql.com/)，如果沒有下載過，請點選連結並照著下面步驟下載並安裝。
    - 詳細安裝步驟請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
-
-## 下載和安裝
-
-1. **下載主程式**:
+   - 主程式下載[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
+2.主程式下載
    - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
-
-2. **安裝主程式**:
    - 下載後，將 `main.exe` 放置在您想要運行應用程式的目錄中。
-
-## 更新
-
-每當有新版本的主程式發布時，您可以按照以下步驟進行更新：
-
-1. **下載更新的主程式**:
-   - 前往以下連結下載最新版本的 `main.exe`：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
-
-2. **覆蓋舊版本**:
-   - 將下載的 `main.exe` 覆蓋原來目錄中的舊版本 `main.exe`。
 
 ## 開源代碼
 
