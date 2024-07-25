@@ -60,6 +60,42 @@
 
 **注意**: 如果您不了解如何查看或修改代碼，請耐心等待我們的更新。
 
+## 使用方式
+
+下面是如何使用本應用程式的詳細說明和步驟：
+
+1. **打開應用程式**:
+   - 下載並安裝主程式後，雙擊 `main.exe` 打開應用程式。
+
+2. **登錄界面**:
+   - 首次使用時，您需要先登錄。輸入您的用戶名和密碼，然後點擊登錄按鈕。
+   - ![Step 1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_1.jpg)
+
+3. **主界面功能**:
+   - 登錄成功後，您將看到主界面。這裡包括庫存管理和商品資料庫等功能。
+   - ![Step 2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_2.jpg)
+
+4. **庫存管理**:
+   - 點擊庫存管理進入庫存管理界面。在這裡，您可以查看和管理庫存。
+   - ![Step 3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_3.jpg)
+
+5. **商品資料庫**:
+   - 點擊商品資料庫進入商品資料庫界面。在這裡，您可以新增、修改或刪除商品信息。
+   - ![Step 4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_4.jpg)
+
+6. **進貨管理**:
+   - 點擊進貨管理進入進貨管理界面。在這裡，您可以新增進貨記錄。
+   - ![Step 5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_5.jpg)
+
+7. **出貨管理**:
+   - 點擊出貨管理進入出貨管理界面。在這裡，您可以新增出貨記錄。
+   - ![Step 6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_6.jpg)
+
+8. **報表功能**:
+   - 點擊報表功能進入報表界面。在這裡，您可以生成各類報表。
+   - ![Step 7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_7.jpg)
+
+
 ## MySQL下載跟安裝教學
 
 到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有Windows系統，其他的可能要自己研究囉。
