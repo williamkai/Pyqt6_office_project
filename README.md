@@ -34,46 +34,53 @@
 啊哈排版好尷尬，但先這樣，我也不會用，等之後摸索好在來整理排版
 以上都是碎碎念廢話，懶得刪除了(以後有緣再來處理)
 
-# 稍微介紹跟使用方式教學
-### 目前有的功能:  
-1. 庫存功能:我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。
-2. 商品資料庫功能:建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
+## 稍微介紹跟使用方式教學
 
-### 使用方式:  
-1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫Mysql，所以在使用前請先安裝好Mysql。
-   <br>這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>，官方沒有下載的話請點選連結並照著下面步驟下載並安裝
-   <br><a href="#mysql下載跟安裝教學">MySQL下載跟安裝教學</a>。
+### 目前有的功能
+1. **庫存功能**: 
+   我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。
+   
+2. **商品資料庫功能**: 
+   建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
+
+### 使用方式
+1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫MySQL，所以在使用前請先安裝好MySQL。
+   - 這邊是 [MySQL 官方網站](https://www.mysql.com/)，如果沒有下載過，請點選連結並照著下面步驟下載並安裝。
+   - 詳細安裝步驟請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
 
 ## 下載和安裝
 
 1. **下載主程式**:
-    - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)
+   - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
 
 2. **安裝主程式**:
-    - 下載後，將`main.exe`放置在您想要運行應用程式的目錄中。
+   - 下載後，將 `main.exe` 放置在您想要運行應用程式的目錄中。
 
 ## 更新
 
 每當有新版本的主程式發布時，您可以按照以下步驟進行更新：
 
 1. **下載更新的主程式**:
-    - 前往以下連結下載最新版本的`main.exe`：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)
+   - 前往以下連結下載最新版本的 `main.exe`：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
 
 2. **覆蓋舊版本**:
-    - 將下載的`main.exe`覆蓋原來目錄中的舊版本`main.exe`。
+   - 將下載的 `main.exe` 覆蓋原來目錄中的舊版本 `main.exe`。
 
 ## 開源代碼
 
-如果您有興趣查看或修改源代碼，可以從以下連結獲取：[GitHub Repository](https://github.com/williamkai/Pyqt6_office_project)
+如果您有興趣查看或修改源代碼，可以從以下連結獲取：[GitHub Repository](https://github.com/williamkai/Pyqt6_office_project)。
 
 ---
 
 **注意**: 如果您不了解如何查看或修改代碼，請耐心等待我們的更新。
 
-# MySQL下載跟安裝教學
-到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有windows系統，其他的可能要自己研究囉。
-  
-[MySQL](https://www.mysql.com/) 官方網站。
+## MySQL下載跟安裝教學
+
+到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有Windows系統，其他的可能要自己研究囉。
+
+[MySQL 官方網站](https://www.mysql.com/)
+
+### 步驟說明
 
 ### 步驟說明
 
