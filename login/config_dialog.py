@@ -62,7 +62,7 @@ class ConfigDialog(QDialog):
         password = self.password_input.text()
 
         if not host or not user or not password:
-            QMessageBox.warning(self, "警告", "所有字段都需要填写")
+            QMessageBox.warning(self, "警告", "所有空格都需要填寫")
             return
         
         try:
@@ -88,6 +88,6 @@ class ConfigDialog(QDialog):
         if os.path.exists(config_path):
             QMessageBox.information(self, "成功", "配置已保存")
         else:
-            QMessageBox.warning(self, "错误", "配置保存失败")
+            QMessageBox.warning(self, "錯誤", "配置保存失败")
 
         self.accept()

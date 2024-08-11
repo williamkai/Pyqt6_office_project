@@ -23,7 +23,7 @@ class RegisterWidgetWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.database = parent.database
-        self.database.initialize()  # 初始化數據庫連接
+        self.database.initialize()  # 初始化資料庫連接
         self.setWindowTitle("註冊帳戶")
         self.setFixedSize(400, 300)  # 設定固定大小            
         self.init_ui()  # 使用絕對佈局
@@ -66,7 +66,7 @@ class RegisterWidgetWindow(QDialog):
             QMessageBox.warning(self, "錯誤", "請輸入註冊資料！")
             return
         
-        # 檢查用户名是否已存在
+        # 檢查用帳號是否已存在
         if self.database.check_username_exists(username):
             QMessageBox.warning(self, "錯誤", "帳號已存在！")
             return

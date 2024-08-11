@@ -19,7 +19,7 @@ class MainWindow(QWidget):
     
     def __init__(self, parent=None, user_email=None):
         super(MainWindow, self).__init__(parent) 
-        self.database =  UserDatabase(user_email)#這邊或創建登入成功使用者的資料庫、跟第一層的帳戶資料
+        self.database =  UserDatabase(user_email)   # 這邊或創建登入成功使用者的資料庫、跟第一層的帳戶資料
 
         self.user_email = user_email
         self.database_window=None
@@ -86,5 +86,22 @@ class MainWindow(QWidget):
         self.account_window = None
 
     def logout(self):
+        # 檢查並關閉資料庫視窗
+        if self.database_window is not None:
+            self.database_window.close()
+            self.database_window = None
+
+        # 檢查並關閉帳戶設定視窗
+        if self.account_window is not None:
+            self.account_window.close()
+            self.account_window = None
+        
+        # 關閉資料庫連接
+        if self.database.connection is not None:
+            self.database.cursor.close()  # 關閉cursor
+            self.database.connection.close()  # 關閉資料庫連接
+            print("資料庫連接已關閉")
+
+        # 在這裡你可以加入其他需要關閉的視窗(之後其他功能視窗就要加進來)
         QMessageBox.information(self, "登出", "已登出")
-        self.logout_signal.emit()  # 發射登出信号
+        self.logout_signal.emit()  # 發射登出信號

@@ -26,21 +26,21 @@ class UserDatabase:
         if self.connection is not None and self.cursor is not None:
             return
         
-        # 判断是否为冻结状态，决定如何获取 config.pickle 的路径
+        # 判断是否為封裝状态，决定如何取得 config.pickle 的路径
         if getattr(sys, 'frozen', False):
-            # 如果是冻结状态（打包成 exe），则使用 sys.executable 的目录
+            # 如果是封裝狀態（也就是打包成 exe），則使用 sys.executable 的目錄(也就是此exe檔案的目錄)
             exe_dir = os.path.dirname(sys.executable)
             config_path = os.path.join(exe_dir, 'config.pickle')
         else:
-            # 如果不是冻结状态，使用当前文件所在目录的上一层目录下的 login 文件夹中的 config.pickle
+            # 如果不是封裝狀態，使用目前文件所在目錄的上一層目錄下的 login 文件夾中的 config.pickle
             config_path = os.path.join(os.path.dirname(__file__), '..', 'login', 'config.pickle')
 
-        # 确认配置文件路径是否存在
+        # 確認配置文件路徑是否存在
         if not os.path.exists(config_path):
             raise Exception(f"配置文件不存在或不完整: {config_path}")
 
         try:
-            # 读取配置文件
+            # 讀取配置文件
             with open(config_path, 'rb') as f:
                 config = pickle.load(f)
 
@@ -54,19 +54,19 @@ class UserDatabase:
             if not all(db_config.values()):
                 raise Exception("配置文件中缺少 'host', 'user' 或 'password'")
 
-            # 连接到数据库
+            # 連接到資料庫
             self.connection = mysql.connector.connect(
                 host=db_config['host'],
                 user=db_config['user'],
                 password=db_config['password']
             )
-            self.cursor = self.connection.cursor()#dictionary=True
+            self.cursor = self.connection.cursor()  # 這是我除bug用到的東西，太久沒用忘記這啥了，dictionary=True
 
-            # 創建用戶特定的資料庫
+            # 創建個別帳戶使用的資料庫
             db_name = f"user_{self.username}"
             self.create_database(db_name)
 
-            # 使用新創建的資料庫
+            # 使用新創建的資料庫或者說個別帳號的資料庫
             self.connection.database = f'{db_name}'
 
             # 初始化資料庫結構
@@ -82,7 +82,7 @@ class UserDatabase:
 
     # 初始化資料庫，也就是先檢查有沒有這個表，沒有就會執行下面函數創建表
     def initialize_database(self):
-        # 检查用户表是否存在，如果不存在则创建
+        # 檢查帳戶表是否存在，如果不存在則創建，這是基礎用戶個別資料表，目前只是要用來連信箱，所以沒啥特別東西，這個表就只有信箱資料
         self.cursor.execute("SHOW TABLES LIKE 'User_basic_information'")
         table_exists = self.cursor.fetchone()
         if not table_exists:

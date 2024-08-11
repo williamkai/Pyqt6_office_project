@@ -20,21 +20,21 @@ class Database:
         if self.connection is not None and self.cursor is not None:
             return
         
-        # 判断是否为冻结状态，决定如何获取 config.pickle 的路径
+        # 判断是否為凍結狀態(也就是封裝)，决定如何獲取 config.pickle 的路徑
         if getattr(sys, 'frozen', False):
-            # 如果是冻结状态（打包成 exe），则使用 sys.executable 的目录
+            # 如果是凍結狀態（打包成 exe），则使用 sys.executable 的目錄
             exe_dir = os.path.dirname(sys.executable)
             config_path = os.path.join(exe_dir, 'config.pickle')
         else:
-            # 如果不是冻结状态，使用当前文件所在目录的上一层目录下的 login 文件夹中的 config.pickle
+            # 如果不是凍結狀態(封裝)，使用當前文件所在目錄的上一層目錄下的 login 文件夾中的 config.pickle
             config_path = os.path.join(os.path.dirname(__file__), '..', 'login', 'config.pickle')
 
-        # 确认配置文件路径是否存在
+        # 確認配置文件路徑是否存在
         if not os.path.exists(config_path):
             raise Exception(f"配置文件不存在或不完整: {config_path}")
 
         try:
-            # 读取配置文件
+            # 讀取配置文件
             with open(config_path, 'rb') as f:
                 config = pickle.load(f)
 
@@ -48,7 +48,7 @@ class Database:
             if not all(db_config.values()):
                 raise Exception("配置文件中缺少 'host', 'user' 或 'password'")
 
-            # 连接到数据库
+            # 連接到資料庫
             self.connection = mysql.connector.connect(
                 host=db_config['host'],
                 user=db_config['user'],
@@ -56,17 +56,17 @@ class Database:
             )
             self.cursor = self.connection.cursor()
 
-            # 如果数据库不存在则创建
+            # 如果資料庫不存在則創建
             self.create_database()
 
-            # 使用已创建的数据库连接
+            # 連接已創建的資料庫
             self.connection.database = 'user_auth'
 
-            # 执行其他初始化操作
+            # 執行其他初始化操作
             self.initialize_database()
 
         except (pickle.UnpicklingError, FileNotFoundError, EOFError, mysql.connector.Error, KeyError) as e:
-            raise Exception(f"初始化数据库时发生错误: {e}")
+            raise Exception(f"初始化資料庫發生生錯誤: {e}")
 
     # 創建實例時候會先執行這句話，判斷有無這個資料庫，沒有就創建
     def create_database(self):
@@ -75,7 +75,7 @@ class Database:
 
     # 初始化資料庫，也就是先檢查有沒有這個表，沒有就會執行下面函數創建表
     def initialize_database(self):
-        # 检查用户表是否存在，如果不存在则创建
+        # 檢查使用者帳戶表是否存在，如果不存在則創建
         self.cursor.execute("SHOW TABLES LIKE 'users'")
         table_exists = self.cursor.fetchone()
         if not table_exists:
@@ -122,13 +122,13 @@ class Database:
             if result is None:
                 return "帳號不存在"  # 帳號不存在
             else:
-                # 查询数据库中是否存在匹配的用户名和密码
+                # 查詢資料庫中是否存在匹配的用帳號和密碼
                 self.cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
                 result = self.cursor.fetchone()
                 if result is not None:
-                    return True  # 用户名和密码匹配成功
+                    return True  # 帳號和密码匹配成功
                 else:
-                    return "密碼錯誤"  # 密碼错误
+                    return "密碼錯誤"  # 密碼錯誤
         except mysql.connector.Error as err:
             print("Error:", err)
             return False

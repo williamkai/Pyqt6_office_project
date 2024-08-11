@@ -31,19 +31,18 @@ class MainApplication(QMainWindow):
         self.login_widget = LoginWidget()
         self.layout.addWidget(self.login_widget)
 
-        # 連接登入成功畫面
+        # 建立登入class的訊號
         self.login_widget.login_success.connect(self.show_main_window)
 
-        # 初始化資料庫
+        # 初始化變數儲存位子(資料庫、跟使用者)
         self.database = None
         self.current_user = None
 
     def show_main_window(self, user_email):
+        self.current_user = user_email  # 這個是用來暫存帳號，之後要來創建個別帳號的資料庫用，這樣才可以針對每個帳號有不同商品資料庫等等
         # 移除登入畫面物件
-        self.current_user = user_email
-
-        self.layout.removeWidget(self.login_widget)
-        self.login_widget.deleteLater()
+        self.layout.removeWidget(self.login_widget) # 這個是把顯示在登入畫面的物件移除掉，但是這邊的移除，只是顯示上移除，這個物件還是儲存在記憶體中，所以當名子重複layout..或其他因素，會造成顯示錯誤
+        self.login_widget.deleteLater() # 這個才是把之前創建出來的登入顯示元件徹底從記憶體中刪除。
 
         # 創建主視窗並添加到佈局
         self.main_window = MainWindow(self, self.current_user)

@@ -33,13 +33,13 @@ class LoginWidget(QWidget):
         self.database=Database()
         self.layout = QVBoxLayout(self)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.register_window = None  # 追蹤註冊帳戶窗口
-        self.create_login_form()
-        self.create_register_button()
-        self.create_config_button()  # 創建配置按钮
+        self.register_window = None  # 追蹤註冊帳號窗口
+        self.create_login_form()    # 創建登入畫面的label跟輸入框登入按鈕
+        self.create_register_button()   # 創建註冊帳號的按鈕
+        self.create_config_button()  # 創建資料庫帳號密碼設定的按钮
 
     def create_login_form(self):
-        self.user_label = QLabel("", self)
+        self.user_label = QLabel("", self)  # 這個主要是打帳號，會顯示出使用者名稱用的
         font = self.user_label.font()
         font.setPointSize(12)
         self.user_label.setFont(font)
@@ -144,12 +144,12 @@ class LoginWidget(QWidget):
         if self.database.connection is None or self.database.cursor is None:
             self.database.initialize()
 
-        # 从数据库验证用户凭据
+        # 從資料庫驗證帳戶資料
         result = self.database.validate_user(email, password)
         if isinstance(result, bool):
             if result:
                 print("登入成功")
-                # 登录成功后关闭数据库连接
+                # 登入成功後關閉數據庫連接，主要是退出檢查帳號的數據庫，第一階段是連到帳號數據庫用來登入用，登入成功後就不需要用到這個了
                 self.database.close()
                 QMessageBox.warning(self, "肥肥力量", "登入成功")
                 self.login_success.emit(email)  # 發送登入成功的訊號
@@ -162,7 +162,7 @@ class LoginWidget(QWidget):
 
     def open_register_window(self):
         if not self.is_config_valid():
-            QMessageBox.warning(self, "警告", "請先設定資料庫")
+            QMessageBox.warning(self, "警告", "請先設定資料庫資料")
             return
         
         if self.register_window is None:
