@@ -30,15 +30,35 @@ class ProductListDao:
         return self.cursor.fetchall()
     
     def delete_product(self, product_code):
-        delete_query = """
+        # 刪除商品
+        delete_product_query = """
             DELETE FROM ProductList WHERE product_code = %s
         """
+
+        # 刪除相關庫存記錄
+        delete_inventory_query = """
+            DELETE FROM Inventory WHERE product_code = %s
+        """
+
         try:
-            self.cursor.execute(delete_query, (product_code,))
+            # 開始一個事務
+            # self.connection.start_transaction()
+            # 執行刪除庫存記錄操作
+            self.cursor.execute(delete_inventory_query, (product_code,))
+
+            # 執行刪除商品操作
+            self.cursor.execute(delete_product_query, (product_code,))
+            
+            # 提交事務
             self.connection.commit()
+            
+            print("商品及相關庫存記錄已刪除")
+            
         except mysql.connector.Error as err:
-            print(f"Error deleting from ProductList table: {err}")
-    
+            # 回滾事務
+            self.connection.rollback()
+            print(f"Error deleting product or inventory records: {err}")
+        
     def insert_product(self, product_code, product_name, package_count, draw_count, manufacturer, price):
         insert_query = """
             INSERT INTO ProductList (product_code, product_name, package_count, draw_count, manufacturer, price)

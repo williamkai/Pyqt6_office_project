@@ -140,7 +140,7 @@ class ProductListWidget(QWidget):
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
             product_code =  self.table_widget.item(row, 0).text() 
-            self.database.delete_product(product_code)
+            self.database.product_list_dao.delete_product(product_code)
             QMessageBox.information(self, "信息", "商品已刪除")
             self.product_table()
 
