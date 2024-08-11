@@ -34,22 +34,222 @@
 啊哈排版好尷尬，但先這樣，我也不會用，等之後摸索好在來整理排版
 以上都是碎碎念廢話，懶得刪除了(以後有緣再來處理)
 
-# 稍微介紹跟使用方式教學
-### 目前有的功能:
-<p>1. 庫存功能:我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。</p>
-<p>2. 商品資料庫功能:建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
-</p>
+## 稍微介紹跟使用方式教學
 
-### 使用方式:
-<p>1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫Mysql，所以在使用前請先安裝好Mysql<br><br>
-這邊是<a href="https://www.mysql.com/" target="blank">MySQL</a>官方，沒有下載的話請點選連結，照著下面步驟下載並安裝。
+### 目前有的功能
+1. **庫存功能**: 
+   我的目的主要是處理工廠的庫存，因為每天都要點貨、出貨、退貨...等等，有這個資料庫，就可以管理我的各商品存貨。
+   
+2. **商品資料庫功能**: 
+   建立商品資料庫，才可以設定庫存量，有這個商品資料庫，在後續可以關聯庫存、出貨、進貨原料、製作需求...等等。
 
-</p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
+### 使用前準備
+1. 這畢竟是資料庫程式，得先下載資料庫，我所使用的是開源的資料庫MySQL，所以在使用前請先安裝好MySQL。
+   - 這邊是 [MySQL 官方網站](https://www.mysql.com/)，如果沒有下載過，請點選連結並照著下面步驟下載並安裝。
+   - 詳細安裝步驟請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
+
+2. **主程式下載**:  
+   - 您可以從以下連結下載最新版本的主程式：[main.exe](https://github.com/williamkai/Pyqt6_office_project/tree/main/dist)。
+   - 下載後，將 `main.exe` 放置在您想要運行應用程式的目錄中。
+
+### 開源代碼
+
+如果您有興趣查看或修改源代碼，可以從以下連結獲取：[GitHub Repository](https://github.com/williamkai/Pyqt6_office_project)。
+
+---
+
+**注意**: 如果您不了解如何查看或修改代碼，請耐心等待我們的更新。
+
+### 使用方式
+
+下面是如何使用本應用程式的詳細說明和步驟：
+
+1. **打開應用程式**:
+   - 下載主程式後，可以把main.exe，放到C:\Program Files\pyQT\main.exe，或者是看自己要放在哪邊都行。
+   - 執行時可以建立捷徑到桌面，方便執行。
+   - 第一次使用時，如果是放在C槽或其他需要系統管理員權限資料夾中，請使用系統管理員權限打開程式。
+   - 建議是放在自己一個資料夾再使用捷徑打開，因為第一次使用時會設定資料庫，會將資料庫資訊保存起來
+   - 會在main.exe所在位子寫入一個檔案config.pickle，用來保存資料庫資料，所以放在桌面的話，怕會多一個資料導致畫面雜。
+
+2. **程式畫面**:
+   - 執行程式後會有兩個框框，一個是文字框，一個是主程式的畫面，之後會把圖片上main移除，現在留著是為了除bug用的。
+   - 第一次使用時，需要先設定資料庫如下圖。
+   - ![Step 1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_1.jpg)
+
+3. **資料庫設定**:
+   - 這邊就要輸入我的資料庫的帳號跟密碼了，如果不知道是啥，請參考 [MySQL下載跟安裝教學](#mysql下載跟安裝教學)。
+   - ![Step 2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_2.jpg)
+
+4. **資料庫保存時會寫入檔案**:
+   - 這邊可能會出問題，檔案如果放在C槽或其他寫入受限的地方，因為會產生config.pickle，且沒有權限寫入檔案，就會出錯
+   - 如果遇到上面說的這個問題，解決方式就是，案右鍵以系統管理員身分執行(如下圖)，就可以囉。
+   - 保存成功如下圖
+   - ![Step 3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_3.jpg)
+   - ![Step 6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_6.jpg)
+
+5. **成功設定資料庫後，就需要創建這個程式的帳戶跟密碼**:
+   - 就是設定帳戶跟密碼，還有使用者名稱
+   - ![Step 4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_4.jpg)
+
+6. **可以登入囉**:
+   - 沒啥特別的，就是登入。
+   - ![Step 5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_5.jpg)
+
+7. **成功登入~**:
+   - 主要是左邊那個畫面，然後目前功能只有庫存資料庫功能，剩下功能都還在慢慢生產中。
+   - 點開後會產生新視窗，就是我們的庫存資料庫功能拉~
+   - 我是把它寫成開啟新視窗，因為功能更多時候，有時候可以開很多個功能在互相使用，感覺這比較方便。
+   - ![Step 7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_7.jpg)
+
+8. **庫存資料庫的功能**:
+   - 目前只有三個功能:D，商品清單、庫存、客戶資料。
+   - 我沒有其他的公司可以參考，所以就是用自己公司的需求設計的。
+   - 未來可能會改成符合所有產業的方式，但現在我得先寫一個自己公司用的，提升自己工作的效率，所以就先這樣設計了
+   - 公司是工廠製造業，所以會製造很多不同的商品(衛生紙)，都會有不同代號跟名稱，所以我的商品清單就是這樣設計的
+   - 我的商品代號是唯一(是PK_KEY)，用來關聯。
+   - ![Step 8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_8.jpg)
+
+9. **庫存功能**:
+   - 我的公司是傳產，說實話，點貨、算庫存...等等都是寫在本子上，我真的無法接受那個效率。
+   - 假設今天製造A商品，那要在庫存上寫入，那問題來了，有五十個商品，可能有十個本子，光是找這個商品在哪一個本子還要用手寫製造N個然後再加總現在庫存多少...等等，我真的覺得超浪費時間，我甚至想要連動製造機台，直接把製造的資料直接寫進資料庫，連人工開程序寫商品進來都不用。
+   - 但目前沒那麼厲害，這邊就是取代那個可悲的紙本庫存本，製造、銷貨、退貨、瑕疵品，都可以在這邊寫入。
+   - ![Step 9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_9.jpg)
+
+10. **庫存功能使用介紹圖**:
+    - 大致上就會是呈現這樣，最上面就是最新的資料，也就是當前庫存量，如果做更改或刪除都可以。
+    - ![Step 10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_10.jpg)
+
+    - ![Step 11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_11.jpg)
+
+    - ![Step 12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_12.jpg)
+
+    - ![Step 13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/QT_13.jpg)
+
+
+## MySQL下載跟安裝教學
+
+到官方網站下載MySQL，下面會放流程圖片，不知道怎麼安裝的請照步驟下載，目前只有Windows系統，其他的可能要自己研究囉。
+
+[MySQL 官方網站](https://www.mysql.com/)
+
+
+### 步驟說明
+
+1. 到官方網站下載MySQL安裝檔。以下是詳細操作步驟，點DOWNLOADS：
+   ![步驟1](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_1.jpg)
+   
+2. 點MySQL Community (GPL) Downloads »：
+   
+   ![步驟2](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_2.jpg)
+   
+
+3. 點MySQL Installer for Windows：
+   
+   ![步驟3](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_3.jpg)
+   
+
+4. 我是選版本比較新的，然後點下面檔案比較大的那個: ![步驟4](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_4.jpg)
+   
+   
+
+5. 他會問要不要登入或註冊，如果沒需求就點下面直接下載: ![步驟5](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_5.jpg)
+   
+
+6. 下載好後，就開始安裝吧: ![步驟6](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_6.jpg)
+   
+
+7. 雖然我不是所有功能都使用，但就點全部下載吧: ![步驟7](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_7.jpg)
+   
+
+8. 這些是各種的功能，沒問題就點吧!: ![步驟8](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_8.jpg)
+   
+
+9. 這邊會是先下載這些功能: ![步驟9](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_9.jpg)
+   
+
+10. 下載後就是安裝: ![步驟10](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_10.jpg)
+    
+
+11. 安裝後繼續下一步: ![步驟11](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_11.jpg)
+    
+
+12. 這邊要來安裝Server跟Router: ![步驟12](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_12.jpg)
+    
+
+13. 沒意外就照上面的繼續執行下一步驟: ![步驟13](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_13.jpg)
+    
+
+14. 這個選項其實是可以選服務器: ![步驟14](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_14.jpg)
+    
+    主要是我是在開發程序所以選上面的開發者選項，但開發完成後，應該是要用第二個，他在處理資料庫會比較快，但我其實沒用過Sever的選項，所以就先選開發者選項吧~~
+
+15. 依然是照著圖片下一步驟: ![步驟15](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_15.jpg)
+    
+    如果對內容有信去就自己去估狗翻譯一下吧
+
+16. 這邊要設定跟密碼跟創建使用者帳號跟密碼: ![步驟16](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_16.jpg)
+    
+    這邊算是滿重要的，因為我寫的程序在第一次使用會要求輸入資料庫的帳號跟密碼，就是這邊這個，當然會操作的人也可以後面在自己去創建。
+
+17. 輸入帳號跟密碼: ![步驟17](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_17.jpg)
+    
+
+18. 帳號跟密碼設定好後再下面會顯示出來，沒問題就下一步驟: ![步驟18](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_18.jpg)
+    
+
+19. 這邊我是都預設直接下一步驟: ![步驟19](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_19.jpg)
+    
+    如果要調整就自己設定囉
+
+20. 沒問題就繼續下一步驟: ![步驟20](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_20.jpg)
+    
+
+21. 沒問題就執行讓他跑: ![步驟21](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_21.jpg)
+    
+
+22. 完成第一階段拉~~，繼續囉~: ![步驟22](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_22.jpg)
+    
+
+23. Sever處理好了繼續下一個: ![步驟23](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_23.jpg)
+    
+
+24. 我是直接預設，他這邊應該是設定一些窗口連接我是都預設就是3306: ![步驟24](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_24.jpg)
+    
+
+25. 好的路由窗口也設定好了繼續下一個: ![步驟25](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_25.jpg)
+    
+
+26. 這邊是要下載範本到資料庫: ![步驟26](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_26.jpg)
+    
+    輸入剛剛設定的根密碼
+
+27. 可以點選確認看密碼打的對不對，沒問題就下一步: ![步驟27](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_27.jpg)
+    
+
+28. 一樣執行: ![步驟28](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_28.jpg)
+    
+
+29. 跑完沒問題就點完成囉: ![步驟29](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_29.jpg)
+    
+
+30. 這三個都處理好了，就繼續下一步驟: ![步驟30](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_30.jpg)
+    
+
+31. 恭喜啦完成，這邊看要不要打開shell或是workbench，可以開來玩看看: ![步驟31](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_31.jpg)
+    
+    但是指令的shell，要自己學一下怎麼使用，當然另一個也要，但相對簡單一點畢竟是GUI
+
+32. 這是給大家看看指令的跟圖形化的操作版面長甚麼樣子: ![步驟32](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_32.jpg)
+    
+
+33. shell就不教學了，可以看一下資料庫長相: ![步驟33](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_33.jpg)
+    
+    可以進去看看，看是要用root帳戶登入還是要剛剛自己創建的帳號登入
+
+34. 左邊是資料庫，每個帳戶登入近來的資料庫應該都相同，畢竟是連到同一個sever: ![步驟34](https://github.com/williamkai/Pyqt6_office_project/blob/main/github_readme_jpg/mysql_34.jpg)
+    
+   然後剛剛下載麼範本就是左邊那些
+### 注意事項
+
+- 確保你的系統符合MySQL的安裝要求。
+- 如果遇到任何問題，可以參考[官方文檔](https://dev.mysql.com/doc/)或在論壇上尋求幫助。
