@@ -11,13 +11,14 @@ from PyQt6.QtWidgets import (QWidget,
                              QDateTimeEdit, 
                              QCompleter, 
                              QComboBox)
-from PyQt6.QtCore import QDateTime,Qt
+from PyQt6.QtCore import QDateTime,Qt,QDate
 # from data_access_object.product_list_dao import ProductListDao
 class ProductListWidget(QWidget):
 
     def __init__(self, parent=None, database=None):
         super().__init__(parent)
         self.database = database
+        self.parent_widget = parent  # 儲存父部件的引用
         self.initialize_ui() 
     
     def initialize_ui(self):
@@ -31,8 +32,8 @@ class ProductListWidget(QWidget):
 
         self.table_widget = QTableWidget()
         self.table_widget.setRowCount(len(products))
-        self.table_widget.setColumnCount(10)
-        self.table_widget.setHorizontalHeaderLabels(["商品代號", "商品名稱", "包數", "抽數", "廠商名稱", "售價", "庫存量", "修改", "刪除", "庫存功能"])
+        self.table_widget.setColumnCount(11)
+        self.table_widget.setHorizontalHeaderLabels(["商品代號", "商品名稱", "包數", "抽數", "廠商名稱", "售價", "庫存量", "修改", "刪除", "庫存功能", "轉庫存表"])
 
         for row_idx, row_data in enumerate(products):
             for col_idx, col_data in enumerate(row_data):
@@ -56,9 +57,17 @@ class ProductListWidget(QWidget):
             inventory_button.clicked.connect(lambda _, r=row_idx: self.add_inventory(r))
             self.table_widget.setCellWidget(row_idx, 9, inventory_button)  # 添加到第9列
 
+            transfer_button = QPushButton("轉庫存表")  # 添加新的按鈕
+            if self.parent_widget and hasattr(self.parent_widget, 'show_inventory_function'):
+                transfer_button.clicked.connect(lambda _, r=self.table_widget.item(row_idx, 0).text(): self.parent_widget.show_inventory_function(product_code=r))
+            else:
+                transfer_button.clicked.connect(lambda _, r=row_idx: print(f"Parent method not available, row {r}"))
+            # transfer_button.clicked.connect(lambda _, r=row_idx: self.show_inventory_function(r))  # 需要定義 transfer_inventory 方法
+            self.table_widget.setCellWidget(row_idx, 10, transfer_button)  # 添加到第10列
+
         if not products:
             self.table_widget.setRowCount(1)
-            for col_idx in range(10):
+            for col_idx in range(11):
                 self.table_widget.setItem(0, col_idx, QTableWidgetItem(""))
 
         self.layout.addWidget(self.table_widget)
@@ -180,6 +189,9 @@ class ProductListWidget(QWidget):
         datetime_edit = QDateTimeEdit(calendarPopup=True)
         datetime_edit.setDateTime(QDateTime.currentDateTime())
         datetime_edit.setDisplayFormat('yyyy-MM-dd HH:mm')
+        # 預設填入今天的日期 (MM/dd) 到備註框
+        today_date = QDate.currentDate()
+        today_date_str = today_date.toString('MM/dd')
         
         # 狀態選擇框
         status_edit = QComboBox()
@@ -189,6 +201,7 @@ class ProductListWidget(QWidget):
 
         # 備註輸入框
         notes_edit = QLineEdit()
+        notes_edit.setText(today_date_str)
 
         layout.addRow("商品代號", product_code_edit)
         layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", datetime_edit)

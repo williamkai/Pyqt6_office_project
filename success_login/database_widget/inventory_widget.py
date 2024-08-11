@@ -15,19 +15,21 @@ from PyQt6.QtWidgets import (QWidget,
                              QLabel,
                              QHeaderView
                              )
-from PyQt6.QtCore import QDateTime
+from PyQt6.QtCore import QDateTime,Qt,QDate
 
 class InventoryWidget(QWidget):
 
-    def __init__(self, parent=None, database=None):
+    def __init__(self, parent=None, database=None,product_code=""):
         super().__init__(parent)
         self.database = database
+        self.last_search_text = product_code
+        print(f"{self.last_search_text}")
         self.initialize_ui()
 
     def initialize_ui(self):
         self.layout = QVBoxLayout(self)
         self.inventory_function()
-        self.last_search_text = ""
+        # self.last_search_text = ""
 
     def inventory_function(self):
         self.clear_layout()
@@ -54,6 +56,16 @@ class InventoryWidget(QWidget):
         add_inventory_button = QPushButton("新增庫存變動")
         add_inventory_button.clicked.connect(self.add_inventory)
         self.layout.addWidget(add_inventory_button)
+        # 確保 last_search_text 是字串
+        if isinstance(self.last_search_text, str):
+            self.search_box.setText(self.last_search_text)
+            self.search_inventory()
+        else:
+            # 處理 last_search_text 不是字串的情況
+            self.search_box.setText("")
+
+
+
 
     def add_inventory(self):
         dialog = QDialog(self)
@@ -64,13 +76,24 @@ class InventoryWidget(QWidget):
         product_code_edit = QComboBox()
         product_code_edit.setEditable(True)
         product_code_edit.addItems(self.all_product_codes)
-        product_code_edit.setCompleter(QCompleter(self.all_product_codes))
+        # product_code_edit.setCompleter(QCompleter(self.all_product_codes))
+        # 設定 QCompleter 並設定大小寫不敏感
+        completer = QCompleter(self.all_product_codes)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        product_code_edit.setCompleter(completer)
+
+        item = self.last_search_text
+        if item:
+            product_code_edit.setCurrentText(item)
 
         # 日期時間輸入框，默認為當前日期和時間
         datetime_edit = QDateTimeEdit(calendarPopup=True)
         datetime_edit.setDateTime(QDateTime.currentDateTime())
         datetime_edit.setDisplayFormat('yyyy-MM-dd HH:mm')
-        
+        # 預設填入今天的日期 (MM/dd) 到備註框
+        today_date = QDate.currentDate()
+        today_date_str = today_date.toString('MM/dd')
+
         # 狀態選擇框
         status_edit = QComboBox()
         status_edit.addItems(["製造", "銷貨", "退貨", "瑕疵品"])
@@ -79,6 +102,7 @@ class InventoryWidget(QWidget):
 
         # 備註輸入框
         notes_edit = QLineEdit()
+        notes_edit.setText(today_date_str)
 
         layout.addRow("商品代號", product_code_edit)
         layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", datetime_edit)

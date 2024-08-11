@@ -54,12 +54,13 @@ class DatabaseWidget(QWidget):
     
     def show_product_list(self):
         self.clear_display_area()
-        self.product_list_widget = ProductListWidget(database=self.database)
+        self.product_list_widget = ProductListWidget(parent=self,database=self.database)
         self.display_layout.addWidget(self.product_list_widget)
     
-    def show_inventory_function(self):
+    def show_inventory_function(self,product_code=None):
         self.clear_display_area()
-        self.inventory_widget = InventoryWidget(database=self.database)
+        print(f"{product_code}")
+        self.inventory_widget = InventoryWidget(database=self.database,product_code=product_code)
         self.display_layout.addWidget(self.inventory_widget)
 
 
