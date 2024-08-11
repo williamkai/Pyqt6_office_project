@@ -1,7 +1,7 @@
 import sys
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QStackedWidget
-
+from PyQt6.QtCore import pyqtSignal
 from login.login_widget import LoginWidget 
 from success_login.main_window import MainWindow
 
@@ -17,6 +17,7 @@ from success_login.main_window import MainWindow
 '''
 
 class MainApplication(QMainWindow):
+    close_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("努力減肥阿凱寫的程式~嗄~~~哈!!!!")
@@ -49,6 +50,8 @@ class MainApplication(QMainWindow):
         self.layout.addWidget(self.main_window)
         # 連接主視窗的登出信號到處理槽
         self.main_window.logout_signal.connect(self.show_login_widget)
+         # 將主視窗的關閉訊號與登錄成功後視窗的清理操作連接
+        self.close_signal.connect(self.main_window.handle_main_window_close)
 
 
     def show_login_widget(self):
@@ -62,6 +65,10 @@ class MainApplication(QMainWindow):
         # 連接登入畫面的登入信號到處理槽
         self.login_widget.login_success.connect(self.show_main_window)
 
+    def closeEvent(self, event):
+        # 發射關閉訊號，通知其他視窗進行清理
+        self.close_signal.emit()
+        event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -24,6 +24,8 @@ class MainWindow(QWidget):
         self.user_email = user_email
         self.database_window=None
         self.account_window = None 
+        self.database.product_list_dao.create_product_list_table()
+        self.database.inventory_dao.create_inventory_table()
 
         # 設定布局
         self.layout = QVBoxLayout(self)
@@ -105,3 +107,18 @@ class MainWindow(QWidget):
         # 在這裡你可以加入其他需要關閉的視窗(之後其他功能視窗就要加進來)
         QMessageBox.information(self, "登出", "已登出")
         self.logout_signal.emit()  # 發射登出信號
+    def handle_main_window_close(self):
+        # 關閉所有打開的子視窗
+        if self.database_window is not None:
+            self.database_window.close()
+            self.database_window = None
+
+        if self.account_window is not None:
+            self.account_window.close()
+            self.account_window = None
+
+        # 關閉資料庫連接
+        if self.database.connection is not None:
+            self.database.cursor.close()
+            self.database.connection.close()
+            print("資料庫連接已關閉")

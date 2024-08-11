@@ -48,7 +48,7 @@ class DatabaseWidget(QWidget):
         self.display_layout = QVBoxLayout(self.display_area)
         self.main_layout.addWidget(self.display_area)
 
-        # 初始化GridLayout对象
+        # 初始化GridLayout對象(之後再做self.display_area，裡面物件布局時候，可能會用到，所以在這邊先設變數出來，方便保存他的物件，在後面清除時候才可以清掉)
         self.grid_layout = None
         self.table_widget = None
     

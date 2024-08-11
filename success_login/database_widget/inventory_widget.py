@@ -31,7 +31,6 @@ class InventoryWidget(QWidget):
 
     def inventory_function(self):
         self.clear_layout()
-        self.database.inventory_dao.create_inventory_table()
 
         search_layout = QHBoxLayout()
         self.search_box = QLineEdit()

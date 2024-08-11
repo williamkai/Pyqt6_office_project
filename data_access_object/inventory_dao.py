@@ -58,6 +58,22 @@ class InventoryDao:
             print(f"Error searching inventory: {err}")
             return []
         
+    def get_latest_inventory(self, product_code):
+        search_query = """
+            SELECT current_stock
+            FROM Inventory
+            WHERE product_code = %s
+            ORDER BY UNIX_TIMESTAMP(date) DESC
+            LIMIT 1
+        """
+        try:
+            self.cursor.execute(search_query, (product_code,))
+            result = self.cursor.fetchone()  # 只取得一條記錄
+            return result[0] if result else None  # 返回庫存量，或者如果沒有記錄返回None
+        except mysql.connector.Error as err:
+            print(f"Error fetching latest inventory: {err}")
+            return None
+
     def update_inventory(self, inventory_id, product_code, date, status, quantity):
         try:
             # 获取当前库存量
