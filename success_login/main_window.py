@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
 from success_login.user_information_widget import UserInformationWidget
 from success_login.database_widget.database_widget import DatabaseWidget
 from data_access_object.user_database import UserDatabase  # 引入用戶專屬的資料庫類
-
+from success_login.email_widget.email_widget import EmailWidget
 class MainWindow(QWidget):
     
     logout_signal = pyqtSignal()
@@ -24,6 +24,7 @@ class MainWindow(QWidget):
         self.user_email = user_email
         self.database_window=None
         self.account_window = None 
+        self.email_window = None
         self.database.product_list_dao.create_product_list_table()
         self.database.inventory_dao.create_inventory_table()
 
@@ -60,7 +61,15 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.logout_button)
 
     def open_email_window(self):
-        QMessageBox.information(self, "信箱處理功能", "打开信箱處理功能窗口")
+        if self.email_window is None:
+            self.email_window = EmailWidget(self)
+            self.email_window.closed.connect(self.on_email_window_closed)
+            self.email_window.show()
+        else:
+            QMessageBox.information(self, "阿肥之力", "信箱處理功能視窗已經開啟了喔！")
+
+    def on_email_window_closed(self):
+        self.email_window = None
 
 
     def open_database_window(self):
@@ -98,6 +107,10 @@ class MainWindow(QWidget):
             self.account_window.close()
             self.account_window = None
         
+        if self.email_window is not None:  # 關閉信箱視窗
+            self.email_window.close()
+            self.email_window = None
+        
         # 關閉資料庫連接
         if self.database.connection is not None:
             self.database.cursor.close()  # 關閉cursor
@@ -116,6 +129,10 @@ class MainWindow(QWidget):
         if self.account_window is not None:
             self.account_window.close()
             self.account_window = None
+        
+        if self.email_window is not None:  # 關閉信箱視窗
+            self.email_window.close()
+            self.email_window = None
 
         # 關閉資料庫連接
         if self.database.connection is not None:

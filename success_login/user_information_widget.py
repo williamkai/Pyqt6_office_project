@@ -21,6 +21,9 @@ class UserInformationWidget(QDialog):
         positions = [(50, 30), (50, 80), (50, 130), (50, 180)]  # 固定位置 (x, y)
         self.inputs = {}
 
+        # 先從資料庫查詢資料
+        user_data = self.database.fetch_user_data()
+
         for idx, label_text in enumerate(labels):
             x, y = positions[idx]
 
@@ -35,6 +38,11 @@ class UserInformationWidget(QDialog):
             input_widget.setGeometry(x + 120, y, 200, 30)  # 設定輸入框的固定位置和大小 (x + offset, y, width, height)
             if "密碼" in label_text:
                 input_widget.setEchoMode(QLineEdit.EchoMode.Password)
+            # 設置預設值
+            field_name = label_text[:-1]  # 移除最後的冒號
+            if field_name in user_data:
+                input_widget.setText(user_data[field_name])
+                
             self.inputs[label_text] = input_widget
 
         # 創建註冊按鈕

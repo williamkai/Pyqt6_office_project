@@ -22,7 +22,13 @@ class InventoryWidget(QWidget):
     def __init__(self, parent=None, database=None,product_code=""):
         super().__init__(parent)
         self.database = database
-        self.last_search_text = product_code
+        # 使用判斷式確保 self.last_search_text 是字符串
+        if isinstance(product_code, str) and product_code:
+            self.last_search_text = product_code
+        else:
+            self.last_search_text = ""
+        
+        print(f"{self.last_search_text}")
         print(f"{self.last_search_text}")
         self.initialize_ui()
 
@@ -57,7 +63,7 @@ class InventoryWidget(QWidget):
         add_inventory_button.clicked.connect(self.add_inventory)
         self.layout.addWidget(add_inventory_button)
         # 確保 last_search_text 是字串
-        if isinstance(self.last_search_text, str):
+        if isinstance(self.last_search_text, str) and self.last_search_text:
             self.search_box.setText(self.last_search_text)
             self.search_inventory()
         else:
@@ -224,6 +230,8 @@ class InventoryWidget(QWidget):
         
         # 断开信号连接，避免多次调用
         self.search_box.textChanged.disconnect(self.dynamic_search)
+        print(f'text: {text}, type: {type(text)}')
+        print(f'self.last_search_text: {self.last_search_text}, type: {type(self.last_search_text)}')
 
         # 判断是输入文字还是删除文字
         if len(text) > len(self.last_search_text):
