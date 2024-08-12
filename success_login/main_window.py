@@ -61,10 +61,17 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.logout_button)
 
     def open_email_window(self):
+        # 先從資料庫中獲取用戶數據
+        user_data = self.database.fetch_user_data()
+        
+        # 檢查是否有信箱帳號和密碼
+        if not user_data["信箱功能帳號"] or not user_data["密碼"]:
+            QMessageBox.warning(self, "阿肥之力", "無法開啟信箱處理功能，因為尚未設定信箱帳號和密碼！")
+            return
         if self.email_window is None:
-            self.email_window = EmailWidget(self)
+            self.email_window = EmailWidget(None, database=self.database)
             self.email_window.closed.connect(self.on_email_window_closed)
-            self.email_window.show()
+            self.email_window.show() 
         else:
             QMessageBox.information(self, "阿肥之力", "信箱處理功能視窗已經開啟了喔！")
 

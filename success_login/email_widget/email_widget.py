@@ -24,10 +24,15 @@ from PyQt6.QtCore import QThread, pyqtSignal,Qt, QTime
 from PyQt6 import QtCore 
 
 class EmailWidget(QWidget):
-    def __init__(self, parent, email, password):
+
+    closed = pyqtSignal()
+
+    def __init__(self, parent=None, database=None):
         super().__init__(parent)
+        self.database=database
+        self.setWindowTitle("信箱功能")
+        self.setMinimumSize(900, 600)
         self.email = email
-        self.password = password
         self.mail_ids=''
         self.emails = []
         self.mail_ids = []
