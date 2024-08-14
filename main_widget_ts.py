@@ -1,3 +1,99 @@
+#jinghong_order_processing_widget.py
+import imaplib
+from PyQt6.QtWidgets import (QWidget, 
+                             QVBoxLayout, 
+                             QHBoxLayout, 
+                             QPushButton, 
+                             QLineEdit, 
+                             QTableWidget, 
+                             QTableWidgetItem, 
+                             QMessageBox, QDialog, 
+                             QFormLayout,
+                             QDateTimeEdit, 
+                             QCompleter, 
+                             QComboBox,
+                             QListWidget,
+                             QTextEdit)
+from PyQt6.QtCore import QDateTime,Qt,QDate
+
+class JinghongOrderProcessingWidget(QWidget):
+    
+    def __init__(self, parent=None, database=None,email=None,password=None):
+        super().__init__(parent)
+        self.database = database
+        self.parent_widget = parent  # 儲存父部件的引用
+        self.email = email
+        self.password = password
+        self.email_list = None  # 初始化爲 None，表示元件尚未建立
+        self.email_display = None  # 初始化爲 None，表示元件尚未建立
+        
+        self.initialize_ui() 
+
+    def initialize_ui(self):
+        self.layout = QVBoxLayout(self)
+        self.jinghong_email_processing_widget()
+
+    def jinghong_email_processing_widget(self):
+        self.button_layout = QHBoxLayout()
+
+        self.email_search_button = QPushButton("信件查詢")
+        self.email_search_button.clicked.connect(self.email_search)
+        self.email_search_button.setFixedWidth(150)
+        self.button_layout.addWidget(self.email_search_button)
+        
+        self.order_sorting_button = QPushButton("訂單整理功能")
+        self.order_sorting_button.clicked.connect(self.email_search)
+        self.order_sorting_button.setFixedWidth(150)
+        self.button_layout.addWidget(self.order_sorting_button)
+
+        self.sales_details_writing_button = QPushButton("銷貨明細寫入功能")
+        self.sales_details_writing_button.clicked.connect(self.email_search)
+        self.sales_details_writing_button.setFixedWidth(150)
+        self.button_layout.addWidget(self.sales_details_writing_button)
+
+        self.inventory_deduction_button = QPushButton("庫存扣除功能")
+        self.inventory_deduction_button.clicked.connect(self.email_search)
+        self.inventory_deduction_button.setFixedWidth(150)
+        self.button_layout.addWidget(self.inventory_deduction_button)
+
+        self.layout.addLayout(self.button_layout)
+
+
+
+    def email_search(self):
+        print("建立信件搜尋的功能視窗")
+        
+        # 如果 email_list 尚未建立，則建立它
+        if self.email_list is None:
+            self.email_list = QListWidget(self)
+            self.email_list.setMinimumHeight(50)
+            self.layout.addWidget(self.email_list, 1)
+        
+        # 如果 email_display 尚未建立，則建立它
+        if self.email_display is None:
+            self.email_display = QTextEdit(self)
+            self.email_display.setReadOnly(True)
+            self.email_display.setMinimumHeight(200)
+            self.layout.addWidget(self.email_display, 4)
+
+        # 設定佈局（只有當第一次初始化時才需要設定）
+        if self.layout.parent() is None:
+            self.setLayout(self.layout)
+
+    def clear_layout(self):
+        while self.layout.count() > 0:
+            item = self.layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+
+
+
+
+
+
+
+
 import imaplib
 import shutil
 import email

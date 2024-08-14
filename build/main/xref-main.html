@@ -339,7 +339,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'org.python'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#copy">copy</a>
+    <a href="#pickle">pickle</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
 
   </div>
@@ -397,9 +397,11 @@ imported by:
  &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
  &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
  &#8226;   <a href="#success_login.database_widget.product_list_widget">success_login.database_widget.product_list_widget</a>
+ &#8226;   <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
  &#8226;   <a href="#success_login.main_window">success_login.main_window</a>
- &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
+ &#8226;   <a href="#success_login.user_information_widget.user_information_widget">success_login.user_information_widget.user_information_widget</a>
 
   </div>
 
@@ -442,8 +444,9 @@ imported by:
  &#8226;   <a href="#success_login.database_widget.inventory_widget">success_login.database_widget.inventory_widget</a>
  &#8226;   <a href="#success_login.database_widget.product_list_widget">success_login.database_widget.product_list_widget</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
  &#8226;   <a href="#success_login.main_window">success_login.main_window</a>
- &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
+ &#8226;   <a href="#success_login.user_information_widget.user_information_widget">success_login.user_information_widget.user_information_widget</a>
 
   </div>
 
@@ -3240,8 +3243,8 @@ imported by:
   <a target="code" href="///C:/Users/willi/anaconda3/envs/qt_test/lib/copy.py" type="text/plain"><tt>copy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'org.python'">'org.python'</a>
- &#8226;   <a href="#copyreg">copyreg</a>
+    <a href="#copyreg">copyreg</a>
+ &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -3360,11 +3363,29 @@ imported by:
   <a target="code" href="-" type="text/plain"><tt>data_access_object</tt></a>
 <span class="moduletype">NamespacePackage</span>  <div class="import">
 imported by:
-    <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
+    <a href="#data_access_object.User_basic_information_dao">data_access_object.User_basic_information_dao</a>
+ &#8226;   <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
  &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
  &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
  &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
  &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="data_access_object.User_basic_information_dao"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/data_access_object/User_basic_information_dao.py" type="text/plain"><tt>data_access_object.User_basic_information_dao</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#mysql.connector">mysql.connector</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#data_access_object.user_database">data_access_object.user_database</a>
 
   </div>
 
@@ -3449,6 +3470,7 @@ imported by:
 imports:
     <a href="#configparser">configparser</a>
  &#8226;   <a href="#data_access_object">data_access_object</a>
+ &#8226;   <a href="#data_access_object.User_basic_information_dao">data_access_object.User_basic_information_dao</a>
  &#8226;   <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
  &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
  &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
@@ -3521,6 +3543,7 @@ imported by:
  &#8226;   <a href="#mysql.connector.types">mysql.connector.types</a>
  &#8226;   <a href="#mysql.opentelemetry.sdk.util">mysql.opentelemetry.sdk.util</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
  &#8226;   <a href="#xmlrpc.client">xmlrpc.client</a>
 
   </div>
@@ -6029,7 +6052,9 @@ imported by:
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#mysql.opentelemetry.importlib_metadata">mysql.opentelemetry.importlib_metadata</a>
+ &#8226;   <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
 
   </div>
@@ -6165,6 +6190,7 @@ imported by:
  &#8226;   <a href="#email.header">email.header</a>
  &#8226;   <a href="#email.message">email.message</a>
  &#8226;   <a href="#email.utils">email.utils</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
 
   </div>
 
@@ -6296,7 +6322,9 @@ imports:
 imported by:
     <a href="#email">email</a>
  &#8226;   <a href="#email._policybase">email._policybase</a>
+ &#8226;   <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
 
   </div>
 
@@ -9618,7 +9646,10 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+    <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
+ &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
+ &#8226;   <a href="#success_login.main_window">success_login.main_window</a>
 
   </div>
 
@@ -11884,7 +11915,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
+    <a href="#data_access_object.User_basic_information_dao">data_access_object.User_basic_information_dao</a>
+ &#8226;   <a href="#data_access_object.customer_dao">data_access_object.customer_dao</a>
  &#8226;   <a href="#data_access_object.database">data_access_object.database</a>
  &#8226;   <a href="#data_access_object.inventory_dao">data_access_object.inventory_dao</a>
  &#8226;   <a href="#data_access_object.product_list_dao">data_access_object.product_list_dao</a>
@@ -13823,7 +13855,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>org</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#pickle">pickle</a>
+    <a href="#copy">copy</a>
 
   </div>
 
@@ -14064,14 +14096,14 @@ imported by:
   <a target="code" href="///C:/Users/willi/anaconda3/envs/qt_test/lib/pickle.py" type="text/plain"><tt>pickle</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#_compat_pickle">_compat_pickle</a>
+    <a href="#'org.python'">'org.python'</a>
+ &#8226;   <a href="#_compat_pickle">_compat_pickle</a>
  &#8226;   <a href="#_pickle">_pickle</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#itertools">itertools</a>
- &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#struct">struct</a>
@@ -14413,6 +14445,7 @@ imported by:
     <a href="#email.encoders">email.encoders</a>
  &#8226;   <a href="#email.message">email.message</a>
  &#8226;   <a href="#encodings.quopri_codec">encodings.quopri_codec</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
 
   </div>
 
@@ -14535,6 +14568,7 @@ imported by:
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#shlex">shlex</a>
  &#8226;   <a href="#string">string</a>
+ &#8226;   <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
  &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#textwrap">textwrap</a>
@@ -15234,7 +15268,30 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+    <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
+ &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.email_widget.email_search_thread"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/email_widget/email_search_thread.py" type="text/plain"><tt>success_login.email_widget.email_search_thread</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#email">email</a>
+ &#8226;   <a href="#email.header">email.header</a>
+ &#8226;   <a href="#imaplib">imaplib</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#success_login.email_widget">success_login.email_widget</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
 
   </div>
 
@@ -15259,11 +15316,38 @@ imports:
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#shutil">shutil</a>
  &#8226;   <a href="#success_login.email_widget">success_login.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
 
   </div>
   <div class="import">
 imported by:
     <a href="#success_login.main_window">success_login.main_window</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.email_widget.jinghong_order_processing_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/email_widget/jinghong_order_processing_widget.py" type="text/plain"><tt>success_login.email_widget.jinghong_order_processing_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#email">email</a>
+ &#8226;   <a href="#email.charset">email.charset</a>
+ &#8226;   <a href="#email.header">email.header</a>
+ &#8226;   <a href="#imaplib">imaplib</a>
+ &#8226;   <a href="#quopri">quopri</a>
+ &#8226;   <a href="#success_login.email_widget">success_login.email_widget</a>
+ &#8226;   <a href="#success_login.email_widget.email_search_thread">success_login.email_widget.email_search_thread</a>
+ &#8226;   <a href="#urllib.parse">urllib.parse</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
 
   </div>
 
@@ -15277,10 +15361,11 @@ imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#data_access_object.user_database">data_access_object.user_database</a>
+ &#8226;   <a href="#imaplib">imaplib</a>
  &#8226;   <a href="#success_login">success_login</a>
  &#8226;   <a href="#success_login.database_widget.database_widget">success_login.database_widget.database_widget</a>
  &#8226;   <a href="#success_login.email_widget.email_widget">success_login.email_widget.email_widget</a>
- &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
+ &#8226;   <a href="#success_login.user_information_widget.user_information_widget">success_login.user_information_widget.user_information_widget</a>
 
   </div>
   <div class="import">
@@ -15293,12 +15378,28 @@ imported by:
 
 <div class="node">
   <a name="success_login.user_information_widget"></a>
-  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/user_information_widget.py" type="text/plain"><tt>success_login.user_information_widget</tt></a>
+  <a target="code" href="-" type="text/plain"><tt>success_login.user_information_widget</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#success_login">success_login</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#success_login.user_information_widget.user_information_widget">success_login.user_information_widget.user_information_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="success_login.user_information_widget.user_information_widget"></a>
+  <a target="code" href="///C:/Users/willi/Desktop/qt_office_project/success_login/user_information_widget/user_information_widget.py" type="text/plain"><tt>success_login.user_information_widget.user_information_widget</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
- &#8226;   <a href="#success_login">success_login</a>
+ &#8226;   <a href="#success_login.user_information_widget">success_login.user_information_widget</a>
 
   </div>
   <div class="import">
@@ -16401,6 +16502,7 @@ imported by:
  &#8226;   <a href="#nturl2path">nturl2path</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#pydoc">pydoc</a>
+ &#8226;   <a href="#success_login.email_widget.jinghong_order_processing_widget">success_login.email_widget.jinghong_order_processing_widget</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#xml.sax.saxutils">xml.sax.saxutils</a>
  &#8226;   <a href="#xmlrpc.client">xmlrpc.client</a>

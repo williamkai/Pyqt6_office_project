@@ -7,6 +7,8 @@ import configparser
 from data_access_object.product_list_dao import ProductListDao
 from data_access_object.inventory_dao import InventoryDao
 from data_access_object.customer_dao import CustomerInformationDao
+from data_access_object.User_basic_information_dao import UserBasicInformationDAO
+
 class UserDatabase:
     '''
     主要連接我第二階段的資料庫
@@ -21,6 +23,7 @@ class UserDatabase:
         self.product_list_dao=ProductListDao(self.connection,self.cursor)
         self.inventory_dao=InventoryDao(self.connection,self.cursor)
         self.customer_dao=CustomerInformationDao(self.connection,self.cursor)
+        self.User_basic_information_dao=UserBasicInformationDAO(self.connection,self.cursor)
 
     def initialize(self):
         if self.connection is not None and self.cursor is not None:
@@ -69,8 +72,7 @@ class UserDatabase:
             # 使用新創建的資料庫或者說個別帳號的資料庫
             self.connection.database = f'{db_name}'
 
-            # 初始化資料庫結構
-            self.initialize_database()
+
 
         except mysql.connector.Error as err:
             raise Exception(f"無法連接資料庫: {err}")
@@ -80,73 +82,6 @@ class UserDatabase:
         create_database_query = f"CREATE DATABASE IF NOT EXISTS {db_name}"
         self.cursor.execute(create_database_query)
 
-    # 初始化資料庫，也就是先檢查有沒有這個表，沒有就會執行下面函數創建表
-    def initialize_database(self):
-        # 檢查帳戶表是否存在，如果不存在則創建，這是基礎用戶個別資料表，目前只是要用來連信箱，所以沒啥特別東西，這個表就只有信箱資料
-        self.cursor.execute("SHOW TABLES LIKE 'User_basic_information'")
-        table_exists = self.cursor.fetchone()
-        if not table_exists:
-            self.create_User_basic_information_table()
-
-    # 如果沒有user就會創建這個table
-    def create_User_basic_information_table(self):
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS User_basic_information (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                email VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL
-            )
-        """
-        try:
-            self.cursor.execute(create_table_query)
-            self.connection.commit()
-        except mysql.connector.Error as err:
-            print(f"Error creating table: {err}")
-               
-    def insert_user_account(self, username, password):
-        try:
-            # 檢查表格是否已經有資料
-            self.cursor.execute("SELECT COUNT(*) FROM User_basic_information")
-            count = self.cursor.fetchone()[0]
-            
-            if count > 0:
-                # 表格已有資料，執行更新操作
-                self.cursor.execute(
-                    "UPDATE User_basic_information SET email = %s, password = %s WHERE id = 1",
-                    (username, password)
-                )
-            else:
-                # 表格沒有資料，執行插入操作
-                self.cursor.execute(
-                    "INSERT INTO User_basic_information (email, password) VALUES (%s, %s)",
-                    (username, password)
-                )
-            
-            self.connection.commit()
-            return True
-        except mysql.connector.Error as err:
-            print("Error:", err)
-            return False
-    def fetch_user_data(self):
-        """ 從資料庫中獲取用戶數據 """
-        query = "SELECT email, password FROM User_basic_information WHERE id = 1"  # 根據實際情況修改查詢語句
-        self.cursor.execute(query)
-        result = self.cursor.fetchone()
-        
-        if result:
-            email, password = result
-            return {
-                "信箱功能帳號": email,
-                "密碼": password,
-                "再次確認密碼": password
-            }
-        else:
-            # 若沒有資料則返回空字典
-            return {
-                "信箱功能帳號": "",
-                "密碼": "",
-                "再次確認密碼": ""
-            }
 
         # try:
         #     self.cursor.execute("INSERT INTO User_basic_information (email, password) VALUES (%s, %s)", (username, password))
