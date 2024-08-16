@@ -9,13 +9,11 @@ class EmailSearchThread(QThread):
 
     search_finished = pyqtSignal(list)  # Emit list of tuples with (mail_id, email_message)
 
-    def __init__(self, email, password, date_str, from_address, keyword):
+    def __init__(self, email, password,search_criteria):
         super().__init__()
         self.email = email
         self.password = password
-        self.date_str = date_str
-        self.from_address = from_address
-        self.keyword = keyword
+        self.search_criteria = search_criteria
 
     def run(self):
         mail_data = []
@@ -24,10 +22,8 @@ class EmailSearchThread(QThread):
             mail.login(self.email, self.password)
             mail.select('inbox')
 
-            search_criteria = f'SINCE "{self.date_str}"'
-
-            print(f"搜索條件: {search_criteria}")
-            result, data = mail.search(None, search_criteria)
+            print(f"搜索條件: {self.search_criteria}")
+            result, data = mail.search(None,self.search_criteria)
             if result == 'OK':
                 mail_ids = data[0].split()
                 print(f"找到的郵件數量: {len(mail_ids)}")

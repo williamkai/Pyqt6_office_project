@@ -45,6 +45,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.email_list = None  # 初始化爲 None，表示元件尚未建立
         self.email_display = None  # 初始化爲 None，表示元件尚未建立
         self.email_search_layout = None
+        self.orders = None
         
         self.initialize_ui() 
 
@@ -136,6 +137,25 @@ class JinghongOrderProcessingWidget(QWidget):
 
         spacer_item = QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.date_time_layout.addItem(spacer_item)
+        # self.email_search_layout.addLayout(self.date_time_layout)
+
+        # 添加结束日期选择器
+        self.end_date_edit = QDateEdit(self)
+        self.end_date_edit.setCalendarPopup(True)
+        self.end_date_edit.setDisplayFormat("yyyy-MM-dd")
+        self.end_date_edit.setDate(QDate.currentDate())
+        self.end_date_edit.setFixedWidth(150)
+        self.date_time_layout.addWidget(QLabel("结束日期:", self))
+        self.date_time_layout.addWidget(self.end_date_edit)
+        
+        # 添加复选框
+        self.use_before_checkbox = QCheckBox("使用结束日期作為限制條件", self)
+        self.date_time_layout.addWidget(self.use_before_checkbox)
+        
+        # 添加间隔
+        spacer_item = QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.date_time_layout.addItem(spacer_item)
+        
         self.email_search_layout.addLayout(self.date_time_layout)
 
         # 添加一个 QLineEdit 用于输入 from 地址
@@ -190,13 +210,22 @@ class JinghongOrderProcessingWidget(QWidget):
         self.display_layout.addWidget(self.email_search_group_box, 1)
 
     def order_search(self):
-        folder_path=self.folder_path_display.text()
+        # 当前日期      #folder_path=self.folder_path_display.text()
+        today_date = QDate.currentDate().toString("dd-MMM-yyyy")
         date_str = self.date_edit.date().toString("dd-MMM-yyyy")
+        end_date = self.end_date_edit.date().toString("dd-MMM-yyyy")
         from_address = self.from_input.text()
-        keyword = self.keyword_input.text()
-
+        search_criteria=f'SINCE "{date_str}"'
+        # 如果需要使用 BEFORE 条件，添加 BEFORE
+        if self.use_before_checkbox.isChecked() and end_date <= today_date:
+            search_criteria += f' BEFORE "{self.end_date_edit.date().toString("dd-MMM-yyyy")}"'
+        
+        # 如果有寄件人地址且复选框选中，添加寄件人条件
+        if from_address and self.use_from_checkbox.isChecked():
+            search_criteria += f' FROM "{from_address}"'
+        
         self.search_thread = EmailSearchThread(
-            self.email, self.password, date_str, from_address, keyword
+            self.email, self.password,search_criteria
         )
         self.search_thread.search_finished.connect(self.handle_search_results)
         self.search_thread.start()
@@ -221,14 +250,16 @@ class JinghongOrderProcessingWidget(QWidget):
 
                 # 按內容分類
                 if '大榮' in email_content:
-                    order_details = self.parse_order_content(email_content)
-
+                    order_details = self.parse_email_content(email_content)
                     orders['大榮'][mail_id] = order_details
-                elif '通盈' in email_content:
 
-                    orders['通盈'][mail_id] = self.extract_order_details(email_message)
-        
-        print(f"加入後的orders{orders}")
+                elif '通盈' in email_content:
+                    order_details = self.parse_email_content(email_content)
+                    orders['通盈'][mail_id] = order_details
+        print(f"{orders}")
+
+        # print(f"加入後的orders{orders}")
+        self.orders=orders
 
     def display_email_content(self):
         selected_item = self.email_list.currentItem()
@@ -327,58 +358,107 @@ class JinghongOrderProcessingWidget(QWidget):
             content = content[match.end():].strip()
         return content
     
-    def parse_order_content(self, email_content):
+    def parse_email_content(self, email_content):
         # 初始化訂單標題和商品訊息
         order_title = ""
-        items = {}
+        items = ""
 
-        # 定位“取貨明細如下：”的位置
-        detail_marker = '取貨明細如下：'
-        detail_index = email_content.find(detail_marker)
-        
-        if detail_index != -1:
-            # 擷取“取貨明細如下：”之前的內容
-            pre_detail_content = email_content[:detail_index].strip()
+        lines = email_content.split('\n')
+        for line in lines:
+            if "取貨明細如下：" in line:
+                order_title=line
+                break
+        order_title=self.parse_order_title(order_title)
 
-            # 找到日期後的標題
-            # 日期的正則算式
-            date_pattern = r'(\d{1,2}/\d{1,2})'
-            # 搜尋日期
-            date_match = re.search(date_pattern, pre_detail_content)
-            
-            if date_match:
-                date_str = date_match.group(0)
-                # 擷取日期後的標題內容
-                title_start = date_match.end()
-                title_content = pre_detail_content[title_start:].strip()
-                
-                # 去掉可能的首碼（例如“大榮-”或“通盈-”）
-                title_parts = title_content.split(' ')
-                if len(title_parts) > 1:
-                    # 處理標題內容中的首碼部分
-                    order_title = ' '.join(title_parts[1:]).strip()
-                else:
-                    order_title = title_content.strip()
-
-            # 擷取“取貨明細如下：”之後到“以上”之前的內容
-            post_detail_content = email_content[detail_index + len(detail_marker):]
-            end_marker = '以上'
-            end_index = post_detail_content.find(end_marker)
-            
-            if end_index != -1:
-                detail_content = post_detail_content[:end_index].strip()
-            else:
-                detail_content = post_detail_content.strip()
-
-            # 使用正則算式擷取商品代號和數量
-            item_matches = re.findall(r'([A-Z0-9-]+)\s*…\s*(\d+)箱', detail_content)
-            for item_code, quantity in item_matches:
-                items[item_code] = int(quantity)
+        items=self.parse_order_items(lines)
 
         return {
             'title': order_title,
             'items': items
-        }
+            }
+    
+    def parse_order_title(self, extracted_text):
+        # 指定要移除的字元
+        remove_markers = ['大榮-', '通盈-','-']
+        extracted_text
+        detail_marker_1 = '衛生紙訂單'
+        detail_index_1 = extracted_text.find(detail_marker_1)
+        detail_marker_2 = '宅配訂單'
+        detail_index_2 = extracted_text.find(detail_marker_2)
+        detail_marker_3 = '訂單'
+        detail_index_3 = extracted_text.find(detail_marker_3)
+
+        if detail_index_1 != -1:
+            # 擷取“取貨明細如下：”之前的內容
+            pre_detail_content = extracted_text[:detail_index_1].strip()
+
+            # 移除指定的字元
+            for marker in remove_markers:
+                pre_detail_content = pre_detail_content.replace(marker, '')
+
+            # 清理前後的空白字符
+            pre_detail_content = pre_detail_content.strip()
+
+            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
+            if pre_detail_content and pre_detail_content[0] == '0':
+                pre_detail_content = pre_detail_content[1:].strip()
+            return pre_detail_content
+        
+        elif detail_index_2 != -1:
+            # 擷取“取貨明細如下：”之前的內容
+            pre_detail_content = extracted_text[:detail_index_2].strip()
+            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
+            if pre_detail_content and pre_detail_content[0] == '0':
+                pre_detail_content = pre_detail_content[1:].strip()
+            return pre_detail_content
+
+        elif detail_index_3 != -1:
+            # 擷取“取貨明細如下：”之前的內容
+            pre_detail_content = extracted_text[:detail_index_3].strip()
+            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
+            if pre_detail_content and pre_detail_content[0] == '0':
+                pre_detail_content = pre_detail_content[1:].strip()
+            return pre_detail_content
+
+        else:
+            print("未找到匹配的文字")
+            return ""
+    def parse_order_items(self,order_lines):
+        # 初始化变量
+        start_marker = '取貨明細如下'
+        end_marker = '以上'
+        start_index = None
+        end_index = None
+
+        # 找到"取貨明細如下："和"以上"的行索引
+        for i, line in enumerate(order_lines):
+            if start_marker in line:
+                start_index = i
+            if end_marker in line:
+                end_index = i
+                break
+
+        # 如果找到有效的起始和结束行
+        if start_index is not None and end_index is not None:
+            # 提取"取貨明細如下："和"以上"之间的内容
+            detail_lines = order_lines[start_index + 1:end_index]
+            # 处理每一行
+            items = []
+            for line in detail_lines:
+                line = line.strip()
+                if line.endswith('箱'):
+                # 倒序查找最后一个 '…'
+                    product_code, separator, remaining = line.rpartition('…')
+
+                    # 去掉商品数量中的“箱”并去除空格
+                    quantity = remaining.replace('箱', '').strip()
+
+                    # 移除 product_code 中剩余的 '…' 并去除空格
+                    product_code = product_code.replace('…', '').strip()
+
+                    # 将结果添加到 items 列表中
+                    items.append({'product_code': product_code, 'quantity': quantity})
+            return items
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Enter or event.key() == Qt.Key.Key_Return:
