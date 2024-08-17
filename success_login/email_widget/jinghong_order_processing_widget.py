@@ -1,25 +1,15 @@
 #jinghong_order_processing_widget.py
 import imaplib
 import email
-import quopri
-import urllib.parse
 import re
 from datetime import datetime
 from email import message_from_bytes
-from email.charset import Charset
 from email.header import decode_header
 from PyQt6.QtWidgets import (QWidget, 
                              QVBoxLayout, 
                              QHBoxLayout, 
                              QPushButton, 
                              QLineEdit, 
-                             QTableWidget, 
-                             QTableWidgetItem, 
-                             QMessageBox, QDialog, 
-                             QFormLayout,
-                             QDateTimeEdit, 
-                             QCompleter, 
-                             QComboBox,
                              QListWidget,
                              QTextEdit,
                              QDateEdit,
@@ -30,10 +20,13 @@ from PyQt6.QtWidgets import (QWidget,
                              QLabel,
                              QGroupBox,
                              QListWidgetItem,
-                             QFileDialog)
+                             QFileDialog,
+                             QMessageBox)
 from PyQt6.QtCore import QDateTime,Qt,QDate, QTime, QEvent
 
 from success_login.email_widget.email_search_thread import EmailSearchThread
+from success_login.email_widget.jinghong_order_processing_function.order_sorting import OrderSortingThread
+
 class JinghongOrderProcessingWidget(QWidget):
     
     def __init__(self, parent=None, database=None,email=None,password=None):
@@ -45,7 +38,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.email_list = None  # 初始化爲 None，表示元件尚未建立
         self.email_display = None  # 初始化爲 None，表示元件尚未建立
         self.email_search_layout = None
-        self.orders = None
+        self.mail_data =None #放搜尋結果資料的字典
         
         self.initialize_ui() 
 
@@ -66,7 +59,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.button_layout.addWidget(self.email_search_button)
         
         self.order_sorting_button = QPushButton("訂單整理功能")
-        self.order_sorting_button.clicked.connect(self.email_search)
+        self.order_sorting_button.clicked.connect(self.order_sorting)
         self.order_sorting_button.setFixedWidth(150)
         self.button_layout.addWidget(self.order_sorting_button)
 
@@ -127,7 +120,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.date_edit.setDate(datetime.today())
         self.date_edit.setFixedWidth(150)
         self.date_time_layout.addWidget(self.date_edit)
-        #添加時間選擇器
+        # 添加時間選擇器
         self.timeedit = QTimeEdit(self)
         self.timeedit.setDisplayFormat('hh:mm:ss')
         self.time = QTime(7, 0, 0)  # 参数依次是小时、分钟、秒
@@ -186,8 +179,16 @@ class JinghongOrderProcessingWidget(QWidget):
         # 添加選擇資料夾按鈕及顯示資料夾路徑的標籤
         self.folder_label = QLabel("選擇保存資料夾:", self)
         self.folder_path_display = QLineEdit(self)
-        self.folder_path_display.setFixedWidth(200)
+        self.folder_path_display.setFixedWidth(300)
         self.folder_path_display.setReadOnly(True)
+        
+        folder_path = self.database.User_basic_information_dao.fetch_user_folder_path()
+        if folder_path:
+            # 假設 folder_path 是一個元組，例如: ('/path/to/folder',)
+            self.folder_path_display.setText(folder_path)
+        else:
+            self.folder_path_display.setText("未設定路徑")
+
 
         self.select_folder_button = QPushButton("選擇資料夾", self)
         self.select_folder_button.setFixedWidth(100)
@@ -209,11 +210,20 @@ class JinghongOrderProcessingWidget(QWidget):
         # 將 QGroupBox 添加到 display_layout
         self.display_layout.addWidget(self.email_search_group_box, 1)
 
+
+    """
+    這個是信件搜索功能的函式
+    是用多線程跑的，這樣可以避免信件還在處理
+    但有其他地方的code，同時也需要運行，產生錯誤。
+    主要分成第一個是把資訊傳到信件搜索的多線呈去處理
+    再傳回兩種資料，一個是信件為一ID，一個是信件的內容(已經轉為文字)，包含標題跟內文
+    """
     def order_search(self):
         # 当前日期      #folder_path=self.folder_path_display.text()
         today_date = QDate.currentDate().toString("dd-MMM-yyyy")
         date_str = self.date_edit.date().toString("dd-MMM-yyyy")
         end_date = self.end_date_edit.date().toString("dd-MMM-yyyy")
+        keyword = self.keyword_input.text()  # 取得輸入框中的關鍵詞
         from_address = self.from_input.text()
         search_criteria=f'SINCE "{date_str}"'
         # 如果需要使用 BEFORE 条件，添加 BEFORE
@@ -225,122 +235,55 @@ class JinghongOrderProcessingWidget(QWidget):
             search_criteria += f' FROM "{from_address}"'
         
         self.search_thread = EmailSearchThread(
-            self.email, self.password,search_criteria
+            self.email, self.password,search_criteria,keyword
         )
         self.search_thread.search_finished.connect(self.handle_search_results)
         self.search_thread.start()
-    
-    def handle_search_results(self, mail_data):    
+
+    def handle_search_results(self, displayed_items, mail_data):    
         self.email_list.clear()  # 清空之前的郵件列表
-        keyword = self.keyword_input.text()  # 取得輸入框中的關鍵詞
-        orders = {'大榮': {}, '通盈': {}}
-        for mail_id, email_message in mail_data:
-            # subject = email_message['Subject']
-            subject = email_message.get('Subject', '(無標題)')
-            subject = self.decode_mime_header(subject) if subject else "(無標題)"
-            from_ = email_message['From']
-             # 檢查標題是否包含關鍵詞
-            if keyword.lower() in subject.lower():
-                item = QListWidgetItem(f"信件代號/標題:{mail_id}/{subject}")  # - {from_}
-                item.setData(Qt.ItemDataRole.UserRole, email_message)
-                self.email_list.addItem(item)
+        self.mail_data = mail_data  # 將郵件資料儲存在類別層級的字典中
 
-                # 擷取郵件內容
-                email_content = self.extract_order_details(email_message)  # 使用 extract_order_details 方法
-
-                # 按內容分類
-                if '大榮' in email_content:
-                    order_details = self.parse_email_content(email_content)
-                    orders['大榮'][mail_id] = order_details
-
-                elif '通盈' in email_content:
-                    order_details = self.parse_email_content(email_content)
-                    orders['通盈'][mail_id] = order_details
-        print(f"{orders}")
-
-        # print(f"加入後的orders{orders}")
-        self.orders=orders
+        for mail_id, subject in displayed_items:
+            item = QListWidgetItem(subject)
+            item.setData(Qt.ItemDataRole.UserRole, mail_id)  # 只儲存 mail_id
+            self.email_list.addItem(item)
 
     def display_email_content(self):
         selected_item = self.email_list.currentItem()
         if selected_item:
-            email_message = selected_item.data(Qt.ItemDataRole.UserRole)
-            email_content = self.extract_order_details(email_message)  # 使用 extract_order_details 方法
+            mail_id = selected_item.data(Qt.ItemDataRole.UserRole)
+            email_content = self.mail_data.get(mail_id, "(未能取得內容)")
+            self.email_display.setPlainText(email_content)  # 顯示內容的函式
 
-            # 取得郵件主題並解碼
-            subject_header = email_message.get('Subject', '')
-            subject = self.decode_mime_header(subject_header)
-            print(f"郵件主題: {subject}")
 
-            # 取得接收時間
-            date_header = email_message.get('Date', '')
-            print(f"接收時間: {date_header}")
+    """
+    這是訂單處理功能，主要是我需要把訂單整理成word印下來
+    因為公司就是這樣的程序，我只能寫這個功能幫助我....
+    哈哈哈....TˇT
+    主要是主裡訂單信件裡的文字，把每筆訂單的來源跟商品數量處理起來
+    主要就是文字處理，去判斷那些文字是我要的，最後整理成字典
+    到這邊還需要顯一些函式，把這些整理好的資料轉成表格或是其他形式
+    顯示出來讓我們看這些資訊對不對...，哭欸思考到這邊發現這樣到這函數的多線呈
+    我是不是不該傳儲存路徑，因為要先確認儲存成word，還是我就直接儲存成word?
+    哭欸
+    """
+    def order_sorting(self):
+        if not self.mail_data:  # 檢查 mail_data 是否為空
+            QMessageBox.warning(self, "阿肥之力", "還沒有搜索信件，請先搜索")
+            return  # 如果為空，提前結束函式
+        print("有執行這邊代表有資料，接下來就是處理訂單變成word、跟統計數量、等等功能了")
+        self.sorting_thread = OrderSortingThread(self.mail_data, self.folder_path_display.text())
+        self.sorting_thread.sorting_finished.connect(self.handle_sorting_results)
+        self.sorting_thread.start()
 
-            # 如果有附件，將附件訊息添加到郵件內容中
-            attachment_info = []
-            if email_message.is_multipart():
-                for part in email_message.walk():
-                    if part.get('Content-Disposition') is not None:
-                        filename = part.get_filename()
-                        if filename:
-                            decoded_filename = self.decode_mime_header(filename)
-                            attachment_info.append(decoded_filename)
-            
-            if attachment_info:
-                email_content += "\n\n附件:\n"
-                for attachment in attachment_info:
-                    email_content += f"- {attachment}\n"
-            
-            # 添加接收時間到郵件內容中
-            if date_header:
-                email_content = f"接收時間: {date_header}\n\n{email_content}"
 
-            self.email_display.setPlainText(email_content)
+    def handle_sorting_results(self,processed_data):
+        # 處理排序完成後的結果
+        print(f"處理完成的結果: {processed_data}")
 
-    def extract_order_details(self, email_message):
-        email_content = ""
 
-        # 解析郵件內容
-        if email_message.is_multipart():
-            for part in email_message.walk():
-                content_type = part.get_content_type()
-                charset = part.get_content_charset()
-                
-                # 處理內文內容
-                if content_type == "text/plain":
-                    try:
-                        payload = part.get_payload(decode=True)
-                        if charset:
-                            email_content += payload.decode(charset)
-                        else:
-                            email_content += payload.decode('utf-8', errors='replace')
-                    except (UnicodeDecodeError, TypeError) as e:
-                        print(f"解碼錯誤: {e}")
-        else:
-            charset = email_message.get_content_charset()
-            try:
-                payload = email_message.get_payload(decode=True)
-                if charset:
-                    email_content = payload.decode(charset)
-                else:
-                    email_content = payload.decode('utf-8', errors='replace')
-            except (UnicodeDecodeError, TypeError) as e:
-                print(f"解碼錯誤: {e}")
 
-        # 清理郵件內容，去掉 "Subject:" 行及其以上的部分
-        email_content = self.clean_email_content(email_content)
-
-        return email_content
-    
-    def decode_mime_header(self, header):
-        decoded_parts = decode_header(header)
-        decoded_string = ""
-        for part, encoding in decoded_parts:
-            if encoding is not None:
-                decoded_string += part.decode(encoding)
-            else:
-                decoded_string += part.decode('utf-8', errors='replace')
-        return decoded_string
 
     def open_folder_dialog(self):
         """ 打開選擇資料夾對話框 """
@@ -348,117 +291,10 @@ class JinghongOrderProcessingWidget(QWidget):
         if folder_path:
             self.folder_path_display.setText(folder_path)
             print(f"選擇的資料夾: {folder_path}")
-
-    def clean_email_content(self,content):
-        # 查找并删除从 "Subject:" 行到邮件开头的部分
-        pattern = r'Subject:.*\n.*\n'
-        match = re.search(pattern, content)
-        if match:
-            # 找到 "Subject:" 行的位置，删除其以上内容
-            content = content[match.end():].strip()
-        return content
-    
-    def parse_email_content(self, email_content):
-        # 初始化訂單標題和商品訊息
-        order_title = ""
-        items = ""
-
-        lines = email_content.split('\n')
-        for line in lines:
-            if "取貨明細如下：" in line:
-                order_title=line
-                break
-        order_title=self.parse_order_title(order_title)
-
-        items=self.parse_order_items(lines)
-
-        return {
-            'title': order_title,
-            'items': items
-            }
-    
-    def parse_order_title(self, extracted_text):
-        # 指定要移除的字元
-        remove_markers = ['大榮-', '通盈-','-']
-        extracted_text
-        detail_marker_1 = '衛生紙訂單'
-        detail_index_1 = extracted_text.find(detail_marker_1)
-        detail_marker_2 = '宅配訂單'
-        detail_index_2 = extracted_text.find(detail_marker_2)
-        detail_marker_3 = '訂單'
-        detail_index_3 = extracted_text.find(detail_marker_3)
-
-        if detail_index_1 != -1:
-            # 擷取“取貨明細如下：”之前的內容
-            pre_detail_content = extracted_text[:detail_index_1].strip()
-
-            # 移除指定的字元
-            for marker in remove_markers:
-                pre_detail_content = pre_detail_content.replace(marker, '')
-
-            # 清理前後的空白字符
-            pre_detail_content = pre_detail_content.strip()
-
-            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
-            if pre_detail_content and pre_detail_content[0] == '0':
-                pre_detail_content = pre_detail_content[1:].strip()
-            return pre_detail_content
-        
-        elif detail_index_2 != -1:
-            # 擷取“取貨明細如下：”之前的內容
-            pre_detail_content = extracted_text[:detail_index_2].strip()
-            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
-            if pre_detail_content and pre_detail_content[0] == '0':
-                pre_detail_content = pre_detail_content[1:].strip()
-            return pre_detail_content
-
-        elif detail_index_3 != -1:
-            # 擷取“取貨明細如下：”之前的內容
-            pre_detail_content = extracted_text[:detail_index_3].strip()
-            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
-            if pre_detail_content and pre_detail_content[0] == '0':
-                pre_detail_content = pre_detail_content[1:].strip()
-            return pre_detail_content
-
-        else:
-            print("未找到匹配的文字")
-            return ""
-    def parse_order_items(self,order_lines):
-        # 初始化变量
-        start_marker = '取貨明細如下'
-        end_marker = '以上'
-        start_index = None
-        end_index = None
-
-        # 找到"取貨明細如下："和"以上"的行索引
-        for i, line in enumerate(order_lines):
-            if start_marker in line:
-                start_index = i
-            if end_marker in line:
-                end_index = i
-                break
-
-        # 如果找到有效的起始和结束行
-        if start_index is not None and end_index is not None:
-            # 提取"取貨明細如下："和"以上"之间的内容
-            detail_lines = order_lines[start_index + 1:end_index]
-            # 处理每一行
-            items = []
-            for line in detail_lines:
-                line = line.strip()
-                if line.endswith('箱'):
-                # 倒序查找最后一个 '…'
-                    product_code, separator, remaining = line.rpartition('…')
-
-                    # 去掉商品数量中的“箱”并去除空格
-                    quantity = remaining.replace('箱', '').strip()
-
-                    # 移除 product_code 中剩余的 '…' 并去除空格
-                    product_code = product_code.replace('…', '').strip()
-
-                    # 将结果添加到 items 列表中
-                    items.append({'product_code': product_code, 'quantity': quantity})
-            return items
+            try:
+                self.database.User_basic_information_dao.update_user_folder_path(folder_path)
+            except Exception as e:
+                print(f"更新路徑到資料庫時發生錯誤: {e}")
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Enter or event.key() == Qt.Key.Key_Return:

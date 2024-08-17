@@ -29,6 +29,7 @@ class MainWindow(QWidget):
         self.database.product_list_dao.create_product_list_table()
         self.database.inventory_dao.create_inventory_table()
         self.database.User_basic_information_dao.create_User_basic_information_table()
+        self.database.User_basic_information_dao.check_and_add_column()
 
         # 設定布局
         self.layout = QVBoxLayout(self)
@@ -63,6 +64,10 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.logout_button)
 
     def open_email_window(self):
+        # 先檢查信箱處理功能視窗是否已經開啟
+        if self.email_window is not None:
+            QMessageBox.information(self, "阿肥之力", "信箱處理功能視窗已經開啟了喔！")
+            return
         # 先從資料庫中獲取用戶數據
         user_data = self.database.User_basic_information_dao.fetch_user_data()
         
@@ -82,8 +87,6 @@ class MainWindow(QWidget):
             self.email_window = EmailWidget(None, database=self.database,email=email,password=password)
             self.email_window.closed.connect(self.on_email_window_closed)
             self.email_window.show() 
-        else:
-            QMessageBox.information(self, "阿肥之力", "信箱處理功能視窗已經開啟了喔！")
 
     def on_email_window_closed(self):
         self.email_window = None
