@@ -18,6 +18,7 @@ from success_login.main_window import MainWindow
 
 class MainApplication(QMainWindow):
     close_signal = pyqtSignal()
+    
     def __init__(self):
         super().__init__()
         self.setWindowTitle("努力減肥阿凱寫的程式~嗄~~~哈!!!!")

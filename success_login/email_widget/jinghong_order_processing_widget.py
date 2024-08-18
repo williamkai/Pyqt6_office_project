@@ -1,6 +1,7 @@
 #jinghong_order_processing_widget.py
 import imaplib
 import email
+import json
 import re
 from datetime import datetime
 from email import message_from_bytes
@@ -22,13 +23,16 @@ from PyQt6.QtWidgets import (QWidget,
                              QListWidgetItem,
                              QFileDialog,
                              QMessageBox)
-from PyQt6.QtCore import QDateTime,Qt,QDate, QTime, QEvent
+from PyQt6.QtCore import QDateTime,Qt,QDate, QTime, QEvent,pyqtSignal
 
 from success_login.email_widget.email_search_thread import EmailSearchThread
 from success_login.email_widget.jinghong_order_processing_function.order_sorting import OrderSortingThread
+from success_login.email_widget.jinghong_order_processing_function.order_sorting_window import OrderSortingWindow
 
 class JinghongOrderProcessingWidget(QWidget):
-    
+
+    close_signal = pyqtSignal()
+
     def __init__(self, parent=None, database=None,email=None,password=None):
         super().__init__(parent)
         self.database = database
@@ -40,7 +44,11 @@ class JinghongOrderProcessingWidget(QWidget):
         self.email_search_layout = None
         self.mail_data =None #放搜尋結果資料的字典
         
+        self.order_sorting_window = None  # 否則初始化為 None
         self.initialize_ui() 
+        
+        self.close_signal.connect(self.handle_close)
+
 
     def initialize_ui(self):
         self.main_layout = QVBoxLayout(self)
@@ -269,6 +277,9 @@ class JinghongOrderProcessingWidget(QWidget):
     哭欸
     """
     def order_sorting(self):
+        if self.order_sorting_window is not None:
+            QMessageBox.warning(self, "阿肥之力", "訂單整理視窗已經開打")
+            return
         if not self.mail_data:  # 檢查 mail_data 是否為空
             QMessageBox.warning(self, "阿肥之力", "還沒有搜索信件，請先搜索")
             return  # 如果為空，提前結束函式
@@ -279,9 +290,16 @@ class JinghongOrderProcessingWidget(QWidget):
 
 
     def handle_sorting_results(self,processed_data):
-        # 處理排序完成後的結果
-        print(f"處理完成的結果: {processed_data}")
+        folder_path=self.folder_path_display.text() 
+        print(f"路徑是啥:{folder_path}")
+        # 打開新視窗並顯示結果 
+        self.order_sorting_window = OrderSortingWindow(None,processed_data,folder_path)
+        self.order_sorting_window.closed.connect(self.on_order_sorting_window_closed)
+        self.order_sorting_window.show() 
 
+    def on_order_sorting_window_closed(self):
+        self.order_sorting_window = None
+        print("訂單整理視窗已經關閉")
 
 
 
@@ -308,3 +326,12 @@ class JinghongOrderProcessingWidget(QWidget):
             widget = item.widget()
             if widget:
                 widget.deleteLater()
+
+    def handle_close(self):
+        if self.order_sorting_window is not None:
+            self.order_sorting_window.close()
+            self.order_sorting_window= None
+
+    def closeEvent(self, event):
+        self.close_signal.emit() # 發射關閉訊號
+        event.accept()

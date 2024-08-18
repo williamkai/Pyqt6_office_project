@@ -38,6 +38,7 @@ from success_login.email_widget.jinghong_order_processing_widget import Jinghong
 class EmailWidget(QWidget):
 
     closed = pyqtSignal()
+    close_signal = pyqtSignal()
 
     def __init__(self, parent=None, database=None,email=None,password=None):
         super().__init__(parent)
@@ -48,6 +49,8 @@ class EmailWidget(QWidget):
         self.password=password
         self.main_layout = QVBoxLayout(self) #垂直布局
         self.initialize_ui()
+        self.Jinghong_order_processing_window=None
+        self.close_signal.connect(self.handle_close)
 
 
     def initialize_ui(self):
@@ -79,8 +82,8 @@ class EmailWidget(QWidget):
  
     def Jinghong_order_processing(self):
         self.clear_display_area()
-        self.Jinghong_order_processing = JinghongOrderProcessingWidget(parent=self,database=self.database,email=self.email,password=self.password)
-        self.display_layout.addWidget(self.Jinghong_order_processing)
+        self.Jinghong_order_processing_window = JinghongOrderProcessingWidget(parent=self,database=self.database,email=self.email,password=self.password)
+        self.display_layout.addWidget(self.Jinghong_order_processing_window)
         print("測試測試-訂單功能")
         print(f"使用的邮箱: {self.email}")
 
@@ -100,17 +103,11 @@ class EmailWidget(QWidget):
             if widget:
                 widget.deleteLater()
 
-        # 清空GridLayout对象及其中的部件
-        # if self.grid_layout:
-        #     while self.grid_layout.count() > 0:
-        #         item = self.grid_layout.takeAt(0)
-        #         widget = item.widget()
-        #         if widget:
-        #             widget.deleteLater()
-
-        #     # 將布局管理器置空，以便重新使用
-        #     self.grid_layout = None
+    def handle_close(self):
+        if self.Jinghong_order_processing_window is not None:
+            self.Jinghong_order_processing_window.close()
 
     def closeEvent(self, event):
+        self.close_signal.emit()  # 發射關閉訊號
         self.closed.emit()
         event.accept()
