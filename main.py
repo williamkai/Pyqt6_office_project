@@ -22,7 +22,7 @@ class MainApplication(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("努力減肥阿凱寫的程式~嗄~~~哈!!!!")
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(400, 300)
         
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)

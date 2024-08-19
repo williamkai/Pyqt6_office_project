@@ -40,8 +40,17 @@ class EmailSearchThread(QThread):
                     subject = self.clean_email_subject_content(subject)
                     email_content=self.extract_order_details(email_message)
 
-                    
-                    if self.keyword.lower() in subject.lower():
+                    self_keyword = self.keyword.lower()
+                    subject_lower = subject.lower()
+
+                    # 定义排除的关键字列表
+                    exclude_keywords = ["退订", "回收", "re"]
+
+                    # 检查排除关键字是否存在于主题中
+                    exclude_condition = any(exclude_kw.lower() in subject_lower for exclude_kw in exclude_keywords)
+   
+                    # 判断是否需要执行
+                    if self_keyword in subject_lower and not exclude_condition:
                         displayed_items.append((mail_id, f"標題:{subject} (信件代號:{mail_id})"))
                         mail_data[mail_id] = email_content
 
