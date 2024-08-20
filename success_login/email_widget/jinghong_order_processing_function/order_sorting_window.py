@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (QMainWindow,
                              QPushButton,
                              QListWidget,
                              QListWidgetItem)
-
+from PyQt6.QtCore import QTimer
 class OrderSortingWindow(QWidget):
     closed = pyqtSignal()
     data_changed = pyqtSignal(dict)
@@ -37,6 +37,8 @@ class OrderSortingWindow(QWidget):
         self.initialize_ui()
         self.create_order_list()
         self.calculate_statistics()
+        self.show()
+        QTimer.singleShot(2000, self.merge_and_send_data)  #延時再傳送信號，因為接收的函數還沒執行到
 
     def initialize_ui(self):
         self.main_layout = QVBoxLayout(self)
@@ -102,8 +104,6 @@ class OrderSortingWindow(QWidget):
 
         if selected_key in ["大榮商品總數", "通盈商品總數"]:
             cleaned_key =selected_key.replace("商品總數", "")
-            print(f"{cleaned_key}")
-            print(f"這個不應該去掉商品總數{selected_key}")
             self.create_order_total_table(cleaned_key)
         else:
             data_to_display = self.processed_data.get(selected_key, {})
@@ -284,6 +284,12 @@ class OrderSortingWindow(QWidget):
         doc.save(file_path)
         print(f"File saved to {file_path}")
         
+    def merge_and_send_data(self):
+        combined_data = {
+            '訂單資料': self.processed_data,
+            '總計資料': self.stats
+            }
+        self.data_changed.emit(combined_data)
 
     def closeEvent(self, event):
         self.closed.emit()  # 當視窗關閉時發出訊號

@@ -28,6 +28,7 @@ from PyQt6.QtCore import QDateTime,Qt,QDate, QTime, QEvent,pyqtSignal
 from success_login.email_widget.email_search_thread import EmailSearchThread
 from success_login.email_widget.jinghong_order_processing_function.order_sorting import OrderSortingThread
 from success_login.email_widget.jinghong_order_processing_function.order_sorting_window import OrderSortingWindow
+from success_login.email_widget.jinghong_order_processing_function.order_sorting_to_excel_window import OrderSortingToExcelWindow
 
 class JinghongOrderProcessingWidget(QWidget):
 
@@ -45,6 +46,8 @@ class JinghongOrderProcessingWidget(QWidget):
         self.mail_data =None #放搜尋結果資料的字典
         
         self.order_sorting_window = None  # 否則初始化為 None
+        self.order_all_data=None
+        self.order_sorting_to_excel_window=None
         self.initialize_ui() 
         
         self.close_signal.connect(self.handle_close)
@@ -72,7 +75,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.button_layout.addWidget(self.order_sorting_button)
 
         self.sales_details_writing_button = QPushButton("銷貨明細寫入功能")
-        self.sales_details_writing_button.clicked.connect(self.email_search)
+        self.sales_details_writing_button.clicked.connect(self.order_sorting_to_excel)
         self.sales_details_writing_button.setFixedWidth(150)
         self.button_layout.addWidget(self.sales_details_writing_button)
 
@@ -283,7 +286,6 @@ class JinghongOrderProcessingWidget(QWidget):
         if not self.mail_data:  # 檢查 mail_data 是否為空
             QMessageBox.warning(self, "阿肥之力", "還沒有搜索信件，請先搜索")
             return  # 如果為空，提前結束函式
-        print("有執行這邊代表有資料，接下來就是處理訂單變成word、跟統計數量、等等功能了")
         self.sorting_thread = OrderSortingThread(self.mail_data, self.folder_path_display.text())
         self.sorting_thread.sorting_finished.connect(self.handle_sorting_results)
         self.sorting_thread.start()
@@ -294,13 +296,33 @@ class JinghongOrderProcessingWidget(QWidget):
         print(f"路徑是啥:{folder_path}")
         # 打開新視窗並顯示結果 
         self.order_sorting_window = OrderSortingWindow(None,processed_data,folder_path)
+        self.order_sorting_window.data_changed.connect(self.order_data_and_total_data)
         self.order_sorting_window.closed.connect(self.on_order_sorting_window_closed)
-        self.order_sorting_window.show() 
+        # self.order_sorting_window.show() 
 
     def on_order_sorting_window_closed(self):
         self.order_sorting_window = None
         print("訂單整理視窗已經關閉")
 
+    def order_data_and_total_data(self,data):
+        self.order_all_data=data
+
+    def order_sorting_to_excel(self):
+        if self.order_all_data is None:
+            QMessageBox.warning(self, "阿肥之力", "請先使用...訂單整理功能")
+            return
+        if self.order_sorting_to_excel_window is not None:
+            QMessageBox.warning(self, "阿肥之力", "銷貨明細功能視窗已經開打")
+            return
+        folder_path=self.folder_path_display.text() 
+        print(f"路徑是啥:{folder_path}")
+        self.order_sorting_to_excel_window = OrderSortingToExcelWindow(None,self.order_all_data,folder_path)
+        self.order_sorting_to_excel_window.closed.connect(self.on_order_sorting_to_excel_window_closed)
+        self.order_sorting_to_excel_window.show() 
+        
+    def on_order_sorting_to_excel_window_closed(self):
+        self.order_sorting_to_excel_window =None
+        print("銷貨寫入功能視窗已關閉")
 
 
     def open_folder_dialog(self):
@@ -331,6 +353,10 @@ class JinghongOrderProcessingWidget(QWidget):
         if self.order_sorting_window is not None:
             self.order_sorting_window.close()
             self.order_sorting_window= None
+
+        if self.order_sorting_to_excel_window is not None:
+            self.order_sorting_to_excel_window.close()
+            self.order_sorting_to_excel_window= None
 
     def closeEvent(self, event):
         self.close_signal.emit() # 發射關閉訊號

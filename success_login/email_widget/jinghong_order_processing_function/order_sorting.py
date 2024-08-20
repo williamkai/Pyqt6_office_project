@@ -16,7 +16,7 @@ class OrderSortingThread(QThread):
 
         # 擷取郵件內容
         for mail_id, email_content in self.email_data_dict.items():
-            print(f"Mail ID: {mail_id}, Content: {email_content}")
+            # print(f"Mail ID: {mail_id}, Content: {email_content}")
                 
             # 按內容分類
             if '大榮' in email_content:
@@ -27,7 +27,7 @@ class OrderSortingThread(QThread):
                 order_details = self.parse_email_content(email_content)
                 orders['通盈'][mail_id] = order_details
            
-            print(f"{orders}")
+            # print(f"{orders}")
             # print(f"加入後的orders{orders}")
         self.sorting_finished.emit(orders)
 
