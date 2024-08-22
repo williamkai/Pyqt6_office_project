@@ -15,7 +15,8 @@ from PyQt6.QtWidgets import (QMainWindow,
                              QTextEdit,
                              QPushButton,
                              QListWidget,
-                             QListWidgetItem)
+                             QListWidgetItem,
+                             QMessageBox)
 
 class OrderSortingToExcelWindow(QWidget):
     START_ROW = 7
@@ -111,9 +112,11 @@ class OrderSortingToExcelWindow(QWidget):
             ws = wb[self.SHEET_NAME]  # 使用常數 SHEET_NAME
         except FileNotFoundError:
             print(f"文件 {file_path} 未找到")
+            QMessageBox.warning(self, "肥肥之力", f"文件 {file_path} 未找到")
             return
         except Exception as e:
             print(f"無法打開文件: {e}")
+            QMessageBox.warning(self, f"肥肥之力", str(e))
             return
 
         # 從 START_ROW 開始搜尋空行
@@ -135,16 +138,17 @@ class OrderSortingToExcelWindow(QWidget):
             if len(row_data) > 0:
                 ws.cell(row_index, 2, row_data[0])  
             if len(row_data) > 1:
-                ws.cell(row_index, 3, row_data[1])  
+                ws.cell(row_index, 3, int(row_data[1]))  
             if len(row_data) > 2:
                 ws.cell(row_index, 4, row_data[2])  
             if len(row_data) > 3:
-                ws.cell(row_index, 7, row_data[3]) 
+                ws.cell(row_index, 7, int(row_data[3])) 
         try:
             wb.save(file_path)
             print("資料已成功寫入 Excel 文件")
         except Exception as e:
             print(f"無法儲存文件: {e}")
+            QMessageBox.warning(self, "肥肥之力", f"無法儲存文件:{e}")
             
     def get_table_data(self):
         input_row_data = []

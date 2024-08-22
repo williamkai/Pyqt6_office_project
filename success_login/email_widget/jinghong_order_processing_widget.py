@@ -111,7 +111,7 @@ class JinghongOrderProcessingWidget(QWidget):
             self.email_display = QTextEdit(self)
             self.email_display.setReadOnly(True)
             self.email_display.setMinimumHeight(200)
-            self.display_layout.addWidget(self.email_display, 4)
+            self.display_layout.addWidget(self.email_display, 5)
 
     def create_email_search_input_box(self):
         self.email_search_group_box = QGroupBox("信件搜尋條件", self)
@@ -129,14 +129,14 @@ class JinghongOrderProcessingWidget(QWidget):
         self.date_edit.setCalendarPopup(True)
         self.date_edit.setDisplayFormat("yyyy-MM-dd")
         self.date_edit.setDate(datetime.today())
-        self.date_edit.setFixedWidth(150)
+        self.date_edit.setFixedWidth(120)
         self.date_time_layout.addWidget(self.date_edit)
         # 添加時間選擇器
         self.timeedit = QTimeEdit(self)
         self.timeedit.setDisplayFormat('hh:mm:ss')
         self.time = QTime(7, 0, 0)  # 参数依次是小时、分钟、秒
         self.timeedit.setTime(self.time)
-        self.timeedit.setFixedWidth(150)
+        self.timeedit.setFixedWidth(120)
         self.date_time_layout.addWidget(self.timeedit)
 
         spacer_item = QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -148,7 +148,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.end_date_edit.setCalendarPopup(True)
         self.end_date_edit.setDisplayFormat("yyyy-MM-dd")
         self.end_date_edit.setDate(QDate.currentDate())
-        self.end_date_edit.setFixedWidth(150)
+        self.end_date_edit.setFixedWidth(120)
         self.date_time_layout.addWidget(QLabel("结束日期:", self))
         self.date_time_layout.addWidget(self.end_date_edit)
         
@@ -166,8 +166,8 @@ class JinghongOrderProcessingWidget(QWidget):
         self.from_input_label = QLabel("寄件人:", self)
         self.from_input_layout.addWidget(self.from_input_label)
         self.from_input = QLineEdit(self)
-        self.from_input.setPlaceholderText("输入寄件人郵箱地址")
-        self.from_input.setFixedWidth(200)
+        self.from_input.setPlaceholderText("输入信箱")
+        self.from_input.setFixedWidth(150)
         self.from_input_layout.addWidget(self.from_input)
 
         # 添加一个复选框来选择是否使用 from 地址作为筛选条件
@@ -190,7 +190,7 @@ class JinghongOrderProcessingWidget(QWidget):
         # 添加選擇資料夾按鈕及顯示資料夾路徑的標籤
         self.folder_label = QLabel("選擇保存資料夾:", self)
         self.folder_path_display = QLineEdit(self)
-        self.folder_path_display.setFixedWidth(300)
+        self.folder_path_display.setFixedWidth(230)
         self.folder_path_display.setReadOnly(True)
         
         folder_path = self.database.User_basic_information_dao.fetch_user_folder_path()
@@ -306,6 +306,7 @@ class JinghongOrderProcessingWidget(QWidget):
 
     def order_data_and_total_data(self,data):
         self.order_all_data=data
+        print(f"哭ㄟ{self.order_all_data}")
 
     def order_sorting_to_excel(self):
         if self.order_all_data is None:

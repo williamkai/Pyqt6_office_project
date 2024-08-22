@@ -44,7 +44,7 @@ class EmailWidget(QWidget):
         super().__init__(parent)
         self.database=database
         self.setWindowTitle("信箱功能")
-        self.setMinimumSize(900, 600)
+        self.setMinimumSize(850, 600)
         self.email=email
         self.password=password
         self.main_layout = QVBoxLayout(self) #垂直布局
