@@ -1,70 +1,57 @@
+# longin_widget.py
+
+# 標準庫導入
 import sys
 import os
 import pickle
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import (
-                            QWidget, 
-                            QVBoxLayout, 
-                            QLabel,  
-                            QLineEdit, 
-                            QPushButton,
-                            QMessageBox
-                            )
 
+# 第三方庫導入
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+
+# 本地模塊導入
 from data_access_object.database import Database
 from login.register_widget import RegisterWidgetWindow
 from login.config_dialog import ConfigDialog
-
- 
-'''
-主要來處理第一步驟的畫面，就是登入畫面
-有帳號密碼、登入跟註冊
-邏輯上就是創建class時候，把畫面上顯示的原件都創出來，然後設定布局
-在__init__中有一個追蹤註冊帳戶窗口的
-目的是因為我打開註冊窗口後，避免重複打開註冊視窗
-
-'''
 
 class LoginWidget(QWidget):
     login_success = pyqtSignal(str)
 
     def __init__(self, parent=None):
-        super().__init__()
-        self.database=Database()
+        super().__init__(parent)
+        self.database = Database()
+        self.register_window = None  # 追蹤註冊帳號窗口
+
+        # 初始化視窗和創建元件
+        self.init_window()
+        self.create_widgets()
+
+    def init_window(self):
+        """初始化視窗屬性"""
         self.layout = QVBoxLayout(self)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.register_window = None  # 追蹤註冊帳號窗口
-        self.create_login_form()    # 創建登入畫面的label跟輸入框登入按鈕
-        self.create_register_button()   # 創建註冊帳號的按鈕
-        self.create_config_button()  # 創建資料庫帳號密碼設定的按钮
+
+    def create_widgets(self):
+        """建立並配置視窗中的元件"""
+        self.create_login_form()      # 建立登入畫面的標籤、輸入框、按鈕
+        self.create_register_button()  # 建立註冊按鈕
+        self.create_config_button()    # 建立資料庫設定按鈕
 
     def create_login_form(self):
-        self.user_label = QLabel("", self)  # 這個主要是打帳號，會顯示出使用者名稱用的
-        font = self.user_label.font()
-        font.setPointSize(12)
-        self.user_label.setFont(font)
-        self.user_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.layout.addWidget(self.user_label)
+        """建立登入表單"""
+        self.user_label = QLabel(self)
+        self.set_label_properties(self.user_label, "", 12)
 
-        email_label = QLabel("帳號:", self)
-        font = email_label.font()
-        font.setPointSize(12)
-        email_label.setFont(font)
-        email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.layout.addWidget(email_label)
+        email_label = QLabel(self)
+        self.set_label_properties(email_label, "帳號:", 12)
 
         self.email_input = QLineEdit(self)
         self.email_input.setFixedSize(200, 30)
         self.layout.addWidget(self.email_input)
-
         self.email_input.textChanged.connect(self.check_username)
 
-        password_label = QLabel("密碼:", self)
-        font = password_label.font()
-        font.setPointSize(12)
-        password_label.setFont(font)
-        password_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.layout.addWidget(password_label)
+        password_label = QLabel(self)
+        self.set_label_properties(password_label, "密碼:", 12)
 
         self.password_input = QLineEdit(self)
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -76,24 +63,39 @@ class LoginWidget(QWidget):
         self.login_button.setDefault(True)
         self.login_button.setFixedSize(200, 40)
         self.layout.addWidget(self.login_button)
-        
+
         self.email_input.returnPressed.connect(self.login)
         self.password_input.returnPressed.connect(self.login)
 
+    def set_label_properties(self, label, text, font_size):
+        """設置標籤的文字、字體大小和對齊方式"""
+        label.setText(text)
+        font = label.font()
+        font.setPointSize(font_size)
+        label.setFont(font)
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.layout.addWidget(label)
+
     def create_register_button(self):
+        """建立註冊按鈕"""
         self.register_button = QPushButton("註冊帳戶", self)
         self.register_button.clicked.connect(self.open_register_window)
         self.register_button.setFixedSize(200, 40)
         self.layout.addWidget(self.register_button)
 
     def create_config_button(self):
+        """建立資料庫設定按鈕"""
         self.config_button = QPushButton("設定資料庫", self)
         self.config_button.clicked.connect(self.open_config_window)
         self.config_button.setFixedSize(200, 40)
         self.layout.addWidget(self.config_button)
 
     def is_config_valid(self):
-        exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+        """檢查資料庫配置是否有效"""
+        exe_dir = (
+            os.path.dirname(sys.executable) if getattr(sys, 'frozen', False)
+            else os.path.dirname(__file__)
+        )
         config_path = os.path.join(exe_dir, 'config.pickle')
 
         if not os.path.exists(config_path):
@@ -102,69 +104,53 @@ class LoginWidget(QWidget):
         try:
             with open(config_path, 'rb') as f:
                 config = pickle.load(f)
-                if 'host' not in config or not config['host']:
-                    return False
-                if 'user' not in config or not config['user']:
-                    return False
-                if 'password' not in config or not config['password']:
-                    return False
+                return all(key in config and config[key] for key in ['host', 'user', 'password'])
         except (pickle.UnpicklingError, FileNotFoundError, EOFError, KeyError):
             return False
 
-        return True
-
     def check_username(self):
+        """檢查使用者名稱是否有效"""
         username = self.email_input.text()
         if username:
             if not self.is_config_valid():
-                print("配置文件不存在或不完整")
+                print("設定檔不存在或不完整")
                 return
-            else:
-                # 檢查 Database 物件的 connection 和 cursor
-                if self.database.connection is None or self.database.cursor is None:
-                    self.database.initialize()
-                query = "SELECT name FROM users WHERE username = %s"
-                self.database.cursor.execute(query, (username,))
-                result = self.database.cursor.fetchone()
-                if result:
-                    self.user_label.setText(f"{result[0]}")
-                else:
-                    self.user_label.setText("")
+            if self.database.connection is None or self.database.cursor is None:
+                self.database.initialize()
+            query = "SELECT name FROM users WHERE username = %s"
+            self.database.cursor.execute(query, (username,))
+            result = self.database.cursor.fetchone()
+            self.user_label.setText(result[0] if result else "")
         else:
             self.user_label.setText("")
 
     def login(self):
+        """執行登入操作"""
         if not self.is_config_valid():
             QMessageBox.warning(self, "警告", "請先設定資料庫")
             return
+
         email = self.email_input.text()
         password = self.password_input.text()
 
-         # 只有在連接和游標為 None 時才初始化
         if self.database.connection is None or self.database.cursor is None:
             self.database.initialize()
 
-        # 從資料庫驗證帳戶資料
         result = self.database.validate_user(email, password)
         if isinstance(result, bool):
-            if result:
-                print("登入成功")
-                # 登入成功後關閉數據庫連接，主要是退出檢查帳號的數據庫，第一階段是連到帳號數據庫用來登入用，登入成功後就不需要用到這個了
-                self.database.close()
-                QMessageBox.warning(self, "肥肥力量", "登入成功")
-                self.login_success.emit(email)  # 發送登入成功的訊號
-            else:
-                QMessageBox.warning(self, "肥肥力量", "密碼錯誤")
-                print("密碼錯誤")
+            QMessageBox.information(self, "肥肥力量", "登入成功")
+            self.login_success.emit(email)
         else:
             QMessageBox.warning(self, "肥肥力量", result)
-            print(result)
+
+        self.database.close()
 
     def open_register_window(self):
+        """開啟註冊視窗"""
         if not self.is_config_valid():
             QMessageBox.warning(self, "警告", "請先設定資料庫資料")
             return
-        
+
         if self.register_window is None:
             self.register_window = RegisterWidgetWindow(self)
             self.register_window.finished.connect(self.on_register_window_closed)
@@ -173,8 +159,11 @@ class LoginWidget(QWidget):
             QMessageBox.information(self, "阿肥之力", "註冊視窗已經開啟了喔！")
 
     def on_register_window_closed(self):
+        """註冊視窗關閉時的處理"""
         self.register_window = None
 
     def open_config_window(self):
+        """開啟設定視窗"""
         config_dialog = ConfigDialog(self)
         config_dialog.exec()
+
