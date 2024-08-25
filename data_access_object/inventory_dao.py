@@ -73,6 +73,40 @@ class InventoryDao:
         except mysql.connector.Error as err:
             print(f"Error fetching latest inventory: {err}")
             return None
+    
+    def get_second_latest_inventory(self, product_code):
+        search_query = """
+            SELECT current_stock
+            FROM Inventory
+            WHERE product_code = %s
+            ORDER BY UNIX_TIMESTAMP(date) DESC
+            LIMIT 1 OFFSET 1
+        """
+        try:
+            self.cursor.execute(search_query, (product_code,))
+            result = self.cursor.fetchone()  # 只取得一條記錄
+            return result[0] if result else None  # 返回前次庫存量，或者如果沒有記錄返回None
+        except mysql.connector.Error as err:
+            print(f"Error fetching second latest inventory: {err}")
+            return None
+    
+    def get_latest_inventory_record(self, product_code):
+        query = """
+            SELECT inventory_id, product_code, date, status, quantity, current_stock, notes
+            FROM Inventory
+            WHERE product_code = %s
+            ORDER BY date DESC
+            LIMIT 1
+        """
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, (product_code,))
+            result = cursor.fetchone()
+        # 將元組轉換爲字典
+        if result:
+            columns = [desc[0] for desc in cursor.description]
+            return dict(zip(columns, result))
+        else:
+            return None
 
     def update_inventory(self, inventory_id, product_code, date, status, quantity):
         try:

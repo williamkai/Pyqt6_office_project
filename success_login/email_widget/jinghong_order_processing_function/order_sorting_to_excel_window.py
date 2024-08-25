@@ -45,10 +45,9 @@ class OrderSortingToExcelWindow(QWidget):
         self.display_layout = QVBoxLayout(self.display_area)
         self.but_layout =QHBoxLayout()
       
-        # 建立表格
-        if self.order_table is None:
-            self.order_table = QTableWidget(self)
-            self.display_layout.addWidget(self.order_table, 5)
+        
+        self.order_table = QTableWidget(self)
+        self.display_layout.addWidget(self.order_table, 5)
         
         self.input_button = QPushButton("Input to Excel", self)
         self.input_button.clicked.connect(self.input_table_to_excel)  # 連結按鈕點擊事件到儲存功能

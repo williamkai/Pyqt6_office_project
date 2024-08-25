@@ -29,7 +29,7 @@ from success_login.email_widget.email_search_thread import EmailSearchThread
 from success_login.email_widget.jinghong_order_processing_function.order_sorting import OrderSortingThread
 from success_login.email_widget.jinghong_order_processing_function.order_sorting_window import OrderSortingWindow
 from success_login.email_widget.jinghong_order_processing_function.order_sorting_to_excel_window import OrderSortingToExcelWindow
-
+from success_login.email_widget.jinghong_order_processing_function.inventory_deduction_window import InventoryDeductionWindow
 class JinghongOrderProcessingWidget(QWidget):
 
     close_signal = pyqtSignal()
@@ -48,6 +48,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.order_sorting_window = None  # 否則初始化為 None
         self.order_all_data=None
         self.order_sorting_to_excel_window=None
+        self.inventory_deduction_window = None  # 初始化庫存扣除功能視窗變數
         self.initialize_ui() 
         
         self.close_signal.connect(self.handle_close)
@@ -80,7 +81,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.button_layout.addWidget(self.sales_details_writing_button)
 
         self.inventory_deduction_button = QPushButton("庫存扣除功能")
-        self.inventory_deduction_button.clicked.connect(self.email_search)
+        self.inventory_deduction_button.clicked.connect(self.open_inventory_deduction_window)
         self.inventory_deduction_button.setFixedWidth(150)
         self.button_layout.addWidget(self.inventory_deduction_button)
 
@@ -298,7 +299,6 @@ class JinghongOrderProcessingWidget(QWidget):
         self.order_sorting_window = OrderSortingWindow(None,processed_data,folder_path)
         self.order_sorting_window.data_changed.connect(self.order_data_and_total_data)
         self.order_sorting_window.closed.connect(self.on_order_sorting_window_closed)
-        # self.order_sorting_window.show() 
 
     def on_order_sorting_window_closed(self):
         self.order_sorting_window = None
@@ -307,7 +307,11 @@ class JinghongOrderProcessingWidget(QWidget):
     def order_data_and_total_data(self,data):
         self.order_all_data=data
         print(f"哭ㄟ{self.order_all_data}")
-
+    """
+    這邊是寫入試算表的功能，主要是訂單整理成word時，我其實有跑其他運算邏輯，把它整理成字典
+    所以跑完訂單整理後self.order_all_data=data，就會有兩個key，一個是所有訂單的資料
+    一個是總計數量後的資料，試算表適用所有訂單資料把他寫進去。
+    """
     def order_sorting_to_excel(self):
         if self.order_all_data is None:
             QMessageBox.warning(self, "阿肥之力", "請先使用...訂單整理功能")
@@ -325,6 +329,27 @@ class JinghongOrderProcessingWidget(QWidget):
         self.order_sorting_to_excel_window =None
         print("銷貨寫入功能視窗已關閉")
 
+    """
+    這邊是寫入資料庫的功能，主要是訂單整理成word時，我其實有跑其他運算邏輯，把它整理成字典
+    所以跑完訂單整理後self.order_all_data=data，就會有兩個key，一個是所有訂單的資料
+    一個是總計數量後的資料，扣庫存適用總計數量後的資料去跑扣庫存。
+    """
+    def open_inventory_deduction_window(self):
+        if self.order_all_data is None:
+            QMessageBox.warning(self, "阿肥之力", "請先使用...訂單整理功能")
+            return
+        if self.inventory_deduction_window is not None:
+            QMessageBox.warning(self, "提示", "庫存扣除功能視窗已經開啟")
+            return
+        folder_path=self.folder_path_display.text() 
+        print(f"路徑是啥:{folder_path}")
+        self.inventory_deduction_window = InventoryDeductionWindow(None,self.order_all_data,folder_path,self.database)
+        self.inventory_deduction_window.closed.connect(self.on_inventory_deduction_window_closed)
+        self.inventory_deduction_window.show()
+
+    def on_inventory_deduction_window_closed(self):
+        self.inventory_deduction_window = None
+        print("庫存扣除功能視窗已關閉")
 
     def open_folder_dialog(self):
         """ 打開選擇資料夾對話框 """
@@ -358,6 +383,10 @@ class JinghongOrderProcessingWidget(QWidget):
         if self.order_sorting_to_excel_window is not None:
             self.order_sorting_to_excel_window.close()
             self.order_sorting_to_excel_window= None
+        
+        if self.inventory_deduction_window is not None:
+            self.inventory_deduction_window.close()
+            self.inventory_deduction_window= None
 
     def closeEvent(self, event):
         self.close_signal.emit() # 發射關閉訊號
