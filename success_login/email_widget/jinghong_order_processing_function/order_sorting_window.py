@@ -28,7 +28,7 @@ class OrderSortingWindow(QWidget):
         self.create_order_list()
         self.calculate_statistics()
         self.show()
-        QTimer.singleShot(2000, self.merge_and_send_data)  
+        QTimer.singleShot(1000, self.merge_and_send_data)  
 
     def initialize_ui(self):
         self.main_layout = QVBoxLayout(self)

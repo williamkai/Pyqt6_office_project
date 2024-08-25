@@ -32,6 +32,7 @@ class MainApplication(QMainWindow):
 
         # 建立登入class的訊號
         self.login_widget.login_success.connect(self.show_main_window)
+        self.close_signal.connect(self.co11)
 
         # 初始化變數儲存位子(資料庫、跟使用者)
         self.database = None
@@ -55,6 +56,9 @@ class MainApplication(QMainWindow):
         self.login_widget = LoginWidget(self)  # 確保創建新的 LoginWidget
         self.login_widget.login_success.connect(self.show_main_window)  # 連接信號
         self.switch_widget(self.main_window, self.login_widget)  # 使用 self.main_window
+
+    def co11(self):
+        self.main_window.handle_main_window_close()
 
     def closeEvent(self, event):
         self.close_signal.emit()
