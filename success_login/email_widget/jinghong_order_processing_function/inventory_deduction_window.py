@@ -279,9 +279,12 @@ class InventoryDeductionWindow(QWidget):
                     latest_inventory_record['notes'] == notes):
                     QMessageBox.warning(self, "警告", f"商品 {product_code} 的庫存已經被扣除過相同記錄，請檢查！")
                     return  # 退出方法，不執行扣除操作
-
+        
         # 扣除庫存
         for product_code, status, quantity, notes in records_to_deduct:
+            # 取得當前日期時間
+            current_date_time = QDateTime.currentDateTime().toString('yyyy-MM-dd HH:mm:ss')
+
             self.save_inventory(
                 None,  # dialog 未使用
                 None,  # inventory_id 為 None，執行新增操作
@@ -292,9 +295,10 @@ class InventoryDeductionWindow(QWidget):
                 None,  # current_stock 未使用
                 notes
             )
-
             # 在扣除庫存後顯示訊息
             print(f"商品 {product_code} 庫存已扣除 {quantity}")
+            # 等待 1 秒鐘再進行下一個扣除
+            time.sleep(1)
 
         QMessageBox.information(self, "完成", "所有庫存扣除已完成")
         # """
