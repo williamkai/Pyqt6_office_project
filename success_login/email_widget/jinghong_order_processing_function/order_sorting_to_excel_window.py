@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (QMainWindow,
 class OrderSortingToExcelWindow(QWidget):
     START_ROW = 7
     SHEET_NAME = '工作表1'  # 可以根据实际情况修改
-    FILE_NAME = "113年8月久富餘對帳明細表-菁弘(含退貨).xlsx"  # 文件名常量
+    # FILE_NAME = "113年8月久富餘對帳明細表-菁弘(含退貨).xlsx"  # 文件名常量
 
     closed = pyqtSignal()
 
@@ -36,8 +36,16 @@ class OrderSortingToExcelWindow(QWidget):
         self.setWindowTitle("銷貨明細處理視窗")
         self.setMinimumSize(300, 400)
         self.resize(500, 600)
+        self.FILE_NAME = self.generate_file_name()  # 動態生成文件名
         self.initialize_ui()
         self.create_table()
+
+    def generate_file_name(self):
+        now = datetime.now()
+        year = now.year - 1911  # 假設你需要的年份是民國年份
+        month = now.month
+        file_name = f"{year}年{month}月久富餘對帳明細表-菁弘(含退貨).xlsx"
+        return file_name
 
     def initialize_ui(self):
         self.main_layout = QVBoxLayout(self)
