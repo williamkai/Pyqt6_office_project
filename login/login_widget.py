@@ -140,10 +140,10 @@ class LoginWidget(QWidget):
         if isinstance(result, bool):
             QMessageBox.information(self, "肥肥力量", "登入成功")
             self.login_success.emit(email)
+            self.database.close()
         else:
             QMessageBox.warning(self, "肥肥力量", result)
 
-        self.database.close()
 
     def open_register_window(self):
         """開啟註冊視窗"""

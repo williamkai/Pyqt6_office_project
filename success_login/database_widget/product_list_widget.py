@@ -1,129 +1,149 @@
 # product_list_widget.py
-from PyQt6.QtWidgets import (QWidget, 
-                             QVBoxLayout, 
-                             QHBoxLayout, 
-                             QPushButton, 
-                             QLineEdit, 
-                             QTableWidget, 
-                             QTableWidgetItem, 
-                             QMessageBox, QDialog, 
-                             QFormLayout,
-                             QDateTimeEdit, 
-                             QCompleter, 
-                             QComboBox)
-from PyQt6.QtCore import QDateTime,Qt,QDate
-# from data_access_object.product_list_dao import ProductListDao
-class ProductListWidget(QWidget):
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit,
+                             QTableWidget, QTableWidgetItem, QMessageBox, QDialog, QFormLayout,
+                             QDateTimeEdit, QCompleter, QComboBox)
+from PyQt6.QtCore import QDateTime, Qt, QDate, QTimer
+from functools import partial
 
+
+class ProductListWidget(QWidget):
     def __init__(self, parent=None, database=None):
         super().__init__(parent)
         self.database = database
-        self.parent_widget = parent  # 儲存父部件的引用
-        self.initialize_ui() 
-    
+        self.parent_widget = parent
+        self.all_product_codes = None
+        self.last_search_text = ""
+        self.initialize_ui()
+
     def initialize_ui(self):
-        self.layout = QVBoxLayout(self)
+        self.main_layout = QVBoxLayout(self)
+        self.create_query_area()
+        self.table_layout = QVBoxLayout()
+        self.main_layout.addLayout(self.table_layout)
         self.product_table()
-        
-    def product_table(self):
-        self.clear_layout()
+
+    def create_query_area(self):
+        self.query_layout = QHBoxLayout()
+
+        self.query_edit = QLineEdit()
+        self.query_edit.setPlaceholderText("輸入商品代號查詢...")
+        self.query_edit.textChanged.connect(self.dynamic_search)
+        self.query_button = QPushButton("查詢")
+        self.query_button.clicked.connect(self.perform_query)
+
+        # 設定 completer
         self.all_product_codes = self.database.inventory_dao.get_all_product_codes()
-        products = self.database.product_list_dao.get_product_list()
+        completer = QCompleter(self.all_product_codes)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.query_edit.setCompleter(completer)
+
+        self.query_layout.addWidget(self.query_edit)
+        self.query_layout.addWidget(self.query_button)
+
+        self.main_layout.addLayout(self.query_layout)
+
+        if isinstance(self.last_search_text, str) and self.last_search_text:
+            self.query_edit.setText(self.last_search_text)
+            self.dynamic_search()
+
+    def perform_query(self):
+        query_code = self.query_edit.text().strip()
+        if query_code:
+            self.update_product_table(query_code)
+            completer = self.query_edit.completer()
+            if completer:
+                completer.popup().hide()
+        else:
+            QMessageBox.warning(self, "警告", "請輸入商品代號進行查詢")
+
+    def product_table(self):
+        self.update_product_table()
+
+    def create_button(self, text, callback):
+        button = QPushButton(text)
+        button.clicked.connect(callback)
+        return button
+
+    def add_buttons_to_row(self, row_idx, product_code):
+        self.table_widget.setCellWidget(row_idx, 7, self.create_button("修改", partial(self.modify_product, row_idx)))
+        self.table_widget.setCellWidget(row_idx, 8, self.create_button("刪除", partial(self.delete_product_confirmation, row_idx)))
+        self.table_widget.setCellWidget(row_idx, 9, self.create_button("庫存功能", partial(self.add_inventory, row_idx)))
+
+        if self.parent_widget and hasattr(self.parent_widget, 'show_inventory_function'):
+            transfer_callback = partial(self.parent_widget.show_inventory_function, product_code)
+        else:
+            transfer_callback = partial(lambda r: print(f"Parent method not available, row {r}"), row_idx)
+
+        self.table_widget.setCellWidget(row_idx, 10, self.create_button("轉庫存表", transfer_callback))
+
+    def update_product_table(self, query_code=None):
+        for i in reversed(range(self.table_layout.count())):
+            widget = self.table_layout.itemAt(i).widget()
+            if widget:
+                widget.deleteLater()
+
+        try:
+            products = self.database.product_list_dao.get_product_list(query_code)
+        except Exception as e:
+            QMessageBox.critical(self, "錯誤", f"無法獲取產品列表: {str(e)}")
+            return
 
         self.table_widget = QTableWidget()
         self.table_widget.setRowCount(len(products))
         self.table_widget.setColumnCount(11)
-        self.table_widget.setHorizontalHeaderLabels(["商品代號", "商品名稱", "包數", "抽數", "廠商名稱", "售價", "庫存量", "修改", "刪除", "庫存功能", "轉庫存表"])
+        self.table_widget.setHorizontalHeaderLabels([
+            "商品代號", "商品名稱", "包數", "抽數", "廠商名稱", "售價", "庫存量", "修改",
+            "刪除", "庫存功能", "轉庫存表"
+        ])
 
         for row_idx, row_data in enumerate(products):
             for col_idx, col_data in enumerate(row_data):
                 self.table_widget.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
-            
-             # 查詢並顯示庫存量
-            product_code = row_data[0]  # 假設商品代號在第一列
-            inventory_amount = self.database.inventory_dao.get_latest_inventory(product_code)
-            inventory_amount = inventory_amount if inventory_amount is not None else "無紀錄"
+
+            product_code = row_data[0]
+            try:
+                inventory_amount = self.database.inventory_dao.get_latest_inventory(product_code)
+            except Exception as e:
+                QMessageBox.critical(self, "錯誤", f"無法獲取庫存量: {str(e)}")
+                inventory_amount = "無紀錄"
+
             self.table_widget.setItem(row_idx, 6, QTableWidgetItem(str(inventory_amount)))
-
-            modify_button = QPushButton("修改")
-            modify_button.clicked.connect(lambda _, r=row_idx: self.modify_product(r))
-            self.table_widget.setCellWidget(row_idx, 7, modify_button)
-
-            delete_button = QPushButton("刪除")
-            delete_button.clicked.connect(lambda _, r=row_idx: self.delete_product_confirmation(r))
-            self.table_widget.setCellWidget(row_idx, 8, delete_button)
-
-            inventory_button = QPushButton("庫存功能")
-            inventory_button.clicked.connect(lambda _, r=row_idx: self.add_inventory(r))
-            self.table_widget.setCellWidget(row_idx, 9, inventory_button)  # 添加到第9列
-
-            transfer_button = QPushButton("轉庫存表")  # 添加新的按鈕
-            if self.parent_widget and hasattr(self.parent_widget, 'show_inventory_function'):
-                transfer_button.clicked.connect(lambda _, r=self.table_widget.item(row_idx, 0).text(): self.parent_widget.show_inventory_function(product_code=r))
-            else:
-                transfer_button.clicked.connect(lambda _, r=row_idx: print(f"Parent method not available, row {r}"))
-            # transfer_button.clicked.connect(lambda _, r=row_idx: self.show_inventory_function(r))  # 需要定義 transfer_inventory 方法
-            self.table_widget.setCellWidget(row_idx, 10, transfer_button)  # 添加到第10列
+            self.add_buttons_to_row(row_idx, product_code)
 
         if not products:
             self.table_widget.setRowCount(1)
             for col_idx in range(11):
                 self.table_widget.setItem(0, col_idx, QTableWidgetItem(""))
 
-        self.layout.addWidget(self.table_widget)
+        self.table_layout.addWidget(self.table_widget)
         self.table_widget.resizeColumnsToContents()
 
-        add_product_button = QPushButton("新增商品")
-        add_product_button.clicked.connect(self.add_product)
-        self.layout.addWidget(add_product_button)
-    
-    def modify_product(self, row):
-        product_code = self.table_widget.item(row, 0).text()
-        product_name = self.table_widget.item(row, 1).text()
-        package_count = int(self.table_widget.item(row, 2).text())
-        draw_count = int(self.table_widget.item(row, 3).text())
-        manufacturer = self.table_widget.item(row, 4).text()
-        price = float(self.table_widget.item(row, 5).text()) if self.table_widget.item(row, 5).text() else None
+        add_product_button = self.create_button("新增商品", self.add_product)
+        self.table_layout.addWidget(add_product_button)
 
+    def dynamic_search(self):
+        text = self.query_edit.text().strip()
+        if len(text) > len(self.last_search_text):
+            matches = [code for code in self.all_product_codes if text.upper() in code.upper()]
+            if len(matches) == 1:
+                self.query_edit.setText(matches[0])
+                self.perform_query()
+                self.last_search_text = matches[0]
+                QTimer.singleShot(100, lambda: self.query_edit.completer().popup().hide())
+        else:
+            self.last_search_text = text
+
+    def create_product_dialog(self, title, product=None):
         dialog = QDialog(self)
-        dialog.setWindowTitle("修改商品")
+        dialog.setWindowTitle(title)
         layout = QFormLayout(dialog)
 
-        product_name_edit = QLineEdit(product_name)
-        package_count_edit = QLineEdit(str(package_count))
-        draw_count_edit = QLineEdit(str(draw_count))
-        manufacturer_edit = QLineEdit(manufacturer)
-        price_edit = QLineEdit(str(price) if price is not None else "")
-
-        layout.addRow("商品名稱", product_name_edit)
-        layout.addRow("包數", package_count_edit)
-        layout.addRow("抽數", draw_count_edit)
-        layout.addRow("廠商名稱", manufacturer_edit)
-        layout.addRow("售價", price_edit)
-
-        buttons = QHBoxLayout()
-        save_button = QPushButton("保存")
-        save_button.clicked.connect(lambda: self.save_product(dialog, product_code, product_name_edit.text(), int(package_count_edit.text()), int(draw_count_edit.text()), manufacturer_edit.text(), float(price_edit.text()) if price_edit.text() else None))
-        buttons.addWidget(save_button)
-        cancel_button = QPushButton("取消")
-        cancel_button.clicked.connect(dialog.reject)
-        buttons.addWidget(cancel_button)
-        layout.addRow(buttons)
-
-        dialog.setLayout(layout)
-        dialog.exec()
-
-    def add_product(self):
-        dialog = QDialog(self)
-        dialog.setWindowTitle("新增商品")
-        layout = QFormLayout(dialog)
-
-        product_code_edit = QLineEdit()
-        product_name_edit = QLineEdit()
-        package_count_edit = QLineEdit()
-        draw_count_edit = QLineEdit()
-        manufacturer_edit = QLineEdit()
-        price_edit = QLineEdit()
+        product_code_edit = QLineEdit() if product is None else QLineEdit(product[0])
+        product_name_edit = QLineEdit() if product is None else QLineEdit(product[1])
+        package_count_edit = QLineEdit() if product is None else QLineEdit(str(product[2]))
+        draw_count_edit = QLineEdit() if product is None else QLineEdit(str(product[3]))
+        manufacturer_edit = QLineEdit() if product is None else QLineEdit(product[4])
+        price_edit = QLineEdit() if product is None else QLineEdit(str(product[5]))
 
         layout.addRow("商品代號", product_code_edit)
         layout.addRow("商品名稱", product_name_edit)
@@ -133,34 +153,64 @@ class ProductListWidget(QWidget):
         layout.addRow("售價", price_edit)
 
         buttons = QHBoxLayout()
-        add_button = QPushButton("新增")
-        add_button.clicked.connect(lambda: self.save_new_product(dialog, product_code_edit.text(), product_name_edit.text(), int(package_count_edit.text()), int(draw_count_edit.text()), manufacturer_edit.text(), float(price_edit.text()) if price_edit.text() else None))
-        buttons.addWidget(add_button)
-        cancel_button = QPushButton("取消")
-        cancel_button.clicked.connect(dialog.reject)
+        if product:
+            save_button = self.create_button("保存", partial(self.save_product, dialog, *self.collect_product_data(product_code_edit, product_name_edit, package_count_edit, draw_count_edit, manufacturer_edit, price_edit)))
+        else:
+            save_button = self.create_button("新增", partial(self.save_new_product, dialog, *self.collect_product_data(product_code_edit, product_name_edit, package_count_edit, draw_count_edit, manufacturer_edit, price_edit)))
+        
+        buttons.addWidget(save_button)
+        cancel_button = self.create_button("取消", dialog.reject)
         buttons.addWidget(cancel_button)
         layout.addRow(buttons)
 
         dialog.setLayout(layout)
         dialog.exec()
 
+    def collect_product_data(self, *fields):
+        return [field.text() for field in fields]
+
+    def modify_product(self, row):
+        product = [self.table_widget.item(row, i).text() for i in range(6)]
+        self.create_product_dialog("修改商品", product)
+
+    def add_product(self):
+        self.create_product_dialog("新增商品")
+
     def delete_product_confirmation(self, row):
-        reply = QMessageBox.question(self, '刪除商品', '確定要刪除此商品嗎？',
-                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        reply = QMessageBox.question(
+            self, '刪除商品', '確定要刪除此商品嗎？',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
         if reply == QMessageBox.StandardButton.Yes:
-            product_code =  self.table_widget.item(row, 0).text() 
-            self.database.product_list_dao.delete_product(product_code)
+            product_code = self.table_widget.item(row, 0).text()
+            try:
+                self.database.product_list_dao.delete_product(product_code)
+            except Exception as e:
+                QMessageBox.critical(self, "錯誤", f"無法刪除商品: {str(e)}")
+                return
             QMessageBox.information(self, "信息", "商品已刪除")
             self.product_table()
 
     def save_new_product(self, dialog, product_code, product_name, package_count, draw_count, manufacturer, price):
-        self.database.product_list_dao.insert_product(product_code, product_name, package_count, draw_count, manufacturer, price)
+        try:
+            self.database.product_list_dao.insert_product(
+                product_code, product_name, package_count, draw_count, manufacturer, price
+            )
+        except Exception as e:
+            QMessageBox.critical(self, "錯誤", f"無法新增商品: {str(e)}")
+            return
         QMessageBox.information(self, "信息", "商品已新增")
         dialog.accept()
         self.product_table()
 
     def save_product(self, dialog, product_code, product_name, package_count, draw_count, manufacturer, price):
-        self.database.product_list_dao.update_product(product_code, product_name, package_count, draw_count, manufacturer, price)
+        try:
+            self.database.product_list_dao.update_product(
+                product_code, product_name, package_count, draw_count, manufacturer, price
+            )
+        except Exception as e:
+            QMessageBox.critical(self, "錯誤", f"無法更新商品: {str(e)}")
+            return
         QMessageBox.information(self, "信息", "商品已更新")
         dialog.accept()
         self.product_table()
@@ -170,36 +220,28 @@ class ProductListWidget(QWidget):
         dialog.setWindowTitle("新增庫存變動")
         layout = QFormLayout(dialog)
 
-        # 商品代號輸入框，帶有自動補全功能
         product_code_edit = QComboBox()
         product_code_edit.setEditable(True)
         product_code_edit.addItems(self.all_product_codes)
-        # product_code_edit.setCompleter(QCompleter(self.all_product_codes))
-        # 設定 QCompleter 並設定大小寫不敏感
         completer = QCompleter(self.all_product_codes)
         completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         product_code_edit.setCompleter(completer)
 
-        # 預填充商品代號
         item = self.table_widget.item(row_idx, 0)
         if item:
             product_code_edit.setCurrentText(item.text())
 
-        # 日期時間輸入框，預設為當前日期和時間
         datetime_edit = QDateTimeEdit(calendarPopup=True)
         datetime_edit.setDateTime(QDateTime.currentDateTime())
         datetime_edit.setDisplayFormat('yyyy-MM-dd HH:mm')
-        # 預設填入今天的日期 (MM/dd) 到備註框
+
         today_date = QDate.currentDate()
         today_date_str = today_date.toString('MM/dd')
-        
-        # 狀態選擇框
+
         status_edit = QComboBox()
         status_edit.addItems(["製造", "銷貨", "退貨", "瑕疵品"])
 
         quantity_edit = QLineEdit()
-
-        # 備註輸入框
         notes_edit = QLineEdit()
         notes_edit.setText(today_date_str)
 
@@ -207,20 +249,18 @@ class ProductListWidget(QWidget):
         layout.addRow("日期時間 (YYYY-MM-DD HH:MM)", datetime_edit)
         layout.addRow("狀態", status_edit)
         layout.addRow("數量", quantity_edit)
-        layout.addRow("備註", notes_edit)  # 添加備註輸入框
+        layout.addRow("備註", notes_edit)
 
         buttons = QHBoxLayout()
         add_button = QPushButton("新增")
-        add_button.clicked.connect(lambda: self.save_inventory(
-            dialog,
-            None,
-            product_code_edit.currentText(),  # 使用 currentText() 而不是 text()
+        add_button.clicked.connect(
+        lambda: self.handle_save_inventory(
+            dialog, product_code_edit.currentText(),
             datetime_edit.dateTime().toString('yyyy-MM-dd HH:mm:ss'),
-            status_edit.currentText(),  # 使用 currentText() 而不是 text()
-            int(quantity_edit.text()),
-            None,
-            notes_edit.text()  # 傳遞備註的值,
-        ))
+            status_edit.currentText(), quantity_edit.text(),  # 這裡傳遞原始文本
+            None, notes_edit.text()
+        )
+    )
         buttons.addWidget(add_button)
         cancel_button = QPushButton("取消")
         cancel_button.clicked.connect(dialog.reject)
@@ -228,31 +268,34 @@ class ProductListWidget(QWidget):
         layout.addRow(buttons)
 
         dialog.setLayout(layout)
-
-        # 設定對話框大小
-        dialog.resize(400, 150)  # 設定合適的寬度和高度
-
+        dialog.resize(400, 150)
         dialog.exec()
 
+    def handle_save_inventory(self, dialog, product_code, date, status, quantity_text, current_stock, notes):
+        try:
+            quantity = int(quantity_text)  # 嘗試將文本轉換為整數
+            if quantity < 0:
+                raise ValueError("數量不能為負數")
+        except ValueError:
+            QMessageBox.warning(self, "錯誤", "請輸入有效的非負整數數量")
+            return
+
+        # 如果成功轉換數量，繼續調用 save_inventory
+        self.save_inventory(dialog, None, product_code, date, status, quantity, current_stock, notes)
+            
     def save_inventory(self, dialog, inventory_id, product_code, date, status, quantity, current_stock, notes):
-        if inventory_id is None:
-            # 如果 inventory_id 为 None，则执行新增操作
-            print("走這邊嗎????? 這便是新增商品庫存")
-            self.database.inventory_dao.insert_inventory(product_code, date, status, quantity, notes)
-            QMessageBox.information(self, "資訊", "庫存變動已新增")
-        else:
-            # 否则执行更新操作
-            print("還是這邊??? 這邊是更新原有資料")
-            self.database.inventory_dao.adjust_inventory_after_date(inventory_id, product_code, date, status, quantity, current_stock, notes)
-            QMessageBox.information(self, "資訊", "庫存變動已更新")
-
-        # 刷新商品表格，更新顯示的庫存量
-        self.product_table()        
+        try:
+            if inventory_id is None:
+                self.database.inventory_dao.insert_inventory(
+                    product_code, date, status, quantity, notes
+                )
+            else:
+                self.database.inventory_dao.adjust_inventory_after_date(
+                    inventory_id, product_code, date, status, quantity, current_stock, notes
+                )
+        except Exception as e:
+            QMessageBox.critical(self, "錯誤", f"無法保存庫存變動: {str(e)}")
+            return
+        QMessageBox.information(self, "資訊", "庫存變動已新增")
+        self.product_table()
         dialog.accept()
-
-    def clear_layout(self):
-        while self.layout.count() > 0:
-            item = self.layout.takeAt(0)
-            widget = item.widget()
-            if widget:
-                widget.deleteLater()

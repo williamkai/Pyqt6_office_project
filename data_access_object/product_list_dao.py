@@ -24,9 +24,22 @@ class ProductListDao:
         except mysql.connector.Error as err:
             print(f"Error creating ProductList table: {err}")
 
-    def get_product_list(self):
-        query = "SELECT * FROM ProductList"
-        self.cursor.execute(query)
+    def get_product_list(self, search_code=None):
+        if search_code:
+            # 查詢並將結果按照是否匹配查詢條件排序
+            query = """
+                SELECT * FROM ProductList
+                ORDER BY CASE
+                    WHEN product_code = %s THEN 0
+                    ELSE 1
+                END
+            """
+            self.cursor.execute(query, (search_code,))
+        else:
+            # 如果沒有查詢條件，返回所有商品
+            query = "SELECT * FROM ProductList"
+            self.cursor.execute(query)
+
         return self.cursor.fetchall()
     
     def delete_product(self, product_code):
