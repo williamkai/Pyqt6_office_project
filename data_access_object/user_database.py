@@ -8,6 +8,7 @@ from data_access_object.product_list_dao import ProductListDao
 from data_access_object.inventory_dao import InventoryDao
 from data_access_object.customer_dao import CustomerInformationDao
 from data_access_object.User_basic_information_dao import UserBasicInformationDAO
+from data_access_object.sales_order_dao import SalesOrderDao
 
 class UserDatabase:
     '''
@@ -24,6 +25,7 @@ class UserDatabase:
         self.inventory_dao=InventoryDao(self.connection,self.cursor)
         self.customer_dao=CustomerInformationDao(self.connection,self.cursor)
         self.User_basic_information_dao=UserBasicInformationDAO(self.connection,self.cursor)
+        self.sales_order_dao=SalesOrderDao(self.connection,self.cursor)
 
     def initialize(self):
         if self.connection is not None and self.cursor is not None:

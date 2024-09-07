@@ -14,6 +14,7 @@ from success_login.user_information_widget.user_information_widget import UserIn
 from success_login.database_widget.database_widget import DatabaseWidget
 from data_access_object.user_database import UserDatabase  # 引入用戶專屬的資料庫類
 from success_login.email_widget.email_widget import EmailWidget
+from success_login.sales_widget.sales_widget import SalesWidget
 class MainWindow(QWidget):
     
     logout_signal = pyqtSignal()
@@ -26,10 +27,13 @@ class MainWindow(QWidget):
         self.database_window=None
         self.account_window = None 
         self.email_window = None
+        self.sales_window = None
         self.database.product_list_dao.create_product_list_table()
         self.database.inventory_dao.create_inventory_table()
         self.database.User_basic_information_dao.create_User_basic_information_table()
         self.database.User_basic_information_dao.check_and_add_column()
+        self.database.sales_order_dao.create_sales_order_table()#創建訂單資料表
+        self.database.sales_order_dao.create_sales_order_detail_table()#創建訂單明細表
 
         # 設定布局
         self.layout = QVBoxLayout(self)
@@ -52,6 +56,11 @@ class MainWindow(QWidget):
         self.database_button.setFixedSize(200, 40)
         self.database_button.clicked.connect(self.open_database_window)
         self.layout.addWidget(self.database_button)
+
+        self.sales_function_button = QPushButton("銷貨功能", self)
+        self.sales_function_button.setFixedSize(200, 40)
+        self.sales_function_button.clicked.connect(self.open_sales_function_window)
+        self.layout.addWidget(self.sales_function_button)
 
         self.account_button = QPushButton("設定帳戶資料", self)
         self.account_button.setFixedSize(200, 40)
@@ -103,6 +112,20 @@ class MainWindow(QWidget):
 
     def on_database_window_closed(self):
         self.database_window = None
+        print("資料庫功能視窗已經關閉")
+
+    
+    def open_sales_function_window(self):
+        if self.sales_window is None:
+            self.sales_window = SalesWidget(None, database=self.database)
+            self.sales_window.closed.connect(self.on_sales_window_closed)  # 連接窗口關閉訊號
+            self.sales_window.show()
+        else:
+            QMessageBox.information(self, "阿肥之力", "資料庫功能已經開啟了喔！")
+            print("資料庫功能視窗已經開啟")
+
+    def on_sales_window_closed(self):
+        self.sales_window = None
         print("資料庫功能視窗已經關閉")
 
     def open_account_window(self):
