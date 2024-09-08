@@ -6,9 +6,9 @@ from docx.shared import Pt, RGBColor
 from docx.oxml.ns import qn
 from collections import defaultdict
 from datetime import datetime
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from PyQt6.QtWidgets import (QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QListWidget, QMessageBox)
-
 
 class OrderSortingWindow(QWidget):
     closed = pyqtSignal()
@@ -192,6 +192,13 @@ class OrderSortingWindow(QWidget):
 
     def handle_total_statistics(self):
         doc = Document()
+        # 獲取今天的日期並格式化
+        today_date = datetime.now().strftime('%Y/%m/%d')
+        
+        # 在文件開頭添加日期並設置置中對齊
+        date_paragraph = doc.add_paragraph(f"日期: {today_date}", style='Normal')
+        date_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
         for key, data in self.stats.items():
             heading = doc.add_heading(key, level=1)
             self.set_font(heading, size=26, font_name='標楷體', bold=True)

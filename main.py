@@ -46,6 +46,7 @@ class MainApplication(QMainWindow):
             old_widget.deleteLater()
         self.layout.addWidget(new_widget)
 
+
     def show_main_window(self, user_email):
         self.current_user = user_email
         self.main_window = MainWindow(self, self.current_user)  # 初始化 main_window
