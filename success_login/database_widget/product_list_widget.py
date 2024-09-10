@@ -137,13 +137,26 @@ class ProductListWidget(QWidget):
         dialog = QDialog(self)
         dialog.setWindowTitle(title)
         layout = QFormLayout(dialog)
+        product_code_edit = QLineEdit()
 
-        product_code_edit = QLineEdit() if product is None else QLineEdit(product[0])
+        if product:
+            product_code_edit.setText(product[0])
+            product_code_edit.setReadOnly(True)  # Make product code read-only for editing
+        else:
+            product_code_edit.setPlaceholderText("輸入商品代號")
+
         product_name_edit = QLineEdit() if product is None else QLineEdit(product[1])
         package_count_edit = QLineEdit() if product is None else QLineEdit(str(product[2]))
         draw_count_edit = QLineEdit() if product is None else QLineEdit(str(product[3]))
         manufacturer_edit = QLineEdit() if product is None else QLineEdit(product[4])
         price_edit = QLineEdit() if product is None else QLineEdit(str(product[5]))
+
+        # product_code_edit = QLineEdit() if product is None else QLineEdit(product[0])
+        # product_name_edit = QLineEdit() if product is None else QLineEdit(product[1])
+        # package_count_edit = QLineEdit() if product is None else QLineEdit(str(product[2]))
+        # draw_count_edit = QLineEdit() if product is None else QLineEdit(str(product[3]))
+        # manufacturer_edit = QLineEdit() if product is None else QLineEdit(product[4])
+        # price_edit = QLineEdit() if product is None else QLineEdit(str(product[5]))
 
         layout.addRow("商品代號", product_code_edit)
         layout.addRow("商品名稱", product_name_edit)
@@ -153,11 +166,33 @@ class ProductListWidget(QWidget):
         layout.addRow("售價", price_edit)
 
         buttons = QHBoxLayout()
+        # 根據是否是編輯模式，選擇相應的保存按鈕功能
         if product:
-            save_button = self.create_button("保存", partial(self.save_product, dialog, *self.collect_product_data(product_code_edit, product_name_edit, package_count_edit, draw_count_edit, manufacturer_edit, price_edit)))
+            save_button = self.create_button(
+                "保存", 
+                lambda: self.save_product(
+                    dialog, 
+                    product_code_edit.text().strip(), 
+                    product_name_edit.text().strip(), 
+                    package_count_edit.text().strip(), 
+                    draw_count_edit.text().strip(), 
+                    manufacturer_edit.text().strip(), 
+                    price_edit.text().strip()
+                )
+            )
         else:
-            save_button = self.create_button("新增", partial(self.save_new_product, dialog, *self.collect_product_data(product_code_edit, product_name_edit, package_count_edit, draw_count_edit, manufacturer_edit, price_edit)))
-        
+            save_button = self.create_button(
+                "新增", 
+                lambda: self.save_new_product(
+                    dialog, 
+                    product_code_edit.text().strip(), 
+                    product_name_edit.text().strip(), 
+                    package_count_edit.text().strip(), 
+                    draw_count_edit.text().strip(), 
+                    manufacturer_edit.text().strip(), 
+                    price_edit.text().strip()
+                )
+            )
         buttons.addWidget(save_button)
         cancel_button = self.create_button("取消", dialog.reject)
         buttons.addWidget(cancel_button)
@@ -165,9 +200,6 @@ class ProductListWidget(QWidget):
 
         dialog.setLayout(layout)
         dialog.exec()
-
-    def collect_product_data(self, *fields):
-        return [field.text() for field in fields]
 
     def modify_product(self, row):
         product = [self.table_widget.item(row, i).text() for i in range(6)]
