@@ -4,7 +4,8 @@ from PyQt6.QtCore import pyqtSignal
 from success_login.database_widget.product_list_widget import ProductListWidget
 from success_login.database_widget.inventory_widget import InventoryWidget
 from success_login.database_widget.customer_information_widget import CustomerInformation
-
+from success_login.sales_widget.order_data_widget import OrderDataWidget
+from success_login.sales_widget.sales_function_widget import SalesFunctionWidget
 
 '''
 銷貨功能
@@ -18,7 +19,7 @@ class SalesWidget(QWidget):
         super().__init__(parent)
         self.database = database
         self.setWindowTitle("銷貨訂單功能")
-        self.setMinimumSize(900, 600)
+        self.setMinimumSize(1000, 700)
         
         self.main_layout = QVBoxLayout(self)
         
@@ -52,11 +53,13 @@ class SalesWidget(QWidget):
     def show_order_data(self):
         self.clear_display_area()
         print("正在寫code")
-        # self.product_list_widget = ProductListWidget(parent=self,database=self.database)
-        # self.display_layout.addWidget(self.product_list_widget)
+        self.order_data_widget = OrderDataWidget(parent=self,database=self.database)
+        self.display_layout.addWidget(self.order_data_widget)
     
     def show_sales_function(self):
         self.clear_display_area()
+        self.sales_function_widget = SalesFunctionWidget(parent=self,database=self.database)
+        self.display_layout.addWidget(self.sales_function_widget)
         print("銷貨功能表_還在寫")
 
 

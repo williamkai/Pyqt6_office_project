@@ -11,14 +11,23 @@ class UserInformationWidget(QDialog):
         super().__init__(parent)
         self.database = parent.database
         self.setWindowTitle("帳戶基本資料")
-        self.setFixedSize(400, 300)  # 設定固定大小            
+        self.setFixedSize(450, 500)  # 設定固定大小            
         self.init_ui()  # 使用絕對佈局
         
 
     def init_ui(self):
         # 創建標籤和輸入框
-        labels = ("信箱功能帳號:", "密碼:", "再次確認密碼:")
-        positions = [(50, 30), (50, 80), (50, 130), (50, 180)]  # 固定位置 (x, y)
+        labels = (
+            "公司名稱:", 
+            "地址:", 
+            "電話:", 
+            "傳真:", 
+            "業務員:",
+            "信箱功能帳號:", 
+            "密碼:", 
+            "再次確認密碼:"
+        )
+        positions = [(50, 30), (50, 80), (50, 130), (50, 180), (50, 230), (50, 280), (50, 330), (50, 380)]  # 固定位置 (x, y)
         self.inputs = {}
 
         # 先從資料庫查詢資料
@@ -35,7 +44,7 @@ class UserInformationWidget(QDialog):
             label.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
             input_widget = QLineEdit(self)
-            input_widget.setGeometry(x + 120, y, 200, 30)  # 設定輸入框的固定位置和大小 (x + offset, y, width, height)
+            input_widget.setGeometry(x + 120, y, 250, 30)  # 設定輸入框的固定位置和大小 (x + offset, y, width, height)
             if "密碼" in label_text:
                 input_widget.setEchoMode(QLineEdit.EchoMode.Password)
             # 設置預設值
@@ -47,10 +56,16 @@ class UserInformationWidget(QDialog):
 
         # 創建註冊按鈕
         self.register_button = QPushButton("設定", self)
-        self.register_button.setGeometry(150, 230, 100, 40)  # 設定按鈕的固定位置和大小 (x, y, width, height)
+        self.register_button.setGeometry(150, 430, 100, 40)  # 設定按鈕的固定位置和大小 (x, y, width, height)
         self.register_button.clicked.connect(self.register)
 
     def register(self):
+        company_name = self.inputs["公司名稱:"].text()
+        address = self.inputs["地址:"].text()
+        phone = self.inputs["電話:"].text()
+        fax = self.inputs["傳真:"].text()
+        salesperson = self.inputs["業務員:"].text()
+        
         username = self.inputs["信箱功能帳號:"].text()
         password = self.inputs["密碼:"].text()
         confirm_password = self.inputs["再次確認密碼:"].text()
@@ -66,11 +81,20 @@ class UserInformationWidget(QDialog):
             return
 
         # 將資料寫進資料庫
-        if self.database.User_basic_information_dao.insert_user_account(username, password):
+        if self.database.User_basic_information_dao.insert_user_account(
+            username, 
+            password, 
+            company_name, 
+            address, 
+            phone, 
+            fax, 
+            salesperson
+        ):
             QMessageBox.information(self, "成功", "帳戶資料寫入成功！")
             self.close()
         else:
             QMessageBox.warning(self, "錯誤", "資料寫入出錯！")
+
 
     def closeEvent(self, event):
         super().closeEvent(event)

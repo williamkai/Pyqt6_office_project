@@ -61,14 +61,17 @@ class OrderSortingThread(QThread):
         detail_index_2 = extracted_text.find(detail_marker_2)
         detail_marker_3 = '訂單'
         detail_index_3 = extracted_text.find(detail_marker_3)
+        detail_marker_4 = '衛生紙'
+        detail_index_4 = extracted_text.find(detail_marker_4)
 
         if detail_index_1 != -1:
             # 擷取“取貨明細如下：”之前的內容
             pre_detail_content = extracted_text[:detail_index_1].strip()
+            pre_detail_content = self.remove_markers_from_text(pre_detail_content, remove_markers)
 
-            # 移除指定的字元
-            for marker in remove_markers:
-                pre_detail_content = pre_detail_content.replace(marker, '')
+            # # 移除指定的字元
+            # for marker in remove_markers:
+            #     pre_detail_content = pre_detail_content.replace(marker, '')
 
             # 清理前後的空白字符
             pre_detail_content = pre_detail_content.strip()
@@ -81,6 +84,9 @@ class OrderSortingThread(QThread):
         elif detail_index_2 != -1:
             # 擷取“取貨明細如下：”之前的內容
             pre_detail_content = extracted_text[:detail_index_2].strip()
+
+            pre_detail_content = self.remove_markers_from_text(pre_detail_content, remove_markers)
+
             # 判斷第一個字是不是 '0'，如果是 '0' 就移除
             if pre_detail_content and pre_detail_content[0] == '0':
                 pre_detail_content = pre_detail_content[1:].strip()
@@ -89,6 +95,17 @@ class OrderSortingThread(QThread):
         elif detail_index_3 != -1:
             # 擷取“取貨明細如下：”之前的內容
             pre_detail_content = extracted_text[:detail_index_3].strip()
+            pre_detail_content = self.remove_markers_from_text(pre_detail_content, remove_markers)
+
+            # 判斷第一個字是不是 '0'，如果是 '0' 就移除
+            if pre_detail_content and pre_detail_content[0] == '0':
+                pre_detail_content = pre_detail_content[1:].strip()
+            return pre_detail_content
+        
+        elif detail_index_4 != -1:
+            # 擷取“取貨明細如下：”之前的內容
+            pre_detail_content = extracted_text[:detail_index_4].strip()
+            pre_detail_content = self.remove_markers_from_text(pre_detail_content, remove_markers)
             # 判斷第一個字是不是 '0'，如果是 '0' 就移除
             if pre_detail_content and pre_detail_content[0] == '0':
                 pre_detail_content = pre_detail_content[1:].strip()
@@ -97,7 +114,15 @@ class OrderSortingThread(QThread):
         else:
             print("未找到匹配的文字")
             return ""
-        
+    
+    def remove_markers_from_text(self,text, markers):
+        """
+        移除指定字元
+        """
+        for marker in markers:
+            text = text.replace(marker, '')
+        return text.strip()
+
     def parse_order_items(self,order_lines):
         # 初始化变量
         start_marker = '取貨明細如下'

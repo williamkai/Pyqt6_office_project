@@ -154,6 +154,10 @@ class MainWindow(QWidget):
             self.email_window.close()
             self.email_window = None
         
+        if self.sales_window is not None:
+            self.sales_window.close()
+            self.sales_window = None
+        
         # 關閉資料庫連接
         if self.database.connection is not None:
             self.database.cursor.close()  # 關閉cursor
@@ -177,6 +181,10 @@ class MainWindow(QWidget):
         if self.email_window is not None:  # 關閉信箱視窗
             self.email_window.close()
             self.email_window = None
+        
+        if self.sales_window is not None:
+            self.sales_window.close()
+            self.sales_window = None
 
         # 關閉資料庫連接
         if self.database.connection is not None:
