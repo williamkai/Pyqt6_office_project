@@ -1,43 +1,55 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QVBoxLayout, QWidget
-from PyQt6.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt6.QtGui import QPainter
-
-class MainWindow(QMainWindow):
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QApplication)
+from PyQt6.QtCore import Qt
+class SplitLayoutExample(QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('Split Layout Example')
+        self.setGeometry(100, 100, 800, 600)
+        self.initialize_ui()
 
-        self.text_edit = QTextEdit()
-        self.print_button = QPushButton("Print")
+    def initialize_ui(self):
+        main_layout = QVBoxLayout(self)
 
-        self.print_button.clicked.connect(self.print_text)
+        # 上部区域 (Top section)
+        top_layout = QHBoxLayout()
+        top_left_label = QLabel('Top Left', self)
+        top_right_label = QLabel('Top Right', self)
+        top_right_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        top_layout.addWidget(top_left_label)
+        top_layout.addWidget(top_right_label)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.text_edit)
-        layout.addWidget(self.print_button)
+        top_widget = QWidget()
+        top_widget.setLayout(top_layout)
 
-        container = QWidget()
-        container.setLayout(layout)
+        # 中部区域 (Middle section)
+        middle_table = QTableWidget(5, 3, self)
+        middle_table.setHorizontalHeaderLabels(['Column 1', 'Column 2', 'Column 3'])
+        for row in range(5):
+            for col in range(3):
+                middle_table.setItem(row, col, QTableWidgetItem(f'Item {row+1}-{col+1}'))
 
-        self.setCentralWidget(container)
-        self.setWindowTitle("Print Example")
-        self.resize(400, 300)
+        # 下部区域 (Bottom section)
+        bottom_layout = QGridLayout()
+        bottom_label1 = QLabel('Bottom Label 1', self)
+        bottom_label2 = QLabel('Bottom Label 2', self)
+        bottom_button = QPushButton('Bottom Button', self)
+        bottom_layout.addWidget(bottom_label1, 0, 0)
+        bottom_layout.addWidget(bottom_label2, 0, 1)
+        bottom_layout.addWidget(bottom_button, 1, 0, 1, 2)  # Button spans across two columns
 
-    def print_text(self):
-        # Create a QPrinter object with default settings
-        printer = QPrinter(QPrinter.PrinterMode.HighResolution)
-        # Create a QPrintDialog to allow the user to select printer and settings
-        print_dialog = QPrintDialog(printer, self)
+        bottom_widget = QWidget()
+        bottom_widget.setLayout(bottom_layout)
 
-        if print_dialog.exec() == QPrintDialog.DialogCode.Accepted:
-            # Print the text document from QTextEdit
-            self.text_edit.document().print(printer)
+        # 将上、中、下区域添加到主布局
+        main_layout.addWidget(top_widget)
+        main_layout.addWidget(middle_table)
+        main_layout.addWidget(bottom_widget)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
+if __name__ == '__main__':
+    app = QApplication([])
+    window = SplitLayoutExample()
     window.show()
-    sys.exit(app.exec())
+    app.exec()
 
 
 

@@ -19,7 +19,7 @@ class SalesWidget(QWidget):
         super().__init__(parent)
         self.database = database
         self.setWindowTitle("銷貨訂單功能")
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(900, 600)
         
         self.main_layout = QVBoxLayout(self)
         

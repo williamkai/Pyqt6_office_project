@@ -1,5 +1,5 @@
 # sales_function_widget.py
-from PyQt6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QGridLayout, QPushButton, QLineEdit, QTableWidget)
+from PyQt6.QtWidgets import (QWidget,QGroupBox, QLabel, QVBoxLayout, QGridLayout, QPushButton, QLineEdit, QTableWidget)
 from PyQt6.QtCore import Qt,QRect
 from PyQt6.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt6.QtGui import QPainter
@@ -12,9 +12,48 @@ class SalesFunctionWidget(QWidget):
         self.initialize_ui()
 
     def initialize_ui(self):
-        print("北爛ㄚㄚㄚ 有夠討厭 超不會設計版面")
-    #     # Main layout
-    #     main_layout = QVBoxLayout(self)
+        # 主布局
+        main_layout = QVBoxLayout(self)
+        
+        # 上部區域 - 使用 QGroupBox
+        top_group_box = QGroupBox("上部區域", self)
+        top_section_layout = QVBoxLayout(top_group_box)
+        label = QLabel("銷售功能小部件", self)
+        top_section_layout.addWidget(label)
+        
+        # 添加一個按鈕以演示布局
+        button = QPushButton("示例按鈕", self)
+        top_section_layout.addWidget(button)
+        
+        # 將上部區域的 QGroupBox 添加到主布局中
+        main_layout.addWidget(top_group_box)
+        
+        # 中部區域 - 使用 QGroupBox，包含表格
+        middle_group_box = QGroupBox("中部區域", self)
+        middle_section_layout = QGridLayout(middle_group_box)
+        table = QTableWidget(5, 5, self)  # 創建一個 5x5 的表格
+        middle_section_layout.addWidget(table, 0, 0, 1, 1)  # 將表格添加到網格布局中
+        
+        # 將中部區域的 QGroupBox 添加到主布局中
+        main_layout.addWidget(middle_group_box)
+        
+        # 下部區域 - 使用 QGroupBox，包含額外按鈕
+        bottom_group_box = QGroupBox("下部區域", self)
+        bottom_section_layout = QVBoxLayout(bottom_group_box)
+        print_button = QPushButton("打印", self)
+        print_button.clicked.connect(self.print_document)
+        bottom_section_layout.addWidget(print_button)
+        
+        # 將下部區域的 QGroupBox 添加到主布局中
+        main_layout.addWidget(bottom_group_box)
+
+    def print_document(self):
+        printer = QPrinter()
+        dialog = QPrintDialog(printer, self)
+        if dialog.exec() == QPrintDialog.DialogCode.Accepted:
+            painter = QPainter(printer)
+            self.render(painter)
+            painter.end()
 
     #     # Upper section (Top section + Customer info)
     #     self.upper_section = QWidget()

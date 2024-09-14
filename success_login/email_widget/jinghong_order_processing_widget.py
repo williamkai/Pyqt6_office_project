@@ -22,7 +22,8 @@ from PyQt6.QtWidgets import (QWidget,
                              QGroupBox,
                              QListWidgetItem,
                              QFileDialog,
-                             QMessageBox)
+                             QMessageBox,
+                             QProgressBar)
 from PyQt6.QtCore import QDateTime,Qt,QDate, QTime, QEvent,pyqtSignal
 
 from success_login.email_widget.email_search_thread import EmailSearchThread
@@ -121,6 +122,7 @@ class JinghongOrderProcessingWidget(QWidget):
         self.from_input_layout=QHBoxLayout()
         self.keyword_input_layout=QHBoxLayout()
         self.order_search_layout=QHBoxLayout()
+        # self.progress_bar_layout=QHBoxLayout()
         print("創建信箱收所限制條件輸入框")
 
         # 添加日期选择器
@@ -128,13 +130,13 @@ class JinghongOrderProcessingWidget(QWidget):
         self.date_time_layout.addWidget(self.date_time_label)
         self.date_edit = QDateEdit(self)
         self.date_edit.setCalendarPopup(True)
-        self.date_edit.setDisplayFormat("yyyy-MM-dd")
+        self.date_edit.setDisplayFormat("yyyy/MM/dd")
         self.date_edit.setDate(datetime.today())
         self.date_edit.setFixedWidth(120)
         self.date_time_layout.addWidget(self.date_edit)
         # 添加時間選擇器
         self.timeedit = QTimeEdit(self)
-        self.timeedit.setDisplayFormat('hh:mm:ss')
+        self.timeedit.setDisplayFormat('hh:mm')
         self.time = QTime(7, 0, 0)  # 参数依次是小时、分钟、秒
         self.timeedit.setTime(self.time)
         self.timeedit.setFixedWidth(120)
@@ -147,7 +149,7 @@ class JinghongOrderProcessingWidget(QWidget):
         # 添加结束日期选择器
         self.end_date_edit = QDateEdit(self)
         self.end_date_edit.setCalendarPopup(True)
-        self.end_date_edit.setDisplayFormat("yyyy-MM-dd")
+        self.end_date_edit.setDisplayFormat("yyyy/MM/dd")
         self.end_date_edit.setDate(QDate.currentDate())
         self.end_date_edit.setFixedWidth(120)
         self.date_time_layout.addWidget(QLabel("结束日期:", self))
@@ -215,8 +217,31 @@ class JinghongOrderProcessingWidget(QWidget):
         # 搜索按鈕
         self.order_search_button = QPushButton("訂單搜索功能", self)
         self.order_search_button.clicked.connect(self.order_search)
-        self.order_search_button.setFixedWidth(600)
+        self.order_search_button.setFixedWidth(300)
         self.order_search_layout.addWidget(self.order_search_button)
+        # self.email_search_layout.addLayout(self.order_search_layout)
+
+        # 添加 QProgressBar
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.setMaximum(100)  # 設定最大值
+        self.progress_bar.setValue(0)      # 初始值
+        self.progress_bar.setFixedWidth(200)  # 設置固定寬度
+        self.progress_bar.setStyleSheet('''
+            QProgressBar {
+                border: 2px solid #000;
+                text-align:center;
+                background:#aaa;
+                color:#fff;
+                height: 15px;
+                border-radius: 8px;
+                width:150px;
+            }
+            QProgressBar::chunk {
+                background: #333;
+                width:1px;
+            }
+        ''')
+        self.order_search_layout.addWidget(self.progress_bar)
         self.email_search_layout.addLayout(self.order_search_layout)
         
         # 將 QGroupBox 添加到 display_layout
@@ -249,8 +274,12 @@ class JinghongOrderProcessingWidget(QWidget):
         self.search_thread = EmailSearchThread(
             self.email, self.password,search_criteria,keyword
         )
+        self.search_thread.progress_update.connect(self.update_progress)
         self.search_thread.search_finished.connect(self.handle_search_results)
         self.search_thread.start()
+    
+    def update_progress(self, value):
+        self.progress_bar.setValue(value)
 
     def handle_search_results(self, displayed_items, mail_data):    
         self.email_list.clear()  # 清空之前的郵件列表

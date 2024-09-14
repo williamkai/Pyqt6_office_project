@@ -9,13 +9,14 @@ from PyQt6.QtCore import QThread, pyqtSignal
 class EmailSearchThread(QThread):
 
     search_finished = pyqtSignal(list, dict)  # Emit list of tuples with (mail_id, email_message)
+    progress_update = pyqtSignal(int)  # 新增進度更新信號
 
-    def __init__(self, email, password,search_criteria,keyword):
+    def __init__(self, email, password, search_criteria, keyword):
         super().__init__()
         self.email = email
         self.password = password
         self.search_criteria = search_criteria
-        self.keyword=keyword
+        self.keyword = keyword
 
     def run(self):
         mail_data = {}
@@ -25,34 +26,35 @@ class EmailSearchThread(QThread):
             mail.login(self.email, self.password)
             mail.select('inbox')
 
-            print(f"搜索條件: {self.search_criteria}")
-            result, data = mail.search(None,self.search_criteria)
+            result, data = mail.search(None, self.search_criteria)
             if result == 'OK':
                 mail_ids = data[0].split()
+                total_emails = len(mail_ids)
                 print(f"找到的郵件數量: {len(mail_ids)}")
-                for mail_id in mail_ids:
+
+                for index, mail_id in enumerate(mail_ids):
                     result, message_data = mail.fetch(mail_id, '(RFC822)')
                     raw_email = message_data[0][1]
                     email_message = email.message_from_bytes(raw_email)
-                     # 直接解碼標題
+                    
                     subject = email_message.get('Subject', '(無標題)')
                     subject = self.decode_mime_header(subject) if subject else "(無標題)"
                     subject = self.clean_email_subject_content(subject)
-                    email_content=self.extract_order_details(email_message)
+                    email_content = self.extract_order_details(email_message)
 
                     self_keyword = self.keyword.lower()
                     subject_lower = subject.lower()
 
-                    # 定义排除的关键字列表
                     exclude_keywords = ["退订", "回收", "re"]
-
-                    # 检查排除关键字是否存在于主题中
                     exclude_condition = any(exclude_kw.lower() in subject_lower for exclude_kw in exclude_keywords)
-   
-                    # 判断是否需要执行
+
                     if self_keyword in subject_lower and not exclude_condition:
                         displayed_items.append((mail_id, f"標題:{subject} (信件代號:{mail_id})"))
                         mail_data[mail_id] = email_content
+
+                    # 更新進度條
+                    progress_value = int((index + 1) / total_emails * 100)
+                    self.progress_update.emit(progress_value)
 
             mail.logout()
 
